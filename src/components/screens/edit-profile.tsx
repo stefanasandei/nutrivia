@@ -32,11 +32,11 @@ const formSchema = z.object({
 export default function EditProfileForm({
   user,
   food,
-  alergies: userAlergies,
+  allergies: userallergies,
 }: {
   user: User;
   food: Aliment[];
-  alergies: Aliment[];
+  allergies: Aliment[];
 }) {
   const router = useRouter();
 
@@ -47,7 +47,7 @@ export default function EditProfileForm({
     },
   });
 
-  const [alergies, setAlergies] = useState<ChipOption[]>([]);
+  const [allergies, setallergies] = useState<ChipOption[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,7 +60,7 @@ export default function EditProfileForm({
     updateProfile.mutate({
       id: user.id,
       username: values.username,
-      alergies: alergies,
+      allergies: allergies,
     });
   }
 
@@ -84,10 +84,10 @@ export default function EditProfileForm({
           )}
         />
         <FormItem>
-          <FormLabel>Alergies</FormLabel>
+          <FormLabel>allergies</FormLabel>
           <FormControl>
             <ChipsInput
-              placeholder="Alergies"
+              placeholder="allergies"
               options={food.map((value) => {
                 return {
                   name: value.name,
@@ -95,9 +95,9 @@ export default function EditProfileForm({
                 };
               })}
               savedOptions={
-                !userAlergies
+                !userallergies
                   ? []
-                  : userAlergies.map((value) => {
+                  : userallergies.map((value) => {
                       return {
                         name: value.name,
                         id: value.id,
@@ -105,7 +105,7 @@ export default function EditProfileForm({
                     })
               }
               onUpdate={(newValue) => {
-                setAlergies(newValue);
+                setallergies(newValue);
               }}
             />
           </FormControl>

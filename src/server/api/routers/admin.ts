@@ -7,12 +7,12 @@ export const adminRouter = createTRPCRouter({
   getAliments: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.aliment.findMany({});
   }),
-  getAlergies: protectedProcedure
+  getallergies: protectedProcedure
     .input(z.object({ uid: z.string().cuid() }))
     .query(async ({ ctx, input }) => {
       return await ctx.db.user.findFirst({
         where: { id: input.uid },
-        select: { alergies: true },
+        select: { allergies: true },
       });
     }),
   addFood: protectedProcedure

@@ -8,7 +8,7 @@ export const userRouter = createTRPCRouter({
       z.object({
         username: z.string().min(1),
         id: z.string().cuid(),
-        alergies: z.array(z.object({ name: z.string(), id: z.number() })),
+        allergies: z.array(z.object({ name: z.string(), id: z.number() })),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -16,8 +16,8 @@ export const userRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           name: input.username,
-          alergies: {
-            set: input.alergies.map((val) => {
+          allergies: {
+            set: input.allergies.map((val) => {
               return {
                 id: val.id,
               };

@@ -10,7 +10,7 @@ export default async function ProfilePage() {
   if (!session) redirect("/");
 
   const food = await api.admin.getAliments.query();
-  const alergies = await api.admin.getAlergies.query({ uid: session.user.id });
+  const allergies = await api.admin.getallergies.query({ uid: session.user.id });
 
   return (
     <section className="container grid items-center gap-6 pb-8 pt-3">
@@ -23,7 +23,7 @@ export default async function ProfilePage() {
       <div className="flex gap-4">
         <EditProfileForm
           user={session.user}
-          alergies={alergies?.alergies!}
+          allergies={allergies?.allergies ?? []}
           food={food}
         />
       </div>
