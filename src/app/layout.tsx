@@ -1,12 +1,14 @@
-import "@/styles/globals.css"
-import { type Metadata } from "next"
+import "@/styles/globals.css";
+import { type Metadata } from "next";
 
-import { siteConfig } from "@/config/site"
-import { fontSans } from "@/lib/fonts"
-import { cn } from "@/lib/utils"
-import { SiteHeader } from "@/components/site-header"
-import { ThemeProvider } from "@/components/theme-provider"
-import { getServerAuthSession } from "@/server/auth"
+import { siteConfig } from "@/config/site";
+import { fontSans } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
+import { SiteHeader } from "@/components/site-header";
+import { ThemeProvider } from "@/components/theme-provider";
+import { getServerAuthSession } from "@/server/auth";
+import { TRPCReactProvider } from "@/trpc/react";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -19,10 +21,10 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
-}
+};
 
 interface RootLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
@@ -34,18 +36,21 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
+            fontSans.variable,
           )}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="relative flex min-h-screen flex-col">
-              <SiteHeader session={session}/>
-              <div className="flex-1">{children}</div>
+              <SiteHeader session={session} />
+              <div className="flex-1">
+                <TRPCReactProvider>{children}</TRPCReactProvider>
+              </div>
+              <Toaster />
             </div>
             {/* <TailwindIndicator /> */}
           </ThemeProvider>
         </body>
       </html>
     </>
-  )
+  );
 }
