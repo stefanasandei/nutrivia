@@ -19,6 +19,8 @@ import { type User } from "next-auth";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import ChipsInput, { ChipOption } from "../chips-input";
+import { useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -36,6 +38,8 @@ export default function EditProfileForm({ user }: { user: User }) {
     },
   });
 
+  const [alergies, setAlergies] = useState<ChipOption[]>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,6 +48,7 @@ export default function EditProfileForm({ user }: { user: User }) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    alert(JSON.stringify(alergies));
     updateProfile.mutate({
       id: user.id,
       username: values.username,
@@ -69,6 +74,28 @@ export default function EditProfileForm({ user }: { user: User }) {
             </FormItem>
           )}
         />
+        <FormItem>
+          <FormLabel>Alergies</FormLabel>
+          <FormControl>
+            <ChipsInput
+              placeholder="Alergies"
+              options={[
+                { name: "A", id: 1 },
+                { name: "B", id: 2 },
+                { name: "C", id: 3 },
+                { name: "D", id: 4 },
+              ]}
+              savedOptions={[{ name: "A", id: 1 }]}
+              onUpdate={(newValue) => {
+                setAlergies(newValue);
+              }}
+            />
+          </FormControl>
+          <FormDescription>
+            Add here any ingredients you have alergic reactions to.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
         <Button type="submit">Submit</Button>
       </form>
     </Form>

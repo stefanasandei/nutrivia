@@ -33,6 +33,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
       <html lang="en" suppressHydrationWarning>
+        <head>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          />
+        </head>
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
