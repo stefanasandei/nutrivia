@@ -15,8 +15,9 @@ export const siteConfig = {
     },
   ],
   links: {
+    login: "/login",
+    about: "/about",
     twitter: "https://twitter.com/todo",
     github: "https://github.com/stefanasandei/fiicode",
-    docs: "todo",
   },
 }
