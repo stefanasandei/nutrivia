@@ -48,9 +48,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="relative flex min-h-screen flex-col">
               <SiteHeader session={session} />
-              <div className="flex-1">
-                <TRPCReactProvider>{children}</TRPCReactProvider>
-              </div>
+              <TRPCReactProvider>
+                <div className="flex h-full flex-1 flex-col">{children}</div>
+              </TRPCReactProvider>
               <Toaster />
             </div>
             {/* <TailwindIndicator /> */}

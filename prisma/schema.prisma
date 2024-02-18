@@ -13,17 +13,18 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    alergies      Aliment[]
+    allergies     Aliment[]
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
 }
 
 model Aliment {
-    id    Int     @id @default(autoincrement())
-    name  String
-    image String?
-    users User[]
+    id     Int     @id @default(autoincrement())
+    name   String
+    image  String?
+    User   User?   @relation(fields: [userId], references: [id])
+    userId String?
 }
 
 model Post {

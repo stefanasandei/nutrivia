@@ -19,8 +19,9 @@ import { type User } from "next-auth";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import ChipsInput, { ChipOption } from "../chips-input";
+import ChipsInput, { type ChipOption } from "../chips-input";
 import { useState } from "react";
+import { Aliment } from "@prisma/client";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -28,7 +29,15 @@ const formSchema = z.object({
   }),
 });
 
-export default function EditProfileForm({ user }: { user: User }) {
+export default function EditProfileForm({
+  user,
+  food,
+  alergies: userAlergies,
+}: {
+  user: User;
+  food: Aliment[];
+  alergies: Aliment[];
+}) {
   const router = useRouter();
 
   const updateProfile = api.user.update.useMutation({
@@ -48,10 +57,10 @@ export default function EditProfileForm({ user }: { user: User }) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    alert(JSON.stringify(alergies));
     updateProfile.mutate({
       id: user.id,
       username: values.username,
+      alergies: alergies,
     });
   }
 
@@ -79,13 +88,22 @@ export default function EditProfileForm({ user }: { user: User }) {
           <FormControl>
             <ChipsInput
               placeholder="Alergies"
-              options={[
-                { name: "A", id: 1 },
-                { name: "B", id: 2 },
-                { name: "C", id: 3 },
-                { name: "D", id: 4 },
-              ]}
-              savedOptions={[{ name: "A", id: 1 }]}
+              options={food.map((value) => {
+                return {
+                  name: value.name,
+                  id: value.id,
+                };
+              })}
+              savedOptions={
+                !userAlergies
+                  ? []
+                  : userAlergies.map((value) => {
+                      return {
+                        name: value.name,
+                        id: value.id,
+                      };
+                    })
+              }
               onUpdate={(newValue) => {
                 setAlergies(newValue);
               }}
