@@ -1,10 +1,15 @@
-export type SiteConfig = typeof siteConfig
+export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Title",
-  description:
-    "Description",
+  name: "Nutrivia",
+  description: "Description",
   mainNav: [
+    {
+      title: "Home",
+      href: "/",
+    },
+  ],
+  mainNavMarketing: [
     {
       title: "Home",
       href: "/",
@@ -20,4 +25,4 @@ export const siteConfig = {
     twitter: "https://twitter.com/todo",
     github: "https://github.com/stefanasandei/fiicode",
   },
-}
+};
