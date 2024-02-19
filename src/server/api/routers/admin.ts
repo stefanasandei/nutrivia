@@ -83,7 +83,14 @@ export const adminRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.foodProduct.findFirst({
         where: { id: input.id },
-        select: { comments: true }
+        select: { comments: { include: { createdBy: true } } }
+      })
+    }),
+  deleteFoodComment: protectedProcedure
+    .input(z.object({ id: z.number(), uid: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.comment.delete({
+        where: { id: input.id }
       })
     })
 });

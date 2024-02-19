@@ -58,11 +58,11 @@ model Comment {
     body          String
     createdAt     DateTime     @default(now())
     updatedAt     DateTime     @updatedAt
-    createdBy     User         @relation(fields: [createdById], references: [id])
+    createdBy     User         @relation(fields: [createdById], references: [id], onDelete: Cascade)
     createdById   String
-    Post          Post?        @relation(fields: [postId], references: [id])
+    Post          Post?        @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId        Int?
-    FoodProduct   FoodProduct? @relation(fields: [foodProductId], references: [id])
+    FoodProduct   FoodProduct? @relation(fields: [foodProductId], references: [id], onDelete: Cascade)
     foodProductId Int?
 }
 

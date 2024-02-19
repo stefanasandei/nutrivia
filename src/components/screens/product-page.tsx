@@ -10,6 +10,7 @@ import { type User } from "next-auth";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import CommentPreview from "../comment";
 
 export default function FoodProductPage({
   food,
@@ -23,7 +24,9 @@ export default function FoodProductPage({
       image: string | null;
     }[];
   } & FoodProduct;
-  comments: Comment[];
+  comments: ({
+    createdBy: User;
+  } & Comment)[];
   user: User | null;
 }) {
   const router = useRouter();
@@ -48,6 +51,13 @@ export default function FoodProductPage({
   const addComment = api.admin.addFoodComment.useMutation({
     onSuccess: () => {
       toast("Comment submitted!");
+      router.refresh();
+    },
+  });
+
+  const deleteComment = api.admin.deleteFoodComment.useMutation({
+    onSuccess: () => {
+      toast("Comment deleted!");
       router.refresh();
     },
   });
@@ -126,8 +136,24 @@ export default function FoodProductPage({
         )}
         <div>
           {comments.map((comment) => {
-            // todo: comment ui
-            return <div key={comment.id}>{comment.body}</div>;
+            return (
+              <div
+                key={comment.id}
+                className="flex w-full flex-row items-center justify-center"
+              >
+                <CommentPreview comment={comment} />
+                {user?.id == comment.createdById && (
+                  <Button
+                    size={"icon"}
+                    onClick={() => {
+                      deleteComment.mutate({ id: comment.id, uid: user.id });
+                    }}
+                  >
+                    <Icons.delete />
+                  </Button>
+                )}
+              </div>
+            );
           })}
         </div>
       </div>
