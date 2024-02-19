@@ -19,8 +19,8 @@ export default async function FoodProductsPage() {
         <p>Here you can view, edit and create food product records.</p>
       </div>
       <div className="mt-5 flex w-full flex-col space-y-4">
-        <RawFoodList user={session.user} rawFood={rawFood} />
         <AddFoodProductForm user={session.user} />
+        <RawFoodList user={session.user} rawFood={rawFood} />
       </div>
     </section>
   );

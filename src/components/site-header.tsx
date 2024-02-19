@@ -7,16 +7,30 @@ import { type Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export function SiteHeader({ session }: { session: Session | null }) {
+export function SiteHeader({
+  session,
+  isAdmin,
+}: {
+  session: Session | null;
+  isAdmin: boolean;
+}) {
   const router = useRouter();
+
+  const mainNav = !isAdmin
+    ? siteConfig.mainNav
+    : [
+        ...siteConfig.mainNav,
+        {
+          title: "Admin",
+          href: "/admin",
+        },
+      ];
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <MainNav
-          items={
-            session != null ? siteConfig.mainNav : siteConfig.mainNavMarketing
-          }
+          items={session != null ? mainNav : siteConfig.mainNavMarketing}
         />
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">

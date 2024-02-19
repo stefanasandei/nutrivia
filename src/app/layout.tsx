@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { getServerAuthSession } from "@/server/auth";
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "sonner";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
   title: {
@@ -47,7 +48,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="relative flex min-h-screen flex-col">
-              <SiteHeader session={session} />
+              <SiteHeader
+                session={session}
+                isAdmin={session?.user.id === env.ADMIN_ID}
+              />
               <TRPCReactProvider>
                 <div className="flex h-full flex-1 flex-col">{children}</div>
               </TRPCReactProvider>
