@@ -38,14 +38,7 @@ export default function FoodList({
       name: string;
       image: string | null;
     }[];
-  } & {
-    id: number;
-    name: string;
-    brand: string | null;
-    weightG: number;
-    priceRON: number;
-    image: string | null;
-  })[];
+  } & FoodProduct)[];
 }) {
   const router = useRouter();
 

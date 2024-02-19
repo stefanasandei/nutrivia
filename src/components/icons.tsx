@@ -25,11 +25,17 @@ import {
   Twitter,
   Trash2,
   Pen,
+  ThumbsUp,
+  ThumbsDown,
+  Search,
 } from "lucide-react";
 
 export type Icon = unknown;
 
 export const Icons = {
+  search: Search,
+  like: ThumbsUp,
+  dislike: ThumbsDown,
   logo: ShoppingBag,
   delete: Trash2,
   update: Pen,
