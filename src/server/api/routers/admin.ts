@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { env } from "@/env";
 
@@ -18,6 +17,12 @@ export const adminRouter = createTRPCRouter({
         where: { id: input.uid },
         select: { allergies: true },
       });
+    }),
+
+  deleteRawFood: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.rawFoodProduct.delete({ where: { id: input.id } });
     }),
 
   addRawFood: protectedProcedure

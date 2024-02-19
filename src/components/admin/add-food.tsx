@@ -45,6 +45,7 @@ export default function AddFoodProductForm({ user }: { user: User }) {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     addRawFood.mutate({ id: user.id, name: values.name });
+    form.reset();
   }
 
   return (

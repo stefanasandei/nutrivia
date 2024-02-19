@@ -22,13 +22,17 @@ import {
   ShoppingBag,
   User,
   X,
-  Twitter
-} from "lucide-react"
+  Twitter,
+  Trash2,
+  Pen,
+} from "lucide-react";
 
-export type Icon = unknown
+export type Icon = unknown;
 
 export const Icons = {
   logo: ShoppingBag,
+  delete: Trash2,
+  update: Pen,
   close: X,
   spinner: Loader2,
   chevronLeft: ChevronLeft,
@@ -68,4 +72,4 @@ export const Icons = {
   ),
   twitter: Twitter,
   check: Check,
-}
+};
