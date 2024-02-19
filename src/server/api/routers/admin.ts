@@ -4,7 +4,9 @@ import { env } from "@/env";
 
 export const adminRouter = createTRPCRouter({
   getFoodProducts: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.foodProduct.findMany({});
+    return await ctx.db.foodProduct.findMany({
+      include: { ingredients: true }
+    });
   }),
   getRawFoodProducts: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.rawFoodProduct.findMany({});
@@ -23,6 +25,11 @@ export const adminRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.rawFoodProduct.delete({ where: { id: input.id } });
+    }),
+  deleteFood: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.foodProduct.delete({ where: { id: input.id } });
     }),
 
   addRawFood: protectedProcedure
@@ -46,7 +53,7 @@ export const adminRouter = createTRPCRouter({
       return await ctx.db.foodProduct.create({
         data: {
           name: input.name, brand: input.brand, weightG: input.weight,
-          priceRON: input.price, ingredients: { connect: [] }
+          priceRON: input.price, ingredients: { connect: input.ingredients }
         },
       });
     }),

@@ -1,4 +1,6 @@
+import AddRawFoodProductForm from "@/components/admin/add-raw-food";
 import AddFoodProductForm from "@/components/admin/add-food";
+import FoodList from "@/components/admin/food-list";
 import RawFoodList from "@/components/admin/raw-food-list";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
@@ -9,6 +11,7 @@ export default async function FoodProductsPage() {
   if (!session) redirect("/");
 
   const rawFood = await api.admin.getRawFoodProducts.query();
+  const food = await api.admin.getFoodProducts.query();
 
   return (
     <section className="container m-3 h-full w-full">
@@ -19,8 +22,10 @@ export default async function FoodProductsPage() {
         <p>Here you can view, edit and create food product records.</p>
       </div>
       <div className="mt-5 flex w-full flex-col space-y-4">
-        <AddFoodProductForm user={session.user} />
+        <AddRawFoodProductForm user={session.user} />
         <RawFoodList user={session.user} rawFood={rawFood} />
+        <AddFoodProductForm user={session.user} rawFood={rawFood} />
+        <FoodList user={session.user} food={food} />
       </div>
     </section>
   );

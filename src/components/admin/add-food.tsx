@@ -19,19 +19,31 @@ import { type User } from "next-auth";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import ChipsInput, { type ChipOption } from "../chips-input";
+import { useState } from "react";
+import { type RawFoodProduct } from "@prisma/client";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
+  name: z.string(),
+  brand: z.string(),
+  weight: z.coerce.number(),
+  price: z.coerce.number(),
 });
 
-export default function AddFoodProductForm({ user }: { user: User }) {
+export default function AddFoodProductForm({
+  user,
+  rawFood,
+}: {
+  user: User;
+  rawFood: RawFoodProduct[];
+}) {
   const router = useRouter();
 
-  const addRawFood = api.admin.addRawFood.useMutation({
+  const [ingredients, setIngredients] = useState<ChipOption[]>([]);
+
+  const addFood = api.admin.addFood.useMutation({
     onSuccess: () => {
-      toast("Raw food record added!");
+      toast("Food record added!");
       router.refresh();
     },
   });
@@ -40,20 +52,32 @@ export default function AddFoodProductForm({ user }: { user: User }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      brand: "",
+      weight: 0,
+      price: 0,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    addRawFood.mutate({ id: user.id, name: values.name });
+    addFood.mutate({
+      id: user.id,
+      image: "?",
+      name: values.name,
+      brand: values.brand,
+      weight: values.weight,
+      price: values.price,
+      ingredients: ingredients.map((value) => {
+        return { id: value.id };
+      }),
+    });
     form.reset();
+    setIngredients([]);
   }
 
   return (
     <Form {...form}>
-      <h1 className="border-t-2 py-2 text-3xl font-bold">
-        Add a raw food product
-      </h1>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+      <h1 className="border-t-2 py-2 text-3xl font-bold">Add a food product</h1>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -63,17 +87,83 @@ export default function AddFoodProductForm({ user }: { user: User }) {
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormDescription>The name of the food product.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="brand"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Brand</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>The brand of the food product.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="weight"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Weight (grams)</FormLabel>
+              <FormControl>
+                <Input {...field} type="number" />
+              </FormControl>
               <FormDescription>
-                The name of the raw food product.
+                The weight of the food product in grams.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price (RON)</FormLabel>
+              <FormControl>
+                <Input {...field} type="number" />
+              </FormControl>
+              <FormDescription>
+                The price of the food product in RON.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormItem>
+          <FormLabel>Ingredients</FormLabel>
+          <FormControl>
+            <ChipsInput
+              placeholder="Ingredients"
+              options={rawFood.map((value) => {
+                return {
+                  name: value.name,
+                  id: value.id,
+                };
+              })}
+              value={ingredients}
+              setValue={(newValue) => {
+                setIngredients(newValue);
+              }}
+            />
+          </FormControl>
+          <FormDescription>
+            Add here all ingredients of the product.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
         <div>
           <p className="mb-2">
-            You are submitting a raw food product as an admin. This will be
-            directly published.
+            You are submitting a food product as an admin. This will be directly
+            published.
           </p>
           <Button type="submit">Submit</Button>
         </div>

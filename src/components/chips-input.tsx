@@ -14,13 +14,15 @@ export type ChipOption = {
 export default function ChipsInput({
   placeholder,
   options,
-  savedOptions,
-  onUpdate,
+  // savedOptions,
+  value,
+  setValue,
 }: {
   placeholder: string;
   options: ChipOption[];
-  savedOptions: ChipOption[];
-  onUpdate: (newValue: ChipOption[]) => void;
+  // savedOptions: ChipOption[];
+  value: ChipOption[];
+  setValue: (newValue: ChipOption[]) => void;
 }) {
   const theme = useTheme();
 
@@ -36,8 +38,7 @@ export default function ChipsInput({
   });
 
   const fixedOptions: ChipOption[] = [];
-  const [value, setValue] = React.useState([...fixedOptions, ...savedOptions]);
-  onUpdate(value);
+  // const [value, setValue] = React.useState([...fixedOptions, ...savedOptions]);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -53,7 +54,6 @@ export default function ChipsInput({
             ),
           ];
           setValue(update);
-          onUpdate(update);
         }}
         options={options}
         getOptionLabel={(option: ChipOption) => option.name}

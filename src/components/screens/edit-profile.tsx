@@ -47,7 +47,16 @@ export default function EditProfileForm({
     },
   });
 
-  const [allergies, setAllergies] = useState<ChipOption[]>([]);
+  const [allergies, setAllergies] = useState<ChipOption[]>(
+    !userallergies
+      ? []
+      : userallergies.map((value) => {
+          return {
+            name: value.name,
+            id: value.id,
+          };
+        }),
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -94,17 +103,8 @@ export default function EditProfileForm({
                   id: value.id,
                 };
               })}
-              savedOptions={
-                !userallergies
-                  ? []
-                  : userallergies.map((value) => {
-                      return {
-                        name: value.name,
-                        id: value.id,
-                      };
-                    })
-              }
-              onUpdate={(newValue) => {
+              value={allergies}
+              setValue={(newValue) => {
                 setAllergies(newValue);
               }}
             />
