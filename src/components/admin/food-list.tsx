@@ -26,6 +26,7 @@ import { Icons } from "../icons";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function FoodList({
   food,
@@ -54,8 +55,6 @@ export default function FoodList({
       router.refresh();
     },
   });
-
-  console.log(food);
 
   return (
     <div>
@@ -90,7 +89,19 @@ export default function FoodList({
                   return <p>{i}</p>;
                 })()}
               </TableCell>
-              <TableCell>?</TableCell>
+              <TableCell>
+                <Image
+                  style={{
+                    height: "100%",
+                    width: "auto",
+                  }}
+                  className="rounded-md"
+                  width={30}
+                  height={30}
+                  src={food.image!}
+                  alt={food.name}
+                />
+              </TableCell>
               <TableCell className="flex flex-row gap-3">
                 <Dialog>
                   <DialogTrigger

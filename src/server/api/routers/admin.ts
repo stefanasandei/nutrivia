@@ -52,7 +52,7 @@ export const adminRouter = createTRPCRouter({
 
       return await ctx.db.foodProduct.create({
         data: {
-          name: input.name, brand: input.brand, weightG: input.weight,
+          name: input.name, image: input.image, brand: input.brand, weightG: input.weight,
           priceRON: input.price, ingredients: { connect: input.ingredients }
         },
       });

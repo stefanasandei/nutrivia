@@ -11,6 +11,10 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "sonner";
 import { env } from "@/env";
 
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -46,6 +50,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             fontSans.variable,
           )}
         >
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="relative flex min-h-screen flex-col">
               <SiteHeader

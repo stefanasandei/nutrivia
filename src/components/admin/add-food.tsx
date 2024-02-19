@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import ChipsInput, { type ChipOption } from "../chips-input";
 import { useState } from "react";
 import { type RawFoodProduct } from "@prisma/client";
+import { UploadButton } from "../uploadthing";
 
 const formSchema = z.object({
   name: z.string(),
@@ -40,6 +41,7 @@ export default function AddFoodProductForm({
   const router = useRouter();
 
   const [ingredients, setIngredients] = useState<ChipOption[]>([]);
+  const [imageURL, setImageURL] = useState("");
 
   const addFood = api.admin.addFood.useMutation({
     onSuccess: () => {
@@ -61,11 +63,11 @@ export default function AddFoodProductForm({
   function onSubmit(values: z.infer<typeof formSchema>) {
     addFood.mutate({
       id: user.id,
-      image: "?",
       name: values.name,
       brand: values.brand,
       weight: values.weight,
       price: values.price,
+      image: imageURL,
       ingredients: ingredients.map((value) => {
         return { id: value.id };
       }),
@@ -138,6 +140,27 @@ export default function AddFoodProductForm({
             </FormItem>
           )}
         />
+        <FormItem>
+          <FormLabel>Image</FormLabel>
+          <FormControl>
+            <UploadButton
+              className="ut-button:bg-primary ut-button:text-primary-foreground ut-button:hover:bg-primary/90 ut-button:transition flex flex-row items-center justify-start gap-3"
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                setImageURL(res[0]?.url ?? "");
+              }}
+              onUploadError={(error: Error) => {
+                alert(
+                  `Please refresh the page and try again. Upload error: ${error.message}`,
+                );
+              }}
+            />
+          </FormControl>
+          <FormDescription>
+            Upload an image with the food product.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
         <FormItem>
           <FormLabel>Ingredients</FormLabel>
           <FormControl>
