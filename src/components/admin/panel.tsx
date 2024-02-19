@@ -1,15 +1,19 @@
+"use client";
+
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
+import { usePathname } from "next/navigation";
 
 export default function AdminNavPanel() {
+  const path = usePathname();
+
   const pages = [
     {
       name: "Overview",
       href: "/admin",
     },
     {
-      name: "Aliments",
-      href: "/admin/aliments",
+      name: "Food Products",
+      href: "/admin/foods",
     },
     {
       name: "Moderation",
@@ -22,7 +26,7 @@ export default function AdminNavPanel() {
   ];
 
   return (
-    <div className="m-3 ml-5 hidden flex-col sm:flex">
+    <div className="fixed m-3 ml-5 hidden flex-col sm:flex">
       <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
         Admin Panel
       </h1>
@@ -33,7 +37,8 @@ export default function AdminNavPanel() {
               href={page.href}
               key={page.href}
               className={
-                "flex h-10 w-full items-center rounded-lg p-2 transition hover:bg-accent"
+                "flex h-10 w-full items-center rounded-lg p-2 transition " +
+                (path.endsWith(page.href) ? "bg-accent" : "hover:bg-accent")
               }
             >
               {page.name}

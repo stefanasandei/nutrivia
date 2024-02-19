@@ -26,12 +26,12 @@ const formSchema = z.object({
   }),
 });
 
-export default function AddAlimentForm({ user }: { user: User }) {
+export default function AddFoodProductForm({ user }: { user: User }) {
   const router = useRouter();
 
-  const addFood = api.admin.addFood.useMutation({
+  const addRawFood = api.admin.addRawFood.useMutation({
     onSuccess: () => {
-      toast("Food record added!");
+      toast("Raw food record added!");
       router.refresh();
     },
   });
@@ -44,12 +44,14 @@ export default function AddAlimentForm({ user }: { user: User }) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    addFood.mutate({ id: user.id, name: values.name });
+    addRawFood.mutate({ id: user.id, name: values.name });
   }
 
   return (
     <Form {...form}>
-      <h1 className="border-t-2 py-2 text-3xl font-bold">Add an aliment</h1>
+      <h1 className="border-t-2 py-2 text-3xl font-bold">
+        Add a raw food product
+      </h1>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
         <FormField
           control={form.control}
@@ -60,15 +62,17 @@ export default function AddAlimentForm({ user }: { user: User }) {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription>The name of the aliment.</FormDescription>
+              <FormDescription>
+                The name of the raw food product.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <div>
           <p className="mb-2">
-            You are submitting an aliment as an admin. This will be directly
-            published.
+            You are submitting a raw food product as an admin. This will be
+            directly published.
           </p>
           <Button type="submit">Submit</Button>
         </div>

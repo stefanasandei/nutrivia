@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ChipsInput, { type ChipOption } from "../chips-input";
 import { useState } from "react";
-import { Aliment } from "@prisma/client";
+import { type RawFoodProduct } from "@prisma/client";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -35,8 +35,8 @@ export default function EditProfileForm({
   allergies: userallergies,
 }: {
   user: User;
-  food: Aliment[];
-  allergies: Aliment[];
+  food: RawFoodProduct[];
+  allergies: RawFoodProduct[];
 }) {
   const router = useRouter();
 
@@ -47,7 +47,7 @@ export default function EditProfileForm({
     },
   });
 
-  const [allergies, setallergies] = useState<ChipOption[]>([]);
+  const [allergies, setAllergies] = useState<ChipOption[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -105,7 +105,7 @@ export default function EditProfileForm({
                     })
               }
               onUpdate={(newValue) => {
-                setallergies(newValue);
+                setAllergies(newValue);
               }}
             />
           </FormControl>
