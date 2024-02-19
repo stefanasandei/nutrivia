@@ -28,11 +28,13 @@ import {
   ThumbsUp,
   ThumbsDown,
   Search,
+  Send,
 } from "lucide-react";
 
 export type Icon = unknown;
 
 export const Icons = {
+  send: Send,
   search: Search,
   like: ThumbsUp,
   dislike: ThumbsDown,

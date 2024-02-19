@@ -17,6 +17,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    Comment       Comment[]
 }
 
 model RawFoodProduct {
@@ -34,19 +35,35 @@ model FoodProduct {
     weightG     Int
     priceRON    Int
     image       String?
+    likes       Int              @default(0)
+    dislikes    Int              @default(0)
     ingredients RawFoodProduct[]
+    comments    Comment[]
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
+    id          Int       @id @default(autoincrement())
+    title       String
+    body        String?
+    image       String?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    createdBy   User      @relation(fields: [createdById], references: [id])
     createdById String
+    comments    Comment[]
+}
 
-    @@index([name])
+model Comment {
+    id            Int          @id @default(autoincrement())
+    body          String
+    createdAt     DateTime     @default(now())
+    updatedAt     DateTime     @updatedAt
+    createdBy     User         @relation(fields: [createdById], references: [id])
+    createdById   String
+    Post          Post?        @relation(fields: [postId], references: [id])
+    postId        Int?
+    FoodProduct   FoodProduct? @relation(fields: [foodProductId], references: [id])
+    foodProductId Int?
 }
 
 model Account {

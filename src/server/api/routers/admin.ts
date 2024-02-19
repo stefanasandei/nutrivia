@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { env } from "@/env";
+import { publicProcedure } from '../trpc';
 
 export const adminRouter = createTRPCRouter({
   getFoodProducts: protectedProcedure.query(async ({ ctx }) => {
@@ -32,6 +33,12 @@ export const adminRouter = createTRPCRouter({
       return await ctx.db.foodProduct.delete({ where: { id: input.id } });
     }),
 
+  findFoodProduct: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.foodProduct.findFirst({ where: { id: input.id }, include: { ingredients: true } });
+    }),
+
   addRawFood: protectedProcedure
     .input(z.object({ id: z.string().cuid(), name: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -57,4 +64,26 @@ export const adminRouter = createTRPCRouter({
         },
       });
     }),
+
+  addFoodComment: protectedProcedure
+    .input(z.object({ id: z.number(), comment: z.string(), userId: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.foodProduct.update({
+        where: { id: input.id },
+        data: {
+          comments: {
+            create: {
+              body: input.comment, createdById: input.userId
+            }
+          }
+        }
+      })
+    }),
+  getFoodComments: publicProcedure.input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.foodProduct.findFirst({
+        where: { id: input.id },
+        select: { comments: true }
+      })
+    })
 });

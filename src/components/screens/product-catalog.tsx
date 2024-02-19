@@ -2,7 +2,7 @@
 
 import { type FoodProduct } from "@prisma/client";
 import { type User } from "next-auth";
-import FoodCard from "@/components/food-cart";
+import FoodCard from "@/components/food-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
