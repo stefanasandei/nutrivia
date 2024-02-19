@@ -12,11 +12,13 @@ export default async function AdminLayout({
   if (!session || session.user.id != env.ADMIN_ID) redirect("/");
 
   return (
-    <div className="grid h-full w-full flex-1 grid-cols-5">
-      <div className="col-span-1 h-full bg-accent/40">
-        <AdminNavPanel />
+    <div className="grid h-full w-full flex-1 grid-cols-6">
+      <div className="col-span-1 hidden w-full lg:flex">
+        <div className="fixed h-full bg-accent/40 pr-7">
+          <AdminNavPanel />
+        </div>
       </div>
-      <div className="col-span-4 w-full">{children}</div>
+      <div className="col-span-5 w-full">{children}</div>
     </div>
   );
 }

@@ -11,6 +11,7 @@ export default async function ContributePage() {
         <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
           Contribute
         </h1>
+        <p>Scan your products here</p>
       </div>
       <div className="flex gap-4"></div>
     </section>

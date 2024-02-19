@@ -26,7 +26,7 @@ export default function AdminNavPanel() {
   ];
 
   return (
-    <div className="fixed m-3 ml-5 hidden flex-col sm:flex">
+    <div className="my-3 ml-5 flex w-full flex-1 flex-col">
       <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
         Admin Panel
       </h1>
@@ -37,7 +37,7 @@ export default function AdminNavPanel() {
               href={page.href}
               key={page.href}
               className={
-                "flex h-10 w-full items-center rounded-lg p-2 transition " +
+                "flex h-10 items-center rounded-lg p-2 transition " +
                 (path.endsWith(page.href) ? "bg-accent" : "hover:bg-accent")
               }
             >
