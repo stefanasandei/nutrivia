@@ -62,6 +62,12 @@ export default function FoodProductPage({
     },
   });
 
+  const likePost = api.admin.likeFoodProduct.useMutation({
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
+
   const [comment, setComment] = useState("");
 
   return (
@@ -101,14 +107,40 @@ export default function FoodProductPage({
               {ingredientsList(food.ingredients)}
             </h1>
           </div>
-          <div className="mt-3 flex w-full flex-row gap-3 sm:mt-0">
-            <Button variant="secondary" size={"icon"}>
-              <Icons.like />
-            </Button>
-            <Button variant="secondary" size={"icon"}>
-              <Icons.dislike />
-            </Button>
-          </div>
+          {user != null && (
+            <div className="mt-3 flex w-full flex-row gap-3 sm:mt-0">
+              <Button
+                variant="secondary"
+                size={"icon"}
+                onClick={() => {
+                  likePost.mutate({
+                    id: food.id,
+                    userId: user.id,
+                    isLike: true,
+                  });
+                }}
+              >
+                <Icons.like
+                  fill={food.likedBy.includes(user?.id) ? "white" : "none"}
+                />
+              </Button>
+              <Button
+                variant="secondary"
+                size={"icon"}
+                onClick={() => {
+                  likePost.mutate({
+                    id: food.id,
+                    userId: user.id,
+                    isLike: false,
+                  });
+                }}
+              >
+                <Icons.dislike
+                  fill={food.dislikedBy.includes(user?.id) ? "white" : "none"}
+                />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex w-full flex-col gap-3">

@@ -9,9 +9,10 @@ import { Icons } from "@/components/icons";
 import { useState } from "react";
 
 export default function ProductCatalog({
+  user,
   food,
 }: {
-  user: User;
+  user?: User;
   food: ({
     ingredients: {
       id: number;
@@ -65,7 +66,7 @@ export default function ProductCatalog({
       </div>
       <div className="grid grid-flow-row grid-cols-1 justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {searchedFood.map((item) => (
-          <FoodCard key={item.id} food={item} />
+          <FoodCard key={item.id} food={item} userId={user ? user.id : null} />
         ))}
       </div>
     </section>

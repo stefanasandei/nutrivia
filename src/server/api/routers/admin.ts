@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { env } from "@/env";
 import { publicProcedure } from '../trpc';
+import { removeItem } from "@/lib/array";
 
 export const adminRouter = createTRPCRouter({
   getFoodProducts: protectedProcedure.query(async ({ ctx }) => {
@@ -92,5 +93,60 @@ export const adminRouter = createTRPCRouter({
       return await ctx.db.comment.delete({
         where: { id: input.id }
       })
+    }),
+
+  likeFoodProduct: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      userId: z.string().cuid(),
+      isLike: z.boolean()
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const foodPost = await ctx.db.foodProduct.findFirst({
+        where: { id: input.id },
+        select: { likedBy: true, dislikedBy: true }
+      });
+
+      if (input.isLike && !foodPost?.likedBy.includes(input.userId) && !foodPost?.dislikedBy.includes(input.userId)) {
+        await ctx.db.foodProduct.update({
+          where: { id: input.id },
+          data: { likedBy: { push: input.userId } }
+        });
+      } else if (input.isLike && foodPost?.likedBy.includes(input.userId) && !foodPost?.dislikedBy.includes(input.userId)) {
+        await ctx.db.foodProduct.update({
+          where: { id: input.id },
+          data: { likedBy: removeItem(foodPost.likedBy, input.userId) }
+        });
+      }
+
+      if (!input.isLike && !foodPost?.dislikedBy.includes(input.userId) && !foodPost?.likedBy.includes(input.userId)) {
+        await ctx.db.foodProduct.update({
+          where: { id: input.id },
+          data: { dislikedBy: { push: input.userId } }
+        });
+      } else if (!input.isLike && foodPost?.dislikedBy.includes(input.userId) && !foodPost?.likedBy.includes(input.userId)) {
+        await ctx.db.foodProduct.update({
+          where: { id: input.id },
+          data: { dislikedBy: removeItem(foodPost.dislikedBy, input.userId) }
+        });
+      }
+
+      if (input.isLike && foodPost?.dislikedBy.includes(input.userId)) {
+        await ctx.db.foodProduct.update({
+          where: { id: input.id },
+          data: {
+            dislikedBy: removeItem(foodPost.dislikedBy, input.userId),
+            likedBy: { push: input.userId }
+          }
+        });
+      } else if (!input.isLike && foodPost?.likedBy.includes(input.userId)) {
+        await ctx.db.foodProduct.update({
+          where: { id: input.id },
+          data: {
+            likedBy: removeItem(foodPost.likedBy, input.userId),
+            dislikedBy: { push: input.userId }
+          }
+        });
+      }
     })
 });

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,9 +11,12 @@ import Image from "next/image";
 import { Icons } from "@/components/icons";
 import { type FoodProduct } from "@prisma/client";
 import Link from "next/link";
+import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
 
 export default function FoodCard({
   food,
+  userId,
 }: {
   food: {
     ingredients: {
@@ -22,16 +25,24 @@ export default function FoodCard({
       image: string | null;
     }[];
   } & FoodProduct;
+  userId: string | null;
 }) {
+  const router = useRouter();
+  const apiContext = api.useUtils();
+
+  const likePost = api.admin.likeFoodProduct.useMutation({
+    onSuccess: async () => {
+      router.refresh();
+      await apiContext.admin.getFoodProducts.invalidate();
+    },
+  });
+
   return (
-    <Link
-      href={`/food/${food.id}`}
-      className="flex w-[300px] flex-col justify-between transition hover:cursor-pointer hover:bg-secondary/30"
+    <Card
+      key={food.id}
+      className="flex h-full w-[300px] flex-col justify-between transition hover:cursor-pointer hover:bg-secondary/30"
     >
-      <Card
-        key={food.id}
-        className="flex h-full w-[300px] flex-col justify-between transition hover:cursor-pointer hover:bg-secondary/30"
-      >
+      <Link href={`/food/${food.id}`} className="">
         <CardHeader className="flex flex-row items-start justify-between">
           <div>
             <CardTitle>{food.name}</CardTitle>
@@ -59,18 +70,18 @@ export default function FoodCard({
             alt={food.name}
           />
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <div className="flex flex-row gap-3">
-            <Button variant="secondary" size={"icon"}>
-              <Icons.like />
-            </Button>
-            <Button variant="secondary" size={"icon"}>
-              <Icons.dislike />
-            </Button>
-          </div>
-          <Button variant="secondary">Discuss</Button>
-        </CardFooter>
-      </Card>
-    </Link>
+      </Link>
+      <CardFooter className="flex justify-between">
+        <Link
+          href={`/food/${food.id}`}
+          className={buttonVariants({ variant: "secondary" })}
+        >
+          Discuss
+        </Link>
+        <Button variant={"secondary"}>
+          {food.likedBy.length - food.dislikedBy.length} score
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

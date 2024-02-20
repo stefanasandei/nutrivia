@@ -37,6 +37,8 @@ model FoodProduct {
     image       String?
     likes       Int              @default(0)
     dislikes    Int              @default(0)
+    likedBy     String[]         @default([])
+    dislikedBy  String[]         @default([])
     ingredients RawFoodProduct[]
     comments    Comment[]
 }
