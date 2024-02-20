@@ -15,6 +15,7 @@ export default async function ForumPage() {
   if (!session) redirect("/");
 
   const latestPosts = await api.post.getLatest.query();
+  const bestPosts = await api.post.getLatest.query();
 
   return (
     <section className="container grid items-center gap-6 pb-8 pt-5 sm:pt-0">
@@ -34,7 +35,13 @@ export default async function ForumPage() {
             <ForumWritePrompt />
           </div>
           <div className="">
-            <TabsContent value="best">best</TabsContent>
+            <TabsContent value="best">
+              <div className="flex flex-col gap-4">
+                {bestPosts.map((post) => (
+                  <PostPreview key={post.id} post={post} />
+                ))}
+              </div>
+            </TabsContent>
             <TabsContent value="new">
               <div className="flex flex-col gap-4">
                 {latestPosts.map((post) => (

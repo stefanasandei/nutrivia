@@ -12,6 +12,12 @@ export const postRouter = createTRPCRouter({
       include: { createdBy: true }
     });
   }),
+  getBest: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.post.findMany({
+      orderBy: { comments: { _count: "desc" } },
+      include: { createdBy: true }
+    });
+  }),
 
   create: protectedProcedure
     .input(z.object({
