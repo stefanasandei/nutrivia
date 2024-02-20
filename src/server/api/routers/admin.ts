@@ -6,9 +6,25 @@ import { removeItem } from "@/lib/array";
 
 export const adminRouter = createTRPCRouter({
   getFoodProducts: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.foodProduct.findMany({
-      include: { ingredients: true }
+    const products = await ctx.db.foodProduct.findMany({
+      include: { ingredients: true, comments: true },
     });
+
+    // *the algorithm*
+    const computeScore = (a: typeof products[0]) => {
+      const ratio = a.likedBy.length - a.dislikedBy.length;
+      const score = ratio * 8 / 10 + a.comments.length * 2 / 10;
+      return score;
+    }
+
+    products.sort((a, b) => {
+      const res = computeScore(a) > computeScore(b);
+      if (res)
+        return -1;
+      return 1;
+    })
+
+    return products;
   }),
   getRawFoodProducts: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.rawFoodProduct.findMany({});
