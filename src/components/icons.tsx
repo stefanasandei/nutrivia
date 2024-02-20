@@ -29,11 +29,19 @@ import {
   ThumbsDown,
   Search,
   Send,
+  Flame,
+  BarChart4,
+  PenLine,
+  MoreHorizontal,
 } from "lucide-react";
 
 export type Icon = unknown;
 
 export const Icons = {
+  options: MoreHorizontal,
+  write: PenLine,
+  best: BarChart4,
+  fire: Flame,
   send: Send,
   search: Search,
   like: ThumbsUp,
