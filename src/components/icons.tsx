@@ -1,5 +1,4 @@
 import {
-  AlertTriangle,
   ArrowRight,
   Check,
   ChevronLeft,
@@ -33,11 +32,13 @@ import {
   BarChart4,
   PenLine,
   MoreHorizontal,
+  ShieldAlert,
 } from "lucide-react";
 
 export type Icon = unknown;
 
 export const Icons = {
+  warning: ShieldAlert,
   options: MoreHorizontal,
   write: PenLine,
   best: BarChart4,
@@ -61,7 +62,6 @@ export const Icons = {
   billing: CreditCard,
   ellipsis: MoreVertical,
   add: Plus,
-  warning: AlertTriangle,
   user: User,
   arrowRight: ArrowRight,
   help: HelpCircle,

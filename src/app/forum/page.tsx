@@ -12,6 +12,7 @@ export default async function ForumPage() {
 
   const latestPosts = await api.post.getLatest.query();
   const bestPosts = await api.post.getBest.query();
+  const hasAgreed = await api.admin.getUserStatus.query();
 
   return (
     <section className="container grid items-center gap-6 pb-8 pt-5 sm:pt-0">
@@ -28,7 +29,10 @@ export default async function ForumPage() {
                 New
               </TabsTrigger>
             </TabsList>
-            <ForumWritePrompt />
+            <ForumWritePrompt
+              user={session.user}
+              agree={hasAgreed?.hasAgreed ?? false}
+            />
           </div>
           <div className="">
             <TabsContent value="best">

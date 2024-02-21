@@ -29,8 +29,16 @@ import { UploadButton } from "./uploadthing";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Link from "next/link";
+import { type User } from "next-auth";
 
-export default function ForumWritePrompt() {
+export default function ForumWritePrompt({
+  agree,
+}: {
+  user: User;
+  agree: boolean;
+}) {
   const router = useRouter();
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -63,7 +71,7 @@ export default function ForumWritePrompt() {
         <Icons.write />
       </Button>
       <Dialog open={openDialog} onOpenChange={(open) => setOpenDialog(open)}>
-        <DialogContent className="flex flex-col justify-between sm:h-[80vh] sm:max-w-[80vw]">
+        <DialogContent className="flex flex-col justify-between sm:h-[85vh] sm:max-w-[80vw]">
           <section>
             <DialogHeader>
               <DialogTitle>Write a post</DialogTitle>
@@ -71,17 +79,49 @@ export default function ForumWritePrompt() {
                 Involved in the community by writing about a great recipe, a
                 success story or your thoughts!
               </DialogDescription>
+              <Link href={"/forum/rules"} target="_blank">
+                <Alert className="my-3 transition hover:cursor-pointer hover:bg-secondary">
+                  <Icons.warning className="size-5" />
+                  <AlertTitle>Heads up!</AlertTitle>
+                  <AlertDescription>
+                    {!agree ? (
+                      <p>
+                        You need to review and agree with our Community
+                        Guidelines before you can participate in the forum!
+                      </p>
+                    ) : (
+                      <p>
+                        Don&apos;t forget to follow our Community Guidelines!
+                      </p>
+                    )}
+                  </AlertDescription>
+                </Alert>
+              </Link>
             </DialogHeader>
-            <div className="mt-5">
+            <div className="">
               <NewPostForm
                 onChange={(obj) => setFormData(obj)}
                 initialValues={formData}
               />
             </div>
           </section>
-          <DialogFooter>
+          <DialogFooter className="flex flex-col items-center gap-1">
+            {!agree && (
+              <p>
+                You need to agree to the{" "}
+                <Link
+                  href={"/forum/rules"}
+                  className="hover:underline"
+                  target="_blank"
+                >
+                  Community Guidelines
+                </Link>{" "}
+                first.
+              </p>
+            )}
             <Button
               type="submit"
+              disabled={!agree}
               onClick={() => {
                 setOpenDialog(false);
                 if (formData == undefined || formData?.title == "") return;
@@ -160,7 +200,7 @@ function NewPostForm({
               <FormLabel>Body</FormLabel>
               <FormControl>
                 <Textarea
-                  className="h-[28vh] max-h-[28vh]"
+                  className="h-[25vh] max-h-[25vh]"
                   value={body}
                   onChange={(value) => {
                     setBody(value.target.value);

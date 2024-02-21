@@ -164,5 +164,20 @@ export const adminRouter = createTRPCRouter({
           }
         });
       }
+    }),
+
+  getUserStatus: protectedProcedure
+    .query(async ({ ctx }) => {
+      return await ctx.db.user.findFirst({
+        where: { id: ctx.session.user.id },
+        select: { hasAgreed: true }
+      })
+    }),
+  agreeRules: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      return await ctx.db.user.update({
+        where: { id: ctx.session.user.id },
+        data: { hasAgreed: true }
+      });
     })
 });
