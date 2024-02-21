@@ -1,0 +1,87 @@
+.nutri-container {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 220px;
+  height: 120px;
+}
+.nutri-container .title {
+  color: #7e7e7e;
+  font-size: 20px;
+  margin: 10px 15px;
+}
+.nutri-container .scores-container {
+  position: relative;
+  height: 72px;
+  border-radius: 20px;
+  margin: 0 5px;
+}
+.nutri-container .scores-container .scores {
+  display: flex;
+  align-content: stretch;
+  height: 100%;
+}
+.nutri-container .scores-container .scores span {
+  flex-grow: 1;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: bold;
+}
+.nutri-container .scores-container .scores .a {
+  background-color: #23823f;
+  border-radius: 20px 0 0 20px;
+}
+.nutri-container .scores-container .scores .b {
+  background-color: #86bd2b;
+}
+.nutri-container .scores-container .scores .c {
+  background-color: #facc04;
+}
+.nutri-container .scores-container .scores .d {
+  background-color: #ef8102;
+}
+.nutri-container .scores-container .scores .e {
+  background-color: #e63c07;
+  border-radius: 0 20px 20px 0;
+}
+.nutri-container .score {
+  color: white;
+  width: 46px;
+  height: 85px;
+  border: 5px solid white;
+  position: absolute;
+  top: -10px;
+  left: -5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 52px;
+  border-radius: 22px;
+}
+.nutri-container .score.a {
+  left: 0.3px;
+  background-color: #23823f;
+}
+.nutri-container .score.b {
+  background-color: #86bd2b;
+  left: 40px;
+}
+.nutri-container .score.c {
+  background-color: #facc04;
+  left: 81px;
+}
+.nutri-container .score.d {
+  background-color: #ef8102;
+  left: 123px;
+}
+.nutri-container .score.e {
+  background-color: #e63c07;
+  left: 163px;
+}
