@@ -39,6 +39,13 @@ export default function FullPostPage({
     },
   });
 
+  const deletePost = api.post.deletePost.useMutation({
+    onSuccess: () => {
+      toast("Post deleted");
+      router.push("/forum");
+    },
+  });
+
   const [comment, setComment] = useState("");
 
   return (
@@ -70,6 +77,16 @@ export default function FullPostPage({
           />
         )}
         <p>{post.body}</p>
+        {post.createdById === user?.id && (
+          <div className="mt-4 flex flex-row gap-3">
+            <Button
+              size={"icon"}
+              onClick={() => deletePost.mutate({ id: post.id })}
+            >
+              <Icons.delete />
+            </Button>
+          </div>
+        )}
       </div>
       <div className="flex w-full flex-col gap-3">
         {user != null && (
