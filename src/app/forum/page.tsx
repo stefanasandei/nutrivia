@@ -71,7 +71,10 @@ function PostPreview({ post }: { post: { createdBy: User } & Post }) {
 
       <CardFooter className="flex w-full flex-col items-start justify-between p-3 sm:flex-row sm:items-end">
         <div className="flex flex-row gap-3">
-          <Link className={buttonVariants({ variant: "secondary" })} href="">
+          <Link
+            className={buttonVariants({ variant: "secondary" })}
+            href={`/forum/${post.id}`}
+          >
             Read more
           </Link>
           <Button variant={"secondary"} size={"icon"}>

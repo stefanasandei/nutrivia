@@ -21,7 +21,7 @@ export default function CommentPreview({
         alt="profile picture"
       />
       <div className="flex flex-col gap-1">
-        <p className="font-thin text-zinc-300">
+        <p className="font-thin text-secondary-foreground">
           <span>{comment.createdBy.name}</span>
           {" • "}
           {dayjs(comment.createdAt).fromNow()}
