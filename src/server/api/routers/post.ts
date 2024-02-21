@@ -5,6 +5,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { removeItem } from "@/lib/array";
 
 export const postRouter = createTRPCRouter({
   getLatest: publicProcedure.query(({ ctx }) => {
@@ -15,7 +16,7 @@ export const postRouter = createTRPCRouter({
   }),
   getBest: publicProcedure.query(({ ctx }) => {
     return ctx.db.post.findMany({
-      orderBy: { comments: { _count: "desc" } },
+      orderBy: { likedBy: "desc" },
       include: { createdBy: true }
     });
   }),
@@ -67,6 +68,28 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.comment.delete({
         where: { id: input.id }
+      })
+    }),
+
+  likePost: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.post.findFirst({
+        where: { id: input.id },
+        select: { likedBy: true }
+      });
+      if (!post?.likedBy)
+        return null;
+
+      if (!post.likedBy.includes(ctx.session.user.id))
+        return await ctx.db.post.update({
+          where: { id: input.id },
+          data: { likedBy: { push: ctx.session.user.id } }
+        });
+
+      return await ctx.db.post.update({
+        where: { id: input.id },
+        data: { likedBy: removeItem(post.likedBy, ctx.session.user.id) }
       })
     })
 });

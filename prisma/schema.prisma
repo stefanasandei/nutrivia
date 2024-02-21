@@ -52,6 +52,7 @@ model Post {
     updatedAt   DateTime  @updatedAt
     createdBy   User      @relation(fields: [createdById], references: [id])
     createdById String
+    likedBy     String[]  @default([])
     comments    Comment[]
 }
 
