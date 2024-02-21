@@ -57,18 +57,54 @@ export const adminRouter = createTRPCRouter({
     }),
 
   addRawFood: protectedProcedure
-    .input(z.object({ id: z.string().cuid(), name: z.string() }))
+    .input(z.object({
+      id: z.string().cuid(), name: z.string(),
+      calories: z.number(),
+      lipids: z.number(),
+      cholesterol: z.number(),
+      sodium: z.number(),
+      potassium: z.number(),
+      carbohydrate: z.number(),
+      proteins: z.number(),
+      vitaminC: z.number(),
+      calcium: z.number(),
+      iron: z.number(),
+      vitaminD: z.number(),
+      vitaminB6: z.number(),
+      vitaminB12: z.number(),
+      magnesium: z.number(),
+    }))
     .mutation(async ({ ctx, input }) => {
       if (input.id != env.ADMIN_ID) return null;
 
       return await ctx.db.rawFoodProduct.create({
-        data: { name: input.name },
+        data: {
+          name: input.name,
+          calories: input.calories,
+          lipids: input.lipids,
+          cholesterol: input.cholesterol,
+          sodium: input.sodium,
+          potassium: input.potassium,
+          carbohydrate: input.carbohydrate,
+          proteins: input.proteins,
+          vitaminC: input.vitaminC,
+          calcium: input.calcium,
+          iron: input.iron,
+          vitaminD: input.vitaminD,
+          vitaminB6: input.vitaminB6,
+          vitaminB12: input.vitaminB12,
+          magnesium: input.magnesium,
+        },
       });
     }),
   addFood: protectedProcedure
     .input(z.object({
       id: z.string().cuid(), name: z.string(), brand: z.string(),
-      weight: z.number(), price: z.number(), image: z.string(),
+      weight: z.number(), price: z.number(),
+      image: z.string(),
+      originCountry: z.string(),
+      nutriScore: z.string(),
+      ean: z.string(),
       ingredients: z.array(z.object({ id: z.number() }))
     }))
     .mutation(async ({ ctx, input }) => {
@@ -76,7 +112,11 @@ export const adminRouter = createTRPCRouter({
 
       return await ctx.db.foodProduct.create({
         data: {
-          name: input.name, image: input.image, brand: input.brand, weightG: input.weight,
+          name: input.name, image: input.image,
+          brand: input.brand, weightG: input.weight,
+          originCountry: input.originCountry,
+          nutriScore: input.nutriScore,
+          ean: input.ean,
           priceRON: input.price, ingredients: { connect: input.ingredients }
         },
       });

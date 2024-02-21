@@ -27,6 +27,9 @@ import { UploadButton } from "../uploadthing";
 const formSchema = z.object({
   name: z.string(),
   brand: z.string(),
+  originCountry: z.string(),
+  nutriScore: z.string(),
+  ean: z.string(),
   weight: z.coerce.number(),
   price: z.coerce.number(),
 });
@@ -55,6 +58,9 @@ export default function AddFoodProductForm({
     defaultValues: {
       name: "",
       brand: "",
+      originCountry: "",
+      nutriScore: "",
+      ean: "",
       weight: 0,
       price: 0,
     },
@@ -67,6 +73,9 @@ export default function AddFoodProductForm({
       brand: values.brand,
       weight: values.weight,
       price: values.price,
+      originCountry: values.originCountry,
+      nutriScore: values.nutriScore,
+      ean: values.ean,
       image: imageURL,
       ingredients: ingredients.map((value) => {
         return { id: value.id };
@@ -79,7 +88,10 @@ export default function AddFoodProductForm({
   return (
     <Form {...form}>
       <h1 className="border-t-2 py-2 text-3xl font-bold">Add a food product</h1>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className=" w-full space-y-4"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -94,57 +106,107 @@ export default function AddFoodProductForm({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="brand"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Brand</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>The brand of the food product.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="weight"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Weight (grams)</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" />
-              </FormControl>
-              <FormDescription>
-                The weight of the food product in grams.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price (RON)</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" />
-              </FormControl>
-              <FormDescription>
-                The price of the food product in RON.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="brand"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Brand</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormDescription>
+                  The brand of the food product.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="weight"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Weight (grams)</FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" />
+                </FormControl>
+                <FormDescription>
+                  The weight of the food product in grams.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price (RON)</FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" />
+                </FormControl>
+                <FormDescription>
+                  The price of the food product in RON.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="originCountry"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Country of origin</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormDescription>
+                  The country where the product was grown or produced in.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="nutriScore"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nutri Score</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormDescription>
+                  The Nutri-Score of the food product.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ean"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>EAN Code</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormDescription>The EAN of the food product.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormItem>
           <FormLabel>Image</FormLabel>
           <FormControl>
             <UploadButton
-              className="ut-button:bg-primary ut-button:text-primary-foreground ut-button:hover:bg-primary/90 ut-button:transition flex flex-row items-center justify-start gap-3"
+              className="flex flex-row items-center justify-start gap-3 ut-button:bg-primary ut-button:text-primary-foreground ut-button:transition ut-button:hover:bg-primary/90"
               endpoint="imageUploader"
               onClientUploadComplete={(res) => {
                 setImageURL(res[0]?.url ?? "");

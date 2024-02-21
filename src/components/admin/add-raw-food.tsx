@@ -20,11 +20,25 @@ import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-});
+export const rawFoodProduct = {
+  name: z.string(),
+  calories: z.number(),
+  lipids: z.number(),
+  cholesterol: z.number(),
+  sodium: z.number(),
+  potassium: z.number(),
+  carbohydrate: z.number(),
+  proteins: z.number(),
+  vitaminC: z.number(),
+  calcium: z.number(),
+  iron: z.number(),
+  vitaminD: z.number(),
+  vitaminB6: z.number(),
+  vitaminB12: z.number(),
+  magnesium: z.number(),
+};
+
+const rawFoodProductSchema = z.object(rawFoodProduct);
 
 export default function AddRawFoodProductForm({ user }: { user: User }) {
   const router = useRouter();
@@ -36,15 +50,46 @@ export default function AddRawFoodProductForm({ user }: { user: User }) {
     },
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof rawFoodProductSchema>>({
+    resolver: zodResolver(rawFoodProductSchema),
     defaultValues: {
       name: "",
+      calories: 0,
+      lipids: 0,
+      cholesterol: 0,
+      sodium: 0,
+      potassium: 0,
+      carbohydrate: 0,
+      proteins: 0,
+      vitaminC: 0,
+      calcium: 0,
+      iron: 0,
+      vitaminD: 0,
+      vitaminB6: 0,
+      vitaminB12: 0,
+      magnesium: 0,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    addRawFood.mutate({ id: user.id, name: values.name });
+  const stuff = [
+    { name: "calories", measure: "kcal" },
+    { name: "lipids", measure: "g" },
+    { name: "cholesterol", measure: "mg" },
+    { name: "sodium", measure: "mg" },
+    { name: "potassium", measure: "mg" },
+    { name: "carbohydrate", measure: "g" },
+    { name: "proteins", measure: "g" },
+    { name: "vitaminC", measure: "mg" },
+    { name: "calcium", measure: "mg" },
+    { name: "iron", measure: "mg" },
+    { name: "vitaminD", measure: "IU" },
+    { name: "vitaminB6", measure: "mg" },
+    { name: "vitaminB12", measure: "µg" },
+    { name: "magnesium", measure: "g" },
+  ] as const;
+
+  function onSubmit(values: z.infer<typeof rawFoodProductSchema>) {
+    addRawFood.mutate({ id: user.id, ...values });
     form.reset();
   }
 
@@ -70,6 +115,29 @@ export default function AddRawFoodProductForm({ user }: { user: User }) {
             </FormItem>
           )}
         />
+        <div className="grid grid-flow-row gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {stuff.map((thing) => (
+            <FormField
+              key={thing.name}
+              control={form.control}
+              name={thing.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {thing.name} ({thing.measure})
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} type="number" />
+                  </FormControl>
+                  <FormDescription>
+                    The quantity of {thing.name}, expressed in {thing.measure}.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
         <div>
           <p className="mb-2">
             You are submitting a raw food product as an admin. This will be

@@ -1,6 +1,6 @@
 "use client";
 
-import { type FoodProduct } from "@prisma/client";
+import { type RawFoodProduct, type FoodProduct } from "@prisma/client";
 import { type User } from "next-auth";
 import {
   Table,
@@ -33,11 +33,7 @@ export default function FoodList({
 }: {
   user: User;
   food: ({
-    ingredients: {
-      id: number;
-      name: string;
-      image: string | null;
-    }[];
+    ingredients: RawFoodProduct[];
   } & FoodProduct)[];
 }) {
   const router = useRouter();

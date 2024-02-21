@@ -42,6 +42,25 @@ export default function RawFoodList({
     },
   });
 
+  const stuff = (rawFood: RawFoodProduct) => {
+    return [
+      { name: "calories", measure: "kcal", value: rawFood.calories },
+      { name: "lipids", measure: "g", value: rawFood.lipids },
+      { name: "cholesterol", measure: "mg", value: rawFood.cholesterol },
+      { name: "sodium", measure: "mg", value: rawFood.sodium },
+      { name: "potassium", measure: "mg", value: rawFood.potassium },
+      { name: "carbohydrate", measure: "g", value: rawFood.carbohydrate },
+      { name: "proteins", measure: "g", value: rawFood.proteins },
+      { name: "vitaminC", measure: "mg", value: rawFood.vitaminC },
+      { name: "calcium", measure: "mg", value: rawFood.calcium },
+      { name: "iron", measure: "mg", value: rawFood.iron },
+      { name: "vitaminD", measure: "IU", value: rawFood.vitaminD },
+      { name: "vitaminB6", measure: "mg", value: rawFood.vitaminB6 },
+      { name: "vitaminB12", measure: "µg", value: rawFood.vitaminB12 },
+      { name: "magnesium", measure: "g", value: rawFood.magnesium },
+    ] as const;
+  };
+
   return (
     <div>
       <h1 className="border-t-2 py-2 text-3xl font-bold">Raw food products</h1>
@@ -51,7 +70,7 @@ export default function RawFoodList({
           <TableRow>
             <TableHead>Internal ID</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Image</TableHead>
+            <TableHead>Nutrition Values</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -60,7 +79,43 @@ export default function RawFoodList({
             <TableRow key={food.id}>
               <TableCell>{food.id}</TableCell>
               <TableCell>{food.name}</TableCell>
-              <TableCell>?</TableCell>
+              <TableCell>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">View</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        Nutrition values for {food.name}
+                      </DialogTitle>
+                      <DialogDescription>
+                        <Table>
+                          <TableCaption>
+                            A list of your recent invoices.
+                          </TableCaption>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Substance</TableHead>
+                              <TableHead>Median quantity</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {stuff(food).map((subst) => (
+                              <TableRow key={subst.name}>
+                                <TableCell>{subst.name}</TableCell>
+                                <TableCell>
+                                  {subst.value} {subst.measure}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </TableCell>
               <TableCell className="flex flex-row gap-3">
                 <Dialog>
                   <DialogTrigger

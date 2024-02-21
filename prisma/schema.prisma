@@ -24,24 +24,38 @@ model User {
 model RawFoodProduct {
     id            Int           @id @default(autoincrement())
     name          String
-    image         String?
+    calories      Int // kcal
+    lipids        Int // g
+    cholesterol   Int // mg
+    sodium        Int // mg
+    potassium     Int // mg
+    carbohydrate  Int // g
+    proteins      Int // g
+    vitaminC      Int // mg
+    calcium       Int // mg
+    iron          Int // mg
+    vitaminD      Int // iu
+    vitaminB6     Int // mg
+    vitaminB12    Int // µg
+    magnesium     Int // mg
     allergicUsers User[]
     foods         FoodProduct[]
 }
 
 model FoodProduct {
-    id          Int              @id @default(autoincrement())
-    name        String
-    brand       String?
-    weightG     Int
-    priceRON    Int
-    image       String?
-    likes       Int              @default(0)
-    dislikes    Int              @default(0)
-    likedBy     String[]         @default([])
-    dislikedBy  String[]         @default([])
-    ingredients RawFoodProduct[]
-    comments    Comment[]
+    id            Int              @id @default(autoincrement())
+    name          String
+    brand         String
+    originCountry String
+    nutriScore    String
+    ean           String
+    weightG       Int
+    priceRON      Int
+    image         String?
+    likedBy       String[]         @default([])
+    dislikedBy    String[]         @default([])
+    ingredients   RawFoodProduct[]
+    comments      Comment[]
 }
 
 model Post {
