@@ -8,6 +8,7 @@ export const adminRouter = createTRPCRouter({
   getFoodProducts: protectedProcedure.query(async ({ ctx }) => {
     const products = await ctx.db.foodProduct.findMany({
       include: { ingredients: true, comments: true },
+      where: { isHidden: false }
     });
 
     // *the algorithm*
@@ -99,7 +100,8 @@ export const adminRouter = createTRPCRouter({
     }),
   addFood: protectedProcedure
     .input(z.object({
-      id: z.string().cuid(), name: z.string(), brand: z.string(),
+      isHidden: z.boolean().optional().default(false),
+      name: z.string(), brand: z.string(),
       weight: z.number(), price: z.number(),
       image: z.string(),
       originCountry: z.string(),
@@ -108,10 +110,13 @@ export const adminRouter = createTRPCRouter({
       ingredients: z.array(z.object({ id: z.number() }))
     }))
     .mutation(async ({ ctx, input }) => {
-      if (input.id != env.ADMIN_ID) return null;
+      let isHidden = input.isHidden;
+      if (ctx.session.user.id != env.ADMIN_ID)
+        isHidden = true;
 
       return await ctx.db.foodProduct.create({
         data: {
+          isHidden: isHidden,
           name: input.name, image: input.image,
           brand: input.brand, weightG: input.weight,
           originCountry: input.originCountry,
@@ -219,5 +224,104 @@ export const adminRouter = createTRPCRouter({
         where: { id: ctx.session.user.id },
         data: { hasAgreed: true }
       });
-    })
+    }),
+
+  createFoodSubmission: protectedProcedure
+    .input(z.object({
+      name: z.string(),
+      brand: z.string(),
+      weight: z.number(),
+      price: z.number(),
+      image: z.string(),
+      originCountry: z.string(),
+      nutriScore: z.string(),
+      ean: z.string(),
+      ingredients: z.array(z.object({ id: z.number() }))
+    })).mutation(async ({ ctx, input }) => {
+      const product = await ctx.db.foodProduct.create({
+        data: {
+          name: input.name,
+          image: input.image,
+          brand: input.brand,
+          weightG: input.weight,
+          originCountry: input.originCountry,
+          nutriScore: input.nutriScore,
+          ean: input.ean,
+          priceRON: input.price, ingredients: { connect: input.ingredients },
+          isHidden: true
+        }
+      });
+
+      return await ctx.db.foodSubmission.create({
+        data: {
+          createdById: ctx.session.user.id,
+          foodProductId: product.id
+        }
+      });
+    }),
+  getFoodSubmissions: protectedProcedure
+    .query(async ({ ctx }) => {
+      return await ctx.db.foodSubmission.findMany({
+        where: { createdById: ctx.session.user.id },
+        include: { food: true }
+      })
+    }),
+  getFoodSubmission: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.foodSubmission.findFirst({
+        where: { createdById: ctx.session.user.id, id: input.id },
+        include: { food: { include: { ingredients: true } } }
+      });
+    }),
+  editFoodSubmission: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string(),
+      brand: z.string(),
+      weight: z.number(),
+      price: z.number(),
+      image: z.string(),
+      originCountry: z.string(),
+      nutriScore: z.string(),
+      ean: z.string(),
+      ingredients: z.array(z.object({ id: z.number() }))
+    })).mutation(async ({ ctx, input }) => {
+      return await ctx.db.foodProduct.update({
+        where: { id: input.id },
+        data: {
+          name: input.name,
+          image: input.image,
+          brand: input.brand,
+          weightG: input.weight,
+          originCountry: input.originCountry,
+          nutriScore: input.nutriScore,
+          ean: input.ean,
+          priceRON: input.price, ingredients: { connect: input.ingredients },
+          isHidden: true
+        }
+      });
+    }),
+  approveFoodSubmission: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.foodProduct.update({
+        where: { id: input.id },
+        data: { isHidden: false }
+      });
+    }),
+  deleteFoodSubmission: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const submission = await ctx.db.foodSubmission.delete({
+        where: { id: input.id },
+        include: { food: true }
+      });
+
+      await ctx.db.foodProduct.delete({
+        where: { id: submission.food.id }
+      })
+
+      return submission;
+    }),
 });

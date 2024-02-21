@@ -1,0 +1,33 @@
+import { api } from "@/trpc/server";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+export default async function SubmissionViewPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const deleteSubmission = await api.admin.deleteFoodSubmission.mutate({
+    id: parseInt(params.id),
+  });
+  if (!deleteSubmission) notFound();
+
+  return (
+    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
+      <div className="flex max-w-[980px] flex-col items-start gap-2">
+        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
+          Submission deleted!
+        </h1>
+      </div>
+      <div className="flex gap-4">
+        <p>
+          Return to the{" "}
+          <Link href={"/"} className="hover:underline">
+            home page
+          </Link>
+          .
+        </p>
+      </div>
+    </section>
+  );
+}

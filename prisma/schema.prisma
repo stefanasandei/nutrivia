@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-    id            String           @id @default(cuid())
-    name          String?          @unique
-    email         String?          @unique
-    emailVerified DateTime?
-    image         String?
-    hasAgreed     Boolean          @default(false)
-    allergies     RawFoodProduct[]
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
-    Comment       Comment[]
+    id             String           @id @default(cuid())
+    name           String?          @unique
+    email          String?          @unique
+    emailVerified  DateTime?
+    image          String?
+    hasAgreed      Boolean          @default(false)
+    allergies      RawFoodProduct[]
+    accounts       Account[]
+    sessions       Session[]
+    posts          Post[]
+    Comment        Comment[]
+    FoodSubmission FoodSubmission[]
 }
 
 model RawFoodProduct {
@@ -56,6 +57,18 @@ model FoodProduct {
     dislikedBy    String[]         @default([])
     ingredients   RawFoodProduct[]
     comments      Comment[]
+    isHidden      Boolean          @default(false)
+    submission    FoodSubmission?
+}
+
+model FoodSubmission {
+    id            Int         @id @default(autoincrement())
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    createdBy     User        @relation(fields: [createdById], references: [id])
+    createdById   String
+    food          FoodProduct @relation(fields: [foodProductId], references: [id], onDelete: Cascade)
+    foodProductId Int         @unique
 }
 
 model Post {

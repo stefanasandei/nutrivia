@@ -35,11 +35,12 @@ const formSchema = z.object({
 });
 
 export default function AddFoodProductForm({
-  user,
   rawFood,
+  isHidden,
 }: {
-  user: User;
+  user?: User;
   rawFood: RawFoodProduct[];
+  isHidden?: boolean;
 }) {
   const router = useRouter();
 
@@ -50,6 +51,13 @@ export default function AddFoodProductForm({
     onSuccess: () => {
       toast("Food record added!");
       router.refresh();
+    },
+  });
+
+  const addFoodSubmission = api.admin.createFoodSubmission.useMutation({
+    onSuccess: () => {
+      toast("Food submission sent!");
+      router.push("/");
     },
   });
 
@@ -67,8 +75,7 @@ export default function AddFoodProductForm({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    addFood.mutate({
-      id: user.id,
+    const body = {
       name: values.name,
       brand: values.brand,
       weight: values.weight,
@@ -80,7 +87,14 @@ export default function AddFoodProductForm({
       ingredients: ingredients.map((value) => {
         return { id: value.id };
       }),
-    });
+    };
+
+    if (!isHidden) {
+      addFood.mutate(body);
+    } else {
+      addFoodSubmission.mutate(body);
+    }
+
     form.reset();
     setIngredients([]);
   }

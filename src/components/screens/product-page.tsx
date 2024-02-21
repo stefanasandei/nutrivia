@@ -116,7 +116,7 @@ export default function FoodProductPage({
   const [comment, setComment] = useState("");
 
   return (
-    <section className="container grid items-center gap-6 pb-8 pt-3">
+    <section className="container grid items-center gap-6 pt-3">
       <div className="flex w-full flex-col items-center justify-between gap-2 sm:flex-row">
         <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
           {food.name}
