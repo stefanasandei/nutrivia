@@ -260,11 +260,17 @@ export const adminRouter = createTRPCRouter({
       });
     }),
   getFoodSubmissions: protectedProcedure
-    .query(async ({ ctx }) => {
-      return await ctx.db.foodSubmission.findMany({
-        where: { createdById: ctx.session.user.id },
-        include: { food: true }
-      })
+    .input(z.object({ approved: z.boolean().default(false) }))
+    .query(async ({ ctx, input }) => {
+      if (ctx.session.user.id != env.ADMIN_ID) {
+        return await ctx.db.foodSubmission.findMany({
+          where: { createdById: ctx.session.user.id },
+          include: { food: true }
+        });
+      } else return await ctx.db.foodSubmission.findMany({
+        include: { food: true },
+        where: { food: { isHidden: !input.approved } }
+      });
     }),
   getFoodSubmission: protectedProcedure
     .input(z.object({ id: z.number() }))

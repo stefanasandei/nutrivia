@@ -2,28 +2,33 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { MailSearch, PieChart, Scale, Utensils } from "lucide-react";
+
+export const pages = [
+  {
+    icon: PieChart,
+    name: "Overview",
+    href: "/admin",
+  },
+  {
+    icon: Utensils,
+    name: "Food Products",
+    href: "/admin/foods",
+  },
+  {
+    icon: Scale,
+    name: "Moderation",
+    href: "/admin/moderation",
+  },
+  {
+    icon: MailSearch,
+    name: "Submissions",
+    href: "/admin/submissions",
+  },
+];
 
 export default function AdminNavPanel() {
   const path = usePathname();
-
-  const pages = [
-    {
-      name: "Overview",
-      href: "/admin",
-    },
-    {
-      name: "Food Products",
-      href: "/admin/foods",
-    },
-    {
-      name: "Moderation",
-      href: "/admin/moderation",
-    },
-    {
-      name: "Submissions",
-      href: "/admin/submissions",
-    },
-  ];
 
   return (
     <div className="my-3 ml-5 flex w-full flex-1 flex-col">
