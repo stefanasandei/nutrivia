@@ -38,6 +38,8 @@ import {
 export type Icon = unknown;
 
 export const Icons = {
+  approve: Check,
+  deny: X,
   warning: ShieldAlert,
   options: MoreHorizontal,
   write: PenLine,

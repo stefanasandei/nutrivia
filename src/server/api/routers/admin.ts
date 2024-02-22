@@ -316,6 +316,14 @@ export const adminRouter = createTRPCRouter({
         data: { isHidden: false }
       });
     }),
+  denyFoodSubmission: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.foodProduct.update({
+        where: { id: input.id },
+        data: { isHidden: true }
+      });
+    }),
   deleteFoodSubmission: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
