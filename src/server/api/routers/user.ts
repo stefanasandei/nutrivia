@@ -26,4 +26,22 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  getBaskets: protectedProcedure
+    .query(async ({ ctx }) => {
+      return await ctx.db.basket.findMany({
+        where: { createdById: ctx.session.user.id },
+        include: { foods: true }
+      });
+    }),
+  createBasket: protectedProcedure
+    .input(z.object({ food: z.array(z.number()) }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.basket.create({
+        data: {
+          createdById: ctx.session.user.id,
+          foods: { connect: input.food.map((id) => { return { id: id } }) }
+        }
+      });
+    })
 });

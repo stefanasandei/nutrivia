@@ -20,6 +20,7 @@ model User {
     posts          Post[]
     Comment        Comment[]
     FoodSubmission FoodSubmission[]
+    baskets        Basket[]
 }
 
 model RawFoodProduct {
@@ -59,6 +60,7 @@ model FoodProduct {
     comments      Comment[]
     isHidden      Boolean          @default(false)
     submission    FoodSubmission?
+    baskets       Basket[]
 }
 
 model FoodSubmission {
@@ -69,6 +71,15 @@ model FoodSubmission {
     createdById   String
     food          FoodProduct @relation(fields: [foodProductId], references: [id], onDelete: Cascade)
     foodProductId Int         @unique
+}
+
+model Basket {
+    id          Int           @id @default(autoincrement())
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    createdBy   User          @relation(fields: [createdById], references: [id])
+    createdById String
+    foods       FoodProduct[]
 }
 
 model Post {
