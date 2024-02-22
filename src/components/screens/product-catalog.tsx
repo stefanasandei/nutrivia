@@ -1,6 +1,6 @@
 "use client";
 
-import { type FoodProduct } from "@prisma/client";
+import { type RawFoodProduct, type FoodProduct } from "@prisma/client";
 import { type User } from "next-auth";
 import FoodCard from "@/components/food-card";
 import { Input } from "@/components/ui/input";
@@ -14,11 +14,7 @@ export default function ProductCatalog({
 }: {
   user?: User;
   food: ({
-    ingredients: {
-      id: number;
-      name: string;
-      image: string | null;
-    }[];
+    ingredients: RawFoodProduct[];
   } & FoodProduct)[];
 }) {
   const [searchQuery, setSearchQuery] = useState("");

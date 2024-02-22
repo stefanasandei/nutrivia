@@ -8,18 +8,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import { type FoodProduct } from "@prisma/client";
+import { type RawFoodProduct, type FoodProduct } from "@prisma/client";
 import Link from "next/link";
 
 export default function FoodCard({
   food,
 }: {
   food: {
-    ingredients: {
-      id: number;
-      name: string;
-      image: string | null;
-    }[];
+    ingredients: RawFoodProduct[];
   } & FoodProduct;
   userId: string | null;
 }) {
