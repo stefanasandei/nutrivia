@@ -21,7 +21,11 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ChipsInput, { type ChipOption } from "../chips-input";
 import { useState } from "react";
-import { type RawFoodProduct } from "@prisma/client";
+import {
+  type FoodProduct,
+  type FoodSubmission,
+  type RawFoodProduct,
+} from "@prisma/client";
 import { UploadButton } from "../uploadthing";
 
 const formSchema = z.object({
@@ -34,14 +38,14 @@ const formSchema = z.object({
   price: z.coerce.number(),
 });
 
-export default function AddFoodProductForm({
+export default function EditFoodSubmissionForm({
+  submission,
   rawFood,
-  isHidden,
   isAdmin,
 }: {
+  submission: { food: FoodProduct } & FoodSubmission;
   user?: User;
   rawFood: RawFoodProduct[];
-  isHidden?: boolean;
   isAdmin?: boolean;
 }) {
   const router = useRouter();
@@ -49,35 +53,26 @@ export default function AddFoodProductForm({
   const [ingredients, setIngredients] = useState<ChipOption[]>([]);
   const [imageURL, setImageURL] = useState("");
 
-  const addFood = api.admin.addFood.useMutation({
+  const editFoodSubmission = api.admin.editFoodSubmission.useMutation({
     onSuccess: () => {
-      toast("Food record added!");
+      toast("Food submission updated!");
       router.refresh();
-    },
-  });
-
-  const addFoodSubmission = api.admin.createFoodSubmission.useMutation({
-    onSuccess: () => {
-      toast("Food submission sent!");
-      router.push("/");
+      router.push("/contribute");
     },
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      brand: "",
-      originCountry: "",
-      nutriScore: "",
-      ean: "",
-      weight: 0,
-      price: 0,
+      weight: submission.food.weightG,
+      price: submission.food.priceRON,
+      ...submission.food,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const body = {
+    editFoodSubmission.mutate({
+      id: submission.food.id,
       name: values.name,
       brand: values.brand,
       weight: values.weight,
@@ -89,13 +84,7 @@ export default function AddFoodProductForm({
       ingredients: ingredients.map((value) => {
         return { id: value.id };
       }),
-    };
-
-    if (!isHidden) {
-      addFood.mutate(body);
-    } else {
-      addFoodSubmission.mutate(body);
-    }
+    });
 
     form.reset();
     setIngredients([]);
@@ -103,7 +92,7 @@ export default function AddFoodProductForm({
 
   return (
     <Form {...form}>
-      <h1 className="border-t-2 py-2 text-3xl font-bold">Add a food product</h1>
+      <h1 className="py-2 text-3xl font-bold">Edit food submission</h1>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className=" w-full space-y-4"
@@ -268,7 +257,7 @@ export default function AddFoodProductForm({
               directly published.
             </p>
           )}
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Update</Button>
         </div>
       </form>
     </Form>
