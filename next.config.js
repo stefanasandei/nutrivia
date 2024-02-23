@@ -4,6 +4,12 @@
  */
 await import("./src/env.js");
 
+import pwa from "next-pwa";
+
+const withPWA = pwa({
+  dest: "public",
+});
+
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
@@ -11,4 +17,5 @@ const config = {
   },
 };
 
-export default config;
+// @ts-expect-error it works
+export default withPWA(config);

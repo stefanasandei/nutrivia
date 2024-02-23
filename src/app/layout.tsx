@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import { type Metadata } from "next";
+import { type Viewport, type Metadata } from "next";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/lib/fonts";
@@ -22,10 +22,16 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: "/icons/favicon.ico",
+    shortcut: "/icons/favicon-16x16.png",
+    apple: "/icons/apple-touch-icon.png",
   },
+  manifest: "manifest.json",
+  applicationName: siteConfig.name,
+};
+
+export const viewport: Viewport = {
+  themeColor: "#6652ff",
 };
 
 interface RootLayoutProps {
