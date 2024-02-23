@@ -1,5 +1,6 @@
 import ForumWritePrompt from "@/components/forum-write-prompt";
 import { Icons } from "@/components/icons";
+import Notifications from "@/components/screens/notifications";
 import PostPreview from "@/components/screens/post-preview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getServerAuthSession } from "@/server/auth";
@@ -17,6 +18,7 @@ export default async function ForumPage() {
   return (
     <section className="container grid items-center gap-6 pb-8 pt-5 sm:pt-0">
       <div>
+        <Notifications />
         <Tabs defaultValue="new">
           <div className="flex w-full flex-row items-center justify-between rounded-md bg-secondary px-3 py-2 sm:my-3">
             <TabsList>
