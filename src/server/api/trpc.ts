@@ -13,6 +13,7 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
+import { getFirebaseAdmin } from "@/lib/firebase-admin";
 
 /**
  * 1. CONTEXT
@@ -32,6 +33,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   return {
     db,
     session,
+    firebaseApp: getFirebaseAdmin(),
     ...opts,
   };
 };

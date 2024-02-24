@@ -1,12 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { getMessaging, getToken } from 'firebase/messaging';
 import firebaseApp from '@/lib/firebase';
 import { env } from '@/env';
+import { api } from '@/trpc/react';
 
 const useFcmToken = () => {
     const [token, setToken] = useState('');
     // const [notificationPermissionStatus, setNotificationPermissionStatus] =
     //     useState('');
+
+    const subscribeToTopic = api.user.subscribeToTopic.useMutation();
 
     useEffect(() => {
         const retrieveToken = async () => {
@@ -26,6 +30,7 @@ const useFcmToken = () => {
                         });
                         if (currentToken) {
                             setToken(currentToken);
+                            subscribeToTopic.mutate({ token: currentToken });
                         } else {
                             console.log(
                                 'No registration token available. Request permission to generate one.'

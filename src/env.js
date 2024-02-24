@@ -25,6 +25,8 @@ export const env = createEnv({
     UPLOADTHING_SECRET: z.string(),
     UPLOADTHING_APP_ID: z.string(),
     ADMIN_ID: z.string(),
+    FIREBASE_PRIVATE_KEY: z.string(),
+    FIREBASE_PRIVATE_EMAIL: z.string(),
   },
 
   client: {
@@ -44,6 +46,8 @@ export const env = createEnv({
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
     UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
     ADMIN_ID: process.env.ADMIN_ID,
+    FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+    FIREBASE_PRIVATE_EMAIL: process.env.FIREBASE_PRIVATE_EMAIL,
 
     NEXT_PUBLIC_VAPID_KEY: process.env.NEXT_PUBLIC_VAPID_KEY,
     NEXT_PUBLIC_FIREBASE_KEY: process.env.NEXT_PUBLIC_FIREBASE_KEY,

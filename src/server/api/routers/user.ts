@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { getMessaging } from "firebase-admin/messaging";
 
 export const userRouter = createTRPCRouter({
   update: protectedProcedure
@@ -42,6 +43,29 @@ export const userRouter = createTRPCRouter({
           createdById: ctx.session.user.id,
           foods: { connect: input.food.map((id) => { return { id: id } }) }
         }
+      });
+    }),
+
+  subscribeToTopic: protectedProcedure
+    .input(z.object({ token: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const registrationTokens = [
+        input.token
+      ];
+
+      const topic = `topic_${ctx.session.user.id}`;
+
+      return await getMessaging(ctx.firebaseApp).subscribeToTopic(registrationTokens, topic);
+    }),
+  sendNotification: protectedProcedure
+    .input(z.object({ title: z.string(), body: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await getMessaging(ctx.firebaseApp).send({
+        notification: {
+          title: input.title,
+          body: input.body
+        },
+        topic: `topic_${ctx.session.user.id}`
       });
     })
 });

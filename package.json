@@ -36,6 +36,7 @@
     "dayjs": "^1.11.10",
     "embla-carousel-react": "8.0.0-rc22",
     "firebase": "^10.8.0",
+    "firebase-admin": "^12.0.0",
     "lucide-react": "^0.331.0",
     "minisearch": "^6.3.0",
     "next": "^14.0.4",
