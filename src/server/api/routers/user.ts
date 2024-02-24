@@ -58,14 +58,14 @@ export const userRouter = createTRPCRouter({
       return await getMessaging(ctx.firebaseApp).subscribeToTopic(registrationTokens, topic);
     }),
   sendNotification: protectedProcedure
-    .input(z.object({ title: z.string(), body: z.string() }))
+    .input(z.object({ userId: z.string().optional(), title: z.string(), body: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return await getMessaging(ctx.firebaseApp).send({
         notification: {
           title: input.title,
           body: input.body
         },
-        topic: `topic_${ctx.session.user.id}`
+        topic: `topic_${!input.userId ? ctx.session.user.id : input.userId}`
       });
     })
 });
