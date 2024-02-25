@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 
 // this api endpoint will be hit by a cron job
 // randomly selects 10% of users and sends them a notification
-export async function POST(_request: Request) {
+export async function GET(_request: Request) {
     const usersCount = await db.user.count();
     const skip = Math.floor(Math.random() * usersCount);
     const take = Math.ceil(0.1 * usersCount);

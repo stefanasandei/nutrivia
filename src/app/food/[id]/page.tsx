@@ -8,10 +8,13 @@ export default async function ProductPage({
 }: {
   params: { id: string };
 }) {
+  const id = parseInt(params.id);
+  if (Number.isNaN(id)) notFound();
+
   const session = await getServerAuthSession();
 
   const food = await api.admin.findFoodProduct.query({
-    id: parseInt(params.id),
+    id: id,
   });
 
   if (food == null) notFound();
