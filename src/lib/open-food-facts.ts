@@ -13,11 +13,14 @@ const OpenFoodProductValidator = z.object({
     product: z.object({
         allergens_from_ingredients: z.string(),
         allergens_hierarchy: z.array(z.string()),
+        ingredients_hierarchy: z.array(z.string()),
+
         brands: z.string(),
         product_name: z.string(),
         image_front_url: z.string(),
-        ingredients_hierarchy: z.array(z.string()),
         nutriscore_grade: z.string(),
+
+        product_quantity: z.string().default("0"),
     }),
     status_verbose: z.string()
 });

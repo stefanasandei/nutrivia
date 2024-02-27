@@ -44,6 +44,21 @@ model RawFoodProduct {
     foods         FoodProduct[]
 }
 
+model FoodNutriments {
+    id            Int         @id @default(autoincrement())
+    food          FoodProduct @relation(fields: [foodProductId], references: [id])
+    foodProductId Int         @unique
+
+    carbohydrates Float
+    energy        Float
+    fat           Float
+    proteins      Float
+    salt          Float
+    saturatedFat  Float
+    sodium        Float
+    sugars        Float
+}
+
 model FoodProduct {
     id            Int              @id @default(autoincrement())
     name          String
@@ -61,6 +76,7 @@ model FoodProduct {
     isHidden      Boolean          @default(false)
     submission    FoodSubmission?
     baskets       Basket[]
+    nutriments    FoodNutriments?
 }
 
 model FoodSubmission {

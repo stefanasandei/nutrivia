@@ -66,7 +66,11 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               <TRPCReactProvider>
                 <div className="flex h-full flex-1 flex-col">{children}</div>
               </TRPCReactProvider>
-              <Toaster />
+              <Toaster
+                toastOptions={{
+                  style: { willChange: "unset" },
+                }}
+              />
             </div>
             {/* <TailwindIndicator /> */}
           </ThemeProvider>

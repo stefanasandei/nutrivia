@@ -33,11 +33,13 @@ import {
   PenLine,
   MoreHorizontal,
   ShieldAlert,
+  Sparkles,
 } from "lucide-react";
 
 export type Icon = unknown;
 
 export const Icons = {
+  coolStars: Sparkles,
   approve: Check,
   deny: X,
   warning: ShieldAlert,

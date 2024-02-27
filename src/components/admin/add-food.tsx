@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,6 +15,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { type User } from "next-auth";
 import { api } from "@/trpc/react";
@@ -23,6 +30,13 @@ import ChipsInput, { type ChipOption } from "../chips-input";
 import { useState } from "react";
 import { type RawFoodProduct } from "@prisma/client";
 import { UploadButton } from "../uploadthing";
+import { Icons } from "../icons";
+import {
+  type OpenFoodProduct,
+  getOpenFoodData,
+  type OpenFoodIngredient,
+} from "@/lib/open-food-facts";
+import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string(),
@@ -32,6 +46,7 @@ const formSchema = z.object({
   ean: z.string(),
   weight: z.coerce.number(),
   price: z.coerce.number(),
+  createPlaceholder: z.boolean(),
 });
 
 export default function AddFoodProductForm({
@@ -48,6 +63,8 @@ export default function AddFoodProductForm({
 
   const [ingredients, setIngredients] = useState<ChipOption[]>([]);
   const [imageURL, setImageURL] = useState("");
+  const [openNutritionData, setOpenNutritionData] =
+    useState<OpenFoodIngredient | null>(null);
 
   const addFood = api.admin.addFood.useMutation({
     onSuccess: () => {
@@ -73,6 +90,7 @@ export default function AddFoodProductForm({
       ean: "",
       weight: 0,
       price: 0,
+      createPlaceholder: true,
     },
   });
 
@@ -97,8 +115,57 @@ export default function AddFoodProductForm({
       addFoodSubmission.mutate(body);
     }
 
+    // TODO: replace with nutriments
+    // no placeholder anymore
+    if (openNutritionData != null) {
+      // push placeholder
+    }
+
     form.reset();
     setIngredients([]);
+  }
+
+  const [apiLoading, setApiLoading] = useState(false);
+  function fillInValues() {
+    setApiLoading(true);
+
+    getOpenFoodData(form.getValues().ean)
+      .then((data) => {
+        setApiLoading(false);
+
+        actuallyFillValues(data);
+      })
+      .catch((err) => {
+        setApiLoading(false);
+        console.log(err);
+
+        toast("Generative fill failed. Please check the EAN code.");
+      });
+  }
+
+  function actuallyFillValues(data: OpenFoodProduct) {
+    form.setValue("brand", data.product.brands);
+    form.setValue("nutriScore", data.product.nutriscore_grade);
+    form.setValue("weight", parseInt(data.product.product_quantity));
+
+    setImageURL(data.product.image_front_url);
+
+    // also nutriments
+    // create a placeholder obj in state
+    // if that thing is not checked, create the placeholder ingredient and link it
+
+    // TODO: grab the nutritional values and create a placeholder ingredient
+    // also image + feedback that nutrition is set
+    // and also add ingredients or just hide that box
+
+    // setOpenNutritionData({});
+    // todo: create nutriments tables
+    // instead of a placeholder, each food will have linked a nutriments data obj
+
+    toast("Values filled in ✨");
+    setTimeout(() => {
+      toast("Beaware we couldn't find all values!");
+    }, 750);
   }
 
   return (
@@ -118,6 +185,38 @@ export default function AddFoodProductForm({
                 <Input {...field} />
               </FormControl>
               <FormDescription>The name of the food product.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="ean"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>EAN Code</FormLabel>
+              <div className="flex flex-row items-center gap-3">
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        disabled={!field.value || apiLoading}
+                        onClick={() => fillInValues()}
+                      >
+                        <Icons.coolStars />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Fill in missing values</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <FormDescription>The EAN of the food product.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -203,42 +302,66 @@ export default function AddFoodProductForm({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="ean"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>EAN Code</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormDescription>The EAN of the food product.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <FormItem>
-          <FormLabel>Image</FormLabel>
-          <FormControl>
-            <UploadButton
-              className="flex flex-row items-center justify-start gap-3 ut-button:bg-primary ut-button:text-primary-foreground ut-button:transition ut-button:hover:bg-primary/90"
-              endpoint="imageUploader"
-              onClientUploadComplete={(res) => {
-                setImageURL(res[0]?.url ?? "");
-              }}
-              onUploadError={(error: Error) => {
-                alert(
-                  `Please refresh the page and try again. Upload error: ${error.message}`,
-                );
-              }}
+          {isAdmin && (
+            <FormField
+              control={form.control}
+              name="createPlaceholder"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0 p-4">
+                  <FormControl>
+                    <Checkbox onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Calculate nutrition values based on provided ingredients
+                    </FormLabel>
+                    <FormDescription>
+                      If not, we&apos;ll use vendor provided information. Choose
+                      only if you&apos;re sure.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
             />
-          </FormControl>
-          <FormDescription>
-            Upload an image with the food product.
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
+          )}
+          <FormItem>
+            <FormLabel>Image</FormLabel>
+            <FormControl>
+              <UploadButton
+                className="flex flex-row items-center justify-start gap-3 ut-button:bg-primary ut-button:text-primary-foreground ut-button:transition ut-button:hover:bg-primary/90"
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  setImageURL(res[0]?.url ?? "");
+                }}
+                onUploadError={(error: Error) => {
+                  alert(
+                    `Please refresh the page and try again. Upload error: ${error.message}`,
+                  );
+                }}
+              />
+            </FormControl>
+            <FormDescription>
+              Upload an image with the food product.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+          <div className="flex h-full flex-row items-center">
+            {!imageURL && <p>no image uploaded</p>}
+            {imageURL && (
+              <Image
+                style={{
+                  height: "100%",
+                  width: "auto",
+                }}
+                className="rounded-md"
+                width={128}
+                height={128}
+                src={imageURL}
+                alt={form.getValues("name")}
+              />
+            )}
+          </div>
+        </div>
         <FormItem>
           <FormLabel>Ingredients</FormLabel>
           <FormControl>

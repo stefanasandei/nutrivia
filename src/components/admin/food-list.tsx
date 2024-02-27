@@ -57,6 +57,7 @@ export default function FoodList({
             <TableHead>Weight (grams)</TableHead>
             <TableHead>Price (RON)</TableHead>
             <TableHead>Ingredients</TableHead>
+            <TableHead>Nutriments</TableHead>
             <TableHead>Image</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -77,6 +78,10 @@ export default function FoodList({
                     else i += f[j];
                   return <p>{i}</p>;
                 })()}
+              </TableCell>
+              <TableCell>
+                <Button variant={"outline"}>View</Button>
+                {/* TODO: view nutriments */}
               </TableCell>
               <TableCell>
                 <Image
