@@ -20,9 +20,7 @@ export const adminRouter = createTRPCRouter({
 
     products.sort((a, b) => {
       const res = computeScore(a) > computeScore(b);
-      if (res)
-        return -1;
-      return 1;
+      return res ? 1 : -1;
     })
 
     return products;

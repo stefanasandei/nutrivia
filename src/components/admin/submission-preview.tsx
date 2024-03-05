@@ -58,7 +58,7 @@ export default function SubmissionPreview({
           </CardFooter>
         </Link>
         {!isAdmin && (
-          <div className="m-3 flex flex-col gap-4">
+          <div className="m-3 flex flex-col gap-4 pr-3">
             <Link
               href={`/contribute/edit/${submission.id}`}
               className={buttonVariants({ size: "icon", variant: "secondary" })}
