@@ -31,11 +31,7 @@ import { useState } from "react";
 import { type RawFoodProduct } from "@prisma/client";
 import { UploadButton } from "../uploadthing";
 import { Icons } from "../icons";
-import {
-  type OpenFoodProduct,
-  getOpenFoodData,
-  type OpenFoodIngredient,
-} from "@/lib/open-food-facts";
+import { type OpenFoodProduct, getOpenFoodData } from "@/lib/open-food-facts";
 import Image from "next/image";
 
 const formSchema = z.object({
@@ -61,11 +57,15 @@ export default function AddFoodProductForm({
 }) {
   const router = useRouter();
 
+  // state
+  const [apiLoading, setApiLoading] = useState(false);
   const [ingredients, setIngredients] = useState<ChipOption[]>([]);
   const [imageURL, setImageURL] = useState("");
-  const [openNutritionData, setOpenNutritionData] =
-    useState<OpenFoodIngredient | null>(null);
+  const [openNutritionData, setOpenNutritionData] = useState<
+    OpenFoodProduct["product"]["nutriments"] | null
+  >(null);
 
+  // api mutations
   const addFood = api.admin.addFood.useMutation({
     onSuccess: () => {
       toast("Food record added!");
@@ -80,6 +80,7 @@ export default function AddFoodProductForm({
     },
   });
 
+  // form handling
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -94,7 +95,13 @@ export default function AddFoodProductForm({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    let nutriments = openNutritionData;
+    if (nutriments == null) {
+      nutriments = (await getOpenFoodData(form.getValues().ean)).product
+        .nutriments;
+    }
+
     const body = {
       name: values.name,
       brand: values.brand,
@@ -107,6 +114,7 @@ export default function AddFoodProductForm({
       ingredients: ingredients.map((value) => {
         return { id: value.id };
       }),
+      nutriments: nutriments,
     };
 
     if (!isHidden) {
@@ -115,23 +123,23 @@ export default function AddFoodProductForm({
       addFoodSubmission.mutate(body);
     }
 
-    // TODO: replace with nutriments
-    // no placeholder anymore
-    if (openNutritionData != null) {
-      // push placeholder
-    }
-
     form.reset();
     setIngredients([]);
+    setImageURL("");
+    setOpenNutritionData(null);
   }
 
-  const [apiLoading, setApiLoading] = useState(false);
+  // open food api utils to fill data in
   function fillInValues() {
     setApiLoading(true);
 
     getOpenFoodData(form.getValues().ean)
       .then((data) => {
         setApiLoading(false);
+
+        if (data.status_verbose !== "product found") {
+          throw new Error("Product not found");
+        }
 
         actuallyFillValues(data);
       })
@@ -150,17 +158,7 @@ export default function AddFoodProductForm({
 
     setImageURL(data.product.image_front_url);
 
-    // also nutriments
-    // create a placeholder obj in state
-    // if that thing is not checked, create the placeholder ingredient and link it
-
-    // TODO: grab the nutritional values and create a placeholder ingredient
-    // also image + feedback that nutrition is set
-    // and also add ingredients or just hide that box
-
-    // setOpenNutritionData({});
-    // todo: create nutriments tables
-    // instead of a placeholder, each food will have linked a nutriments data obj
+    setOpenNutritionData(data.product.nutriments);
 
     toast("Values filled in ✨");
     setTimeout(() => {
@@ -168,6 +166,7 @@ export default function AddFoodProductForm({
     }, 750);
   }
 
+  // the jsx
   return (
     <Form {...form}>
       <h1 className="border-t-2 py-2 text-3xl font-bold">Add a food product</h1>

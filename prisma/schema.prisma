@@ -46,7 +46,7 @@ model RawFoodProduct {
 
 model FoodNutriments {
     id            Int         @id @default(autoincrement())
-    food          FoodProduct @relation(fields: [foodProductId], references: [id])
+    food          FoodProduct @relation(fields: [foodProductId], references: [id], onDelete: Cascade)
     foodProductId Int         @unique
 
     carbohydrates Float

@@ -33,7 +33,7 @@ TODO Plan:
   - refactor the trpc api to create and link nutriments
   - refact food products list to view nutriments
   - new food product page to showcase nutriments
-  - compute nutriscore (when missing) based on nutriments
+  // - compute nutriscore (when missing) based on nutriments
 
   - stats for the basket based on nutriments
   - check basket and feed for alergies

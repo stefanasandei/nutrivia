@@ -105,7 +105,16 @@ export const adminRouter = createTRPCRouter({
       originCountry: z.string(),
       nutriScore: z.string(),
       ean: z.string(),
-      ingredients: z.array(z.object({ id: z.number() }))
+      ingredients: z.array(z.object({ id: z.number() })),
+      nutriments: z.object({
+        carbohydrates: z.number(),
+        energy: z.number(),
+        fat: z.number(),
+        proteins: z.number(),
+        salt: z.number(),
+        sodium: z.number(),
+        sugars: z.number(),
+      })
     }))
     .mutation(async ({ ctx, input }) => {
       let isHidden = input.isHidden;
@@ -120,7 +129,19 @@ export const adminRouter = createTRPCRouter({
           originCountry: input.originCountry,
           nutriScore: input.nutriScore,
           ean: input.ean,
-          priceRON: input.price, ingredients: { connect: input.ingredients }
+          priceRON: input.price, ingredients: { connect: input.ingredients },
+          nutriments: {
+            create: {
+              carbohydrates: input.nutriments.carbohydrates,
+              energy: input.nutriments.energy,
+              fat: input.nutriments.fat,
+              proteins: input.nutriments.proteins,
+              salt: input.nutriments.salt,
+              saturatedFat: 0.0,
+              sodium: input.nutriments.sodium,
+              sugars: input.nutriments.sugars,
+            }
+          }
         },
       });
     }),

@@ -21,6 +21,16 @@ const OpenFoodProductValidator = z.object({
         nutriscore_grade: z.string(),
 
         product_quantity: z.string().default("0"),
+
+        nutriments: z.object({
+            carbohydrates: z.number(),
+            energy: z.number(),
+            fat: z.number(),
+            proteins: z.number(),
+            salt: z.number(),
+            sodium: z.number(),
+            sugars: z.number(),
+        })
     }),
     status_verbose: z.string()
 });
