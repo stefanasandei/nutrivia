@@ -14,6 +14,7 @@ model User {
     emailVerified  DateTime?
     image          String?
     hasAgreed      Boolean          @default(false)
+    isVegan        Boolean          @default(false)
     allergies      RawFoodProduct[]
     accounts       Account[]
     sessions       Session[]
@@ -40,6 +41,7 @@ model RawFoodProduct {
     vitaminB6     Int // mg
     vitaminB12    Int // µg
     magnesium     Int // mg
+    vegan         Boolean       @default(true)
     allergicUsers User[]
     foods         FoodProduct[]
 }
@@ -52,11 +54,14 @@ model FoodNutriments {
     carbohydrates Float
     energy        Float
     fat           Float
-    proteins      Float
     salt          Float
     saturatedFat  Float
     sodium        Float
     sugars        Float
+
+    fruitsVegetables Float @default(0)
+    fiber            Float @default(0)
+    proteins         Float
 }
 
 model FoodProduct {

@@ -4,12 +4,18 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getMessaging } from "firebase-admin/messaging";
 
 export const userRouter = createTRPCRouter({
+  get: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.user.findUnique({
+      where: { id: ctx.session.user.id }
+    })
+  }),
   update: protectedProcedure
     .input(
       z.object({
         username: z.string().min(1),
         id: z.string().cuid(),
         allergies: z.array(z.object({ name: z.string(), id: z.number() })),
+        vegan: z.boolean()
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -17,6 +23,7 @@ export const userRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           name: input.username,
+          isVegan: input.vegan,
           allergies: {
             set: input.allergies.map((val) => {
               return {

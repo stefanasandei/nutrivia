@@ -11,6 +11,8 @@ export default async function ProfilePage() {
   const session = await getServerAuthSession();
   if (!session) redirect("/");
 
+  const user = await api.user.get.query();
+
   const food = await api.admin.getRawFoodProducts.query();
   const allergies = await api.admin.getAllergiesOfUser.query({
     uid: session.user.id,
@@ -31,7 +33,7 @@ export default async function ProfilePage() {
       </div>
       <div className="flex gap-4">
         <EditProfileForm
-          user={session.user}
+          user={user!}
           allergies={allergies?.allergies ?? []}
           food={food}
         />

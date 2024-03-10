@@ -15,18 +15,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { type User } from "next-auth";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ChipsInput, { type ChipOption } from "../chips-input";
 import { useState } from "react";
-import { type RawFoodProduct } from "@prisma/client";
+import { type RawFoodProduct, type User } from "@prisma/client";
+import { Checkbox } from "../ui/checkbox";
 
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
+  vegan: z.boolean(),
 });
 
 export default function EditProfileForm({
@@ -62,6 +63,7 @@ export default function EditProfileForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: user.name!,
+      vegan: user.isVegan,
     },
   });
 
@@ -70,6 +72,7 @@ export default function EditProfileForm({
       id: user.id,
       username: values.username,
       allergies: allergies,
+      vegan: values.vegan,
     });
   }
 
@@ -114,6 +117,23 @@ export default function EditProfileForm({
           </FormDescription>
           <FormMessage />
         </FormItem>
+        <FormField
+          control={form.control}
+          name="vegan"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+              <FormControl>
+                <Checkbox
+                  onCheckedChange={field.onChange}
+                  defaultChecked={field.value}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Are you vegan?</FormLabel>
+              </div>
+            </FormItem>
+          )}
+        />
         <Button type="submit">Submit</Button>
       </form>
     </Form>

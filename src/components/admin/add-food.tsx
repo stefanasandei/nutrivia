@@ -96,11 +96,10 @@ export default function AddFoodProductForm({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    let nutriments = openNutritionData;
-    if (nutriments == null) {
-      nutriments = (await getOpenFoodData(form.getValues().ean)).product
-        .nutriments;
-    }
+    const data = await getOpenFoodData(form.getValues().ean);
+    const nutriments = !openNutritionData
+      ? data.product.nutriments
+      : openNutritionData;
 
     const body = {
       name: values.name,
@@ -114,7 +113,15 @@ export default function AddFoodProductForm({
       ingredients: ingredients.map((value) => {
         return { id: value.id };
       }),
-      nutriments: nutriments,
+      nutriments: {
+        ...nutriments,
+        fruitsVegetables:
+          nutriments[
+            "fruits-vegetables-legumes-estimate-from-ingredients_100g"
+          ],
+        saturatedFat: nutriments["saturated-fat"],
+        fiber: data.product.nutriscore["2023"].data.fiber,
+      },
     };
 
     if (!isHidden) {

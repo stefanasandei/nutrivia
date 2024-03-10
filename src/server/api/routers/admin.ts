@@ -75,6 +75,7 @@ export const adminRouter = createTRPCRouter({
       vitaminB6: z.number(),
       vitaminB12: z.number(),
       magnesium: z.number(),
+      vegan: z.boolean()
     }))
     .mutation(async ({ ctx, input }) => {
       if (input.id != env.ADMIN_ID) return null;
@@ -96,6 +97,7 @@ export const adminRouter = createTRPCRouter({
           vitaminB6: input.vitaminB6,
           vitaminB12: input.vitaminB12,
           magnesium: input.magnesium,
+          vegan: input.vegan
         },
       });
     }),
@@ -117,6 +119,8 @@ export const adminRouter = createTRPCRouter({
         salt: z.number(),
         sodium: z.number(),
         sugars: z.number(),
+        fruitsVegetables: z.number(),
+        fiber: z.number()
       })
     }))
     .mutation(async ({ ctx, input }) => {

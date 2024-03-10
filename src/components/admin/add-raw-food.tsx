@@ -19,6 +19,7 @@ import { type User } from "next-auth";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Checkbox } from "../ui/checkbox";
 
 export const rawFoodProduct = {
   name: z.string(),
@@ -36,6 +37,7 @@ export const rawFoodProduct = {
   vitaminB6: z.coerce.number(),
   vitaminB12: z.coerce.number(),
   magnesium: z.coerce.number(),
+  vegan: z.coerce.boolean(),
 };
 
 const rawFoodProductSchema = z.object(rawFoodProduct);
@@ -68,6 +70,7 @@ export default function AddRawFoodProductForm({ user }: { user: User }) {
       vitaminB6: 0,
       vitaminB12: 0,
       magnesium: 0,
+      vegan: true,
     },
   });
 
@@ -137,6 +140,24 @@ export default function AddRawFoodProductForm({ user }: { user: User }) {
               )}
             />
           ))}
+
+          <FormField
+            control={form.control}
+            name="vegan"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center space-x-3 space-y-0 p-4">
+                <FormControl>
+                  <Checkbox
+                    onCheckedChange={field.onChange}
+                    defaultChecked={field.value}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Is it vegan?</FormLabel>
+                </div>
+              </FormItem>
+            )}
+          />
         </div>
         <div>
           <p className="mb-2">

@@ -71,6 +71,7 @@ export default function RawFoodList({
             <TableHead>Internal ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Nutrition Values</TableHead>
+            <TableHead>Vegan</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -115,6 +116,9 @@ export default function RawFoodList({
                     </DialogHeader>
                   </DialogContent>
                 </Dialog>
+              </TableCell>
+              <TableCell>
+                {food.vegan ? <Icons.check /> : <Icons.close />}
               </TableCell>
               <TableCell className="flex flex-row gap-3">
                 <Dialog>
