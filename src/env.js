@@ -34,6 +34,7 @@ export const env = createEnv({
     NEXT_PUBLIC_FIREBASE_KEY: z.string(),
     NEXT_PUBLIC_FIREBASE_PROJECT: z.string(),
     NEXT_PUBLIC_FIREBASE_ID: z.string(),
+    NEXT_PUBLIC_URL: z.string(),
   },
 
   runtimeEnv: {
@@ -53,6 +54,7 @@ export const env = createEnv({
     NEXT_PUBLIC_FIREBASE_KEY: process.env.NEXT_PUBLIC_FIREBASE_KEY,
     NEXT_PUBLIC_FIREBASE_PROJECT: process.env.NEXT_PUBLIC_FIREBASE_PROJECT,
     NEXT_PUBLIC_FIREBASE_ID: process.env.NEXT_PUBLIC_FIREBASE_ID,
+    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,

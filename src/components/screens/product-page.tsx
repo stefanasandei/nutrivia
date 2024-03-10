@@ -13,7 +13,7 @@ import { Icons } from "../icons";
 import { Input } from "../ui/input";
 import { api } from "@/trpc/react";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import CommentPreview from "../comment";
 import NutriScore from "../nutri-score";
@@ -28,6 +28,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircle } from "lucide-react";
+import { env } from "@/env";
 
 export default function FoodProductPage({
   food,
@@ -44,6 +45,7 @@ export default function FoodProductPage({
   user: ({ allergies: RawFoodProduct[] } & User) | null;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [comment, setComment] = useState("");
   const [activeSection, setActiveSection] = useState<
@@ -133,7 +135,16 @@ export default function FoodProductPage({
                 />
               </Button>
             )}
-            <Button size={"icon"} variant={"secondary"}>
+            <Button
+              size={"icon"}
+              variant={"secondary"}
+              onClick={async () => {
+                const text = `${env.NEXT_PUBLIC_URL}${pathname}`;
+                await navigator.clipboard.writeText(text).then(() => {
+                  toast("Link copied to clipboard!");
+                });
+              }}
+            >
               <Icons.share />
             </Button>
           </div>
