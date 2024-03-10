@@ -17,6 +17,8 @@ export default async function ProductPage({
     id: id,
   });
 
+  console.log(food);
+
   if (food == null) notFound();
 
   const comments = await api.admin.getFoodComments.query({
@@ -25,7 +27,10 @@ export default async function ProductPage({
 
   return (
     <FoodProductPage
-      food={food}
+      food={{
+        ...food,
+        nutriments: food.nutriments!,
+      }}
       comments={comments?.comments ?? []}
       user={session == null ? null : session.user}
     />

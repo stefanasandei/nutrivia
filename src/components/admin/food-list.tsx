@@ -1,6 +1,10 @@
 "use client";
 
-import { type RawFoodProduct, type FoodProduct } from "@prisma/client";
+import {
+  type RawFoodProduct,
+  type FoodProduct,
+  type FoodNutriments,
+} from "@prisma/client";
 import { type User } from "next-auth";
 import {
   Table,
@@ -34,6 +38,7 @@ export default function FoodList({
   user: User;
   food: ({
     ingredients: RawFoodProduct[];
+    nutriments: FoodNutriments;
   } & FoodProduct)[];
 }) {
   const router = useRouter();
@@ -44,6 +49,45 @@ export default function FoodList({
       router.refresh();
     },
   });
+
+  const nutriments = (index: number) => {
+    if (food[index]?.nutriments == undefined) return [];
+
+    return [
+      {
+        name: "carbohydrates",
+        unit: "g",
+        value: food[index]!.nutriments.carbohydrates,
+      },
+      {
+        name: "energy",
+        unit: "g",
+        value: food[index]!.nutriments.energy,
+      },
+      { name: "fat", unit: "g", value: food[index]!.nutriments.fat },
+      {
+        name: "proteins",
+        unit: "g",
+        value: food[index]!.nutriments.proteins,
+      },
+      { name: "salt", unit: "g", value: food[index]!.nutriments.salt },
+      {
+        name: "saturatedFat",
+        unit: "g",
+        value: food[index]!.nutriments.saturatedFat,
+      },
+      {
+        name: "sodium",
+        unit: "g",
+        value: food[index]!.nutriments.sodium,
+      },
+      {
+        name: "sugars",
+        unit: "g",
+        value: food[index]!.nutriments.sugars,
+      },
+    ];
+  };
 
   return (
     <div>
@@ -63,7 +107,7 @@ export default function FoodList({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {food.map((food) => (
+          {food.map((food, index) => (
             <TableRow key={food.id}>
               <TableCell>{food.name}</TableCell>
               <TableCell>{food.brand}</TableCell>
@@ -80,8 +124,40 @@ export default function FoodList({
                 })()}
               </TableCell>
               <TableCell>
-                <Button variant={"outline"}>View</Button>
-                {/* TODO: view nutriments */}
+                <Dialog>
+                  <DialogTrigger
+                    className={buttonVariants({
+                      variant: "outline",
+                    })}
+                  >
+                    View
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Nutriments</DialogTitle>
+                      <DialogDescription>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Nutrition facts </TableHead>
+                              <TableHead>As sold for 100 g / 100 ml </TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {nutriments(index).map((nutriment) => (
+                              <TableRow key={nutriment.name}>
+                                <TableCell>{nutriment.name}</TableCell>
+                                <TableCell>
+                                  {nutriment.value} {nutriment.unit}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </TableCell>
               <TableCell>
                 <Image

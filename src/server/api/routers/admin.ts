@@ -7,7 +7,7 @@ import { removeItem } from "@/lib/array";
 export const adminRouter = createTRPCRouter({
   getFoodProducts: protectedProcedure.query(async ({ ctx }) => {
     const products = await ctx.db.foodProduct.findMany({
-      include: { ingredients: true, comments: true },
+      include: { ingredients: true, comments: true, nutriments: true },
       where: { isHidden: false }
     });
 
