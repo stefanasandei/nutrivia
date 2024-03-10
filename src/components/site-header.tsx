@@ -2,10 +2,11 @@
 
 import { siteConfig } from "@/config/site";
 import { MainNav } from "@/components/main-nav";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { type Session } from "next-auth";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function SiteHeader({
   session,
@@ -34,14 +35,16 @@ export function SiteHeader({
         />
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
-            <Button
+            <Link
+              href={session ? "/profile" : ""}
+              className={buttonVariants()}
               onClick={async () => {
                 if (session) router.push("/profile");
                 else await signIn("discord");
               }}
             >
               {session ? "Profile" : "Sign in"}
-            </Button>
+            </Link>
           </nav>
         </div>
       </div>

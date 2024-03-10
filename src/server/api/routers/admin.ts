@@ -52,7 +52,10 @@ export const adminRouter = createTRPCRouter({
   findFoodProduct: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.db.foodProduct.findFirst({ where: { id: input.id }, include: { ingredients: true } });
+      return await ctx.db.foodProduct.findFirst({
+        where: { id: input.id },
+        include: { ingredients: true, nutriments: true }
+      });
     }),
 
   addRawFood: protectedProcedure
