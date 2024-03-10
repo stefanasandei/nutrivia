@@ -5,13 +5,13 @@ import {
   type Comment,
   type FoodProduct,
   type FoodNutriments,
+  type User,
 } from "@prisma/client";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Icons } from "../icons";
 import { Input } from "../ui/input";
 import { api } from "@/trpc/react";
-import { type User } from "next-auth";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -26,17 +26,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-
-/*
-TODO Plan:
-  - refactor this page to add nutriments
-  - refact food products list to view nutriments
-  - new food product page to showcase nutriments
-  // - compute nutriscore (when missing) based on nutriments
-
-  - stats for the basket based on nutriments
-  - check basket and feed for alergies
-*/
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export default function FoodProductPage({
   food,
@@ -50,7 +41,7 @@ export default function FoodProductPage({
   comments: ({
     createdBy: User;
   } & Comment)[];
-  user: User | null;
+  user: ({ allergies: RawFoodProduct[] } & User) | null;
 }) {
   const router = useRouter();
 
@@ -157,15 +148,17 @@ export default function FoodProductPage({
           >
             <p>Brief</p>
           </a>
-          <a
-            href="#core"
-            className={cn(
-              "rounded-lg bg-accent p-3 transition-all hover:cursor-pointer hover:bg-accent/50",
-              activeSection == "core" ? "brightness-150" : "",
-            )}
-          >
-            <p>For you</p>
-          </a>
+          {user != null && (
+            <a
+              href="#core"
+              className={cn(
+                "rounded-lg bg-accent p-3 transition-all hover:cursor-pointer hover:bg-accent/50",
+                activeSection == "core" ? "brightness-150" : "",
+              )}
+            >
+              <p>For you</p>
+            </a>
+          )}
           <a
             href="#health"
             className={cn(
@@ -190,9 +183,11 @@ export default function FoodProductPage({
       <div className="section" id="brief">
         <BriefProductCard food={food} />
       </div>
-      <div className="section" id="core">
-        <CoreInfoCard />
-      </div>
+      {user != null && (
+        <div className="section" id="core">
+          <CoreInfoCard food={food} allergies={user.allergies} />
+        </div>
+      )}
       <div className="section" id="health">
         <HealthCard food={food} />
       </div>
@@ -312,11 +307,67 @@ const BriefProductCard = ({
   );
 };
 
-const CoreInfoCard = () => {
+const CoreInfoCard = ({
+  allergies: userAllergies,
+  food,
+}: {
+  allergies: RawFoodProduct[];
+  food: {
+    ingredients: RawFoodProduct[];
+    nutriments: FoodNutriments;
+  } & FoodProduct;
+}) => {
+  const notVeganIngredients = food.ingredients.filter(
+    (value) => value.vegan == false,
+  );
+  const isVegan = notVeganIngredients.length == 0;
+
+  const allergies = food.ingredients.filter(
+    (value) => userAllergies.map((v) => v.name).includes(value.name) == true,
+  );
+
   return (
     <div className="mt-3 h-full w-full rounded-lg bg-secondary/30 p-3">
       <h1 className="mb-3 text-3xl font-bold">For you</h1>
-      <p>TODO: allergies</p>
+      <div className="flex flex-col gap-3">
+        {!isVegan ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Not vegan!</AlertTitle>
+            <AlertDescription>
+              The following ingredients are not vegan:{" "}
+              {notVeganIngredients.map((v) => v.name).toString()}
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Alert variant="default">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>This product is vegan!</AlertTitle>
+            <AlertDescription>
+              Your session has expired. Please log in again.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {allergies.length != 0 ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Contains allergies!</AlertTitle>
+            <AlertDescription>
+              you have allergies to the following ingredients:{" "}
+              {allergies.map((v) => v.name).toString()}
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Alert variant="default">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>No allergies present!</AlertTitle>
+            <AlertDescription>
+              This product contains no known allergies you have registered.
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
     </div>
   );
 };

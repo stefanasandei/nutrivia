@@ -6,7 +6,8 @@ import { getMessaging } from "firebase-admin/messaging";
 export const userRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.user.findUnique({
-      where: { id: ctx.session.user.id }
+      where: { id: ctx.session.user.id },
+      include: { allergies: true }
     })
   }),
   update: protectedProcedure
