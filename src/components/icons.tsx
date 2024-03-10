@@ -34,11 +34,13 @@ import {
   MoreHorizontal,
   ShieldAlert,
   Sparkles,
+  Share2,
 } from "lucide-react";
 
 export type Icon = unknown;
 
 export const Icons = {
+  share: Share2,
   coolStars: Sparkles,
   approve: Check,
   deny: X,
