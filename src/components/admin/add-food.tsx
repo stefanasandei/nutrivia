@@ -120,7 +120,7 @@ export default function AddFoodProductForm({
             "fruits-vegetables-legumes-estimate-from-ingredients_100g"
           ],
         saturatedFat: nutriments["saturated-fat"],
-        fiber: data.product.nutriscore["2023"].data.fiber,
+        fiber: data.product.nutriscore_data.fiber,
       },
     };
 
@@ -159,6 +159,7 @@ export default function AddFoodProductForm({
   }
 
   function actuallyFillValues(data: OpenFoodProduct) {
+    form.setValue("name", data.product.product_name);
     form.setValue("brand", data.product.brands);
     form.setValue("nutriScore", data.product.nutriscore_grade);
     form.setValue("weight", parseInt(data.product.product_quantity));

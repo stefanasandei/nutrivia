@@ -31,15 +31,11 @@ const OpenFoodProductValidator = z.object({
             sodium: z.number(),
             sugars: z.number(),
             "saturated-fat": z.number(),
-            "fruits-vegetables-legumes-estimate-from-ingredients_100g": z.number()
+            "fruits-vegetables-legumes-estimate-from-ingredients_100g": z.number().default(0)
         }),
 
-        nutriscore: z.object({
-            "2023": z.object({
-                data: z.object({
-                    fiber: z.number()
-                })
-            })
+        nutriscore_data: z.object({
+            fiber: z.number()
         })
     }),
     status_verbose: z.string()
