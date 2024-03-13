@@ -1,6 +1,10 @@
 "use client";
 
-import { type RawFoodProduct, type FoodProduct } from "@prisma/client";
+import {
+  type RawFoodProduct,
+  type FoodProduct,
+  type Comment,
+} from "@prisma/client";
 import { type User } from "next-auth";
 import FoodCard from "@/components/food-card";
 import { Input } from "@/components/ui/input";
@@ -14,10 +18,13 @@ export default function ProductCatalog({
 }: {
   user?: User;
   food: ({
+    comments: Comment[];
     ingredients: RawFoodProduct[];
   } & FoodProduct)[];
 }) {
   const [searchQuery, setSearchQuery] = useState("");
+
+  // TODO: use full text search instead
   const [searchedFood, setSearchedFood] = useState(food.slice());
 
   const update = (query: string) => {

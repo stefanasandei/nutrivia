@@ -8,13 +8,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import { type RawFoodProduct, type FoodProduct } from "@prisma/client";
+import {
+  type RawFoodProduct,
+  type FoodProduct,
+  type Comment,
+} from "@prisma/client";
 import Link from "next/link";
+import { computeScore } from "@/lib/food";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function FoodCard({
   food,
 }: {
   food: {
+    comments: Comment[];
     ingredients: RawFoodProduct[];
   } & FoodProduct;
   userId: string | null;
@@ -60,9 +72,22 @@ export default function FoodCard({
         >
           Discuss
         </Link>
-        <Button variant={"secondary"}>
-          {food.likedBy.length - food.dislikedBy.length} score
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={"secondary"}>{computeScore(food)}% score</Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                Learn how we calculate{" "}
+                <Link href="/forum" className="font-semibold hover:underline">
+                  the quality score
+                </Link>
+                .
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardFooter>
     </Card>
   );

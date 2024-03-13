@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { env } from "@/env";
 import { publicProcedure } from '../trpc';
 import { removeItem } from "@/lib/array";
+import { computeScore } from "@/lib/food";
 
 export const adminRouter = createTRPCRouter({
   getFoodProducts: protectedProcedure.query(async ({ ctx }) => {
@@ -12,15 +13,9 @@ export const adminRouter = createTRPCRouter({
     });
 
     // *the algorithm*
-    const computeScore = (a: typeof products[0]) => {
-      const ratio = a.likedBy.length - a.dislikedBy.length;
-      const score = ratio * 8 / 10 + a.comments.length * 2 / 10;
-      return score;
-    }
-
     products.sort((a, b) => {
       const res = computeScore(a) > computeScore(b);
-      return res ? 1 : -1;
+      return res ? -1 : 1;
     })
 
     return products;
