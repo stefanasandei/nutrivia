@@ -12,6 +12,7 @@ import CreateBasketForm from "@/components/admin/create-basket";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import NutriScore from "../nutri-score";
 import { Icons } from "../icons";
+import { recommendHealthyFood } from "@/lib/food";
 
 export function CreateNewBasket({
   food,
@@ -32,22 +33,8 @@ export function CreateNewBasket({
   >([]);
   const [open, setOpen] = useState(false);
 
-  const nutriments = useMemo(() => {
-    return {
-      carbohydrates: foodItems.reduce(
-        (acc, curr) => acc + curr.nutriments.carbohydrates,
-        0,
-      ),
-      energy: foodItems.reduce((acc, curr) => acc + curr.nutriments.energy, 0),
-      fat: foodItems.reduce((acc, curr) => acc + curr.nutriments.fat, 0),
-      salt: foodItems.reduce((acc, curr) => acc + curr.nutriments.salt, 0),
-      saturatedFat: foodItems.reduce(
-        (acc, curr) => acc + curr.nutriments.saturatedFat,
-        0,
-      ),
-      sodium: foodItems.reduce((acc, curr) => acc + curr.nutriments.sodium, 0),
-      sugars: foodItems.reduce((acc, curr) => acc + curr.nutriments.sugars, 0),
-    };
+  const tips = useMemo(() => {
+    return recommendHealthyFood(foodItems);
   }, [foodItems]);
 
   return (
@@ -105,7 +92,18 @@ export function CreateNewBasket({
           </div>
           <div className="col-span-1 h-full md:border-l-2 md:pl-5">
             <p className="text-3xl font-semibold">Recommendations</p>
-            <p>{JSON.stringify(nutriments, null, 4)}</p>
+            {foodItems.length > 0 && (
+              <div className="mt-3">
+                <p>General tips:</p>
+                <div className="list-inside list-disc">
+                  {tips.slice(0, 3).map((tip) => (
+                    <p key={tip} className="list-item md:ml-3">
+                      {tip}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <Button
