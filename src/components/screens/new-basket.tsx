@@ -19,6 +19,7 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import NutriScore from "../nutri-score";
 import { Icons } from "../icons";
 import { computeScore, recommendHealthyFood } from "@/lib/food";
+import { cn } from "@/lib/utils";
 
 export function CreateNewBasket({
   food,
@@ -86,6 +87,11 @@ export function CreateNewBasket({
       <div className="flex flex-1 flex-col justify-between space-y-3">
         <div className="grid h-full flex-1 grid-flow-row md:grid-cols-3">
           <div className="col-span-2 space-y-4 overflow-y-auto">
+            {foodItems.length == 0 && (
+              <div className="flex h-full items-center justify-center">
+                <p className="text-center text-xl">Add items to get started!</p>
+              </div>
+            )}
             {foodItems.map((item, index) => (
               <div
                 key={`${item.id}-${index}`}
@@ -109,7 +115,15 @@ export function CreateNewBasket({
             ))}
           </div>
           <div className="col-span-1 h-full md:border-l-2 md:pl-5">
-            <p className="text-3xl font-semibold">Recommendations</p>
+            <p
+              className={cn(
+                "text-3xl font-semibold",
+                foodItems.length == 0 ? "hidden md:block" : "",
+              )}
+            >
+              Recommendations
+            </p>
+
             {foodItems.length > 0 && (
               <div className="mt-3 space-y-3">
                 <div>
@@ -124,7 +138,7 @@ export function CreateNewBasket({
                 </div>
 
                 <div className="space-y-3">
-                  <p>Good stuff:</p>
+                  <p>Try out this healthy food:</p>
                   {bestFood.map((bfood) => (
                     <QuickFoodPreview
                       food={{
@@ -159,6 +173,7 @@ export function CreateNewBasket({
               food: foodItems.map((item) => item.id),
             })
           }
+          disabled={foodItems.length == 0}
         >
           Create basket
         </Button>

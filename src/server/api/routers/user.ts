@@ -40,7 +40,7 @@ export const userRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       return await ctx.db.basket.findMany({
         where: { createdById: ctx.session.user.id },
-        include: { foods: true }
+        include: { foods: { include: { comments: true } } }
       });
     }),
   createBasket: protectedProcedure

@@ -1,14 +1,15 @@
 "use client";
 
-import { type FoodProduct, type Basket } from "@prisma/client";
+import { type FoodProduct, type Basket, type Comment } from "@prisma/client";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
+import { computeScore } from "@/lib/food";
 
 export default function MainBasketsPage({
   baskets,
 }: {
-  baskets: ({ foods: FoodProduct[] } & Basket)[];
+  baskets: ({ foods: ({ comments: Comment[] } & FoodProduct)[] } & Basket)[];
   food: FoodProduct[];
 }) {
   return (
@@ -38,24 +39,40 @@ export default function MainBasketsPage({
 function BasketPreview({
   basket,
 }: {
-  basket: { foods: FoodProduct[] } & Basket;
+  basket: { foods: ({ comments: Comment[] } & FoodProduct)[] } & Basket;
 }) {
+  const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
+  const formattedDate = formatter.format(basket.createdAt);
+
+  const score =
+    basket.foods.reduce((acc, curr) => acc + computeScore(curr), 0) /
+    basket.foods.length;
+
   return (
-    <div className="flex w-full flex-row items-center gap-4">
-      <h1 className="text-2xl">Basket #{basket.id}:</h1>
-      {basket.foods.map((foodItem, i) => (
-        <div
-          className="relative transition hover:cursor-pointer hover:brightness-50"
-          key={foodItem.id + i.toString()}
-        >
-          <div
-            className="relative aspect-square h-16 w-16 rounded-lg bg-cover bg-center"
-            style={{ backgroundImage: `url(${foodItem.image})` }}
+    <div className="flex w-full flex-col gap-4 md:ml-6">
+      <h1 className="text-2xl font-semibold md:list-item">
+        Basket from {formattedDate}:
+      </h1>
+      <p>Products: </p>
+      <div className="flex flex-row gap-2">
+        {basket.foods.map((foodItem) => (
+          <Link
+            key={foodItem.id}
+            href={`/food/${foodItem.id}`}
+            className="relative transition hover:cursor-pointer hover:brightness-50"
           >
-            <Icons.check className="absolute right-0 top-0 size-6 -translate-y-1/3 translate-x-1/3 transform rounded-full bg-blue-500" />
-          </div>
-        </div>
-      ))}
+            <div
+              className="relative aspect-square h-16 w-16 rounded-lg bg-cover bg-center"
+              style={{ backgroundImage: `url(${foodItem.image})` }}
+            ></div>
+          </Link>
+        ))}
+      </div>
+      <p>
+        Total price:{" "}
+        {basket.foods.reduce((acc, curr) => acc + curr.priceRON, 0)} RON
+      </p>
+      <p>Health score: {score}%</p>
     </div>
   );
 }
