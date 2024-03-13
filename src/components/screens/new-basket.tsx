@@ -1,23 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { type FoodNutriments, type FoodProduct } from "@prisma/client";
+import {
+  type Comment,
+  type FoodNutriments,
+  type FoodProduct,
+} from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import ResponsiveDialog from "@/components/responsive-dialog";
-import CreateBasketForm from "@/components/admin/create-basket";
+import CreateBasketForm, {
+  QuickFoodPreview,
+} from "@/components/admin/create-basket";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import NutriScore from "../nutri-score";
 import { Icons } from "../icons";
-import { recommendHealthyFood } from "@/lib/food";
+import { computeScore, recommendHealthyFood } from "@/lib/food";
 
 export function CreateNewBasket({
   food,
 }: {
-  food: ({ nutriments: FoodNutriments | null } & FoodProduct)[];
+  food: ({
+    nutriments: FoodNutriments | null;
+    comments: Comment[];
+  } & FoodProduct)[];
 }) {
   const router = useRouter();
 
@@ -27,6 +36,15 @@ export function CreateNewBasket({
       router.push("/basket");
     },
   });
+
+  const bestFood = useMemo(() => {
+    const sortedFood = food.sort((a, b) => {
+      const p = computeScore(a) > computeScore(b);
+      return p ? -1 : 1;
+    });
+
+    return sortedFood.slice(0, Math.min(3, sortedFood.length));
+  }, [food]);
 
   const [foodItems, setFoodItems] = useState<
     ({ nutriments: FoodNutriments } & FoodProduct)[]
@@ -93,13 +111,42 @@ export function CreateNewBasket({
           <div className="col-span-1 h-full md:border-l-2 md:pl-5">
             <p className="text-3xl font-semibold">Recommendations</p>
             {foodItems.length > 0 && (
-              <div className="mt-3">
-                <p>General tips:</p>
-                <div className="list-inside list-disc">
-                  {tips.slice(0, 3).map((tip) => (
-                    <p key={tip} className="list-item md:ml-3">
-                      {tip}
-                    </p>
+              <div className="mt-3 space-y-3">
+                <div>
+                  <p>General tips:</p>
+                  <div className="list-inside list-disc">
+                    {tips.slice(0, 3).map((tip) => (
+                      <p key={tip} className="list-item md:ml-3">
+                        {tip}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <p>Good stuff:</p>
+                  {bestFood.map((bfood) => (
+                    <QuickFoodPreview
+                      food={{
+                        ...bfood,
+                        id: bfood.id.toString(),
+                        price: bfood.priceRON,
+                        image: bfood.image!,
+                      }}
+                      onClick={(item) => {
+                        const newItems = [item].map((item) => {
+                          return food.find(
+                            (f) => f.id == parseInt(item.id),
+                          )! as {
+                            nutriments: FoodNutriments;
+                          } & FoodProduct;
+                        });
+
+                        setFoodItems([...foodItems, ...newItems]);
+                        setOpen(false);
+                      }}
+                      key={`${bfood.id}-preview`}
+                    />
                   ))}
                 </div>
               </div>
