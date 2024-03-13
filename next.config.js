@@ -18,6 +18,7 @@ const config = {
   images: {
     remotePatterns: [
       { hostname: "utfs.io" },
+      { hostname: "images.openfoodfacts.org" },
       { hostname: "images.openfoodfacts.net" },
     ],
   },

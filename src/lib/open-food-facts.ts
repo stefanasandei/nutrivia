@@ -44,7 +44,7 @@ const OpenFoodProductValidator = z.object({
 export type OpenFoodProduct = z.infer<typeof OpenFoodProductValidator>;
 
 export const getOpenFoodData = async (ean: string): Promise<OpenFoodProduct> => {
-    const url = `https://world.openfoodfacts.net/api/v2/product/${ean}`;
+    const url = `https://world.openfoodfacts.org/api/v2/product/${ean}`;
     const res = await fetch(url);
     const data: OpenFoodProduct = OpenFoodProductValidator.parse(await res.json());
 
