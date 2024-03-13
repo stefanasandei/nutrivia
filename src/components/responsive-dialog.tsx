@@ -22,20 +22,23 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { type Dispatch, type SetStateAction } from "react";
 
 export default function ResponsiveDialog({
   children,
   triggerButton,
   title,
   description,
+  openState,
 }: {
   children: React.ReactNode;
   triggerButton: React.ReactNode;
   title: string;
   description: string;
+  openState: [boolean, Dispatch<SetStateAction<boolean>>];
 }) {
-  const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [open, setOpen] = openState;
 
   if (isDesktop) {
     return (

@@ -9,13 +9,14 @@ import { type FoodProduct } from "@prisma/client";
 import MiniSearch from "minisearch";
 import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader } from "../ui/card";
+import NutriScore from "../nutri-score";
 
 export default function CreateBasketForm({
   food,
   onSubmit,
 }: {
   food: FoodProduct[];
-  onSubmit: (items: number[]) => void;
+  onSubmit: (items: BriefFoodData[]) => void;
 }) {
   const miniSearch = useMemo(() => {
     const ms = new MiniSearch({
@@ -46,12 +47,6 @@ export default function CreateBasketForm({
     setFoodItems(copy);
   };
 
-  const getPrice = () => {
-    let sum = 0;
-    for (const item of foodItems) sum += item.price ?? 0;
-    return sum;
-  };
-
   return (
     <form
       className={
@@ -60,7 +55,7 @@ export default function CreateBasketForm({
     >
       <div className="flex h-full w-full flex-col gap-3">
         <div className="flex w-full flex-col gap-3">
-          <Label>Search for a food product</Label>
+          <Label>Search for food products</Label>
           <div className="flex flex-row gap-2">
             <Input
               placeholder="Type here"
@@ -105,27 +100,23 @@ export default function CreateBasketForm({
             </div>
           ))}
         </div>
-        <p>Total price: {getPrice()} RON</p>
         <Button
           type="submit"
-          className="w-full"
+          className="w-full transition"
           onClick={(event) => {
             event.preventDefault();
-            onSubmit(
-              foodItems.map((item) => {
-                return parseInt(item.id);
-              }),
-            );
+            onSubmit(foodItems);
           }}
+          disabled={foodItems.length == 0}
         >
-          Save changes
+          Add {foodItems.length} items
         </Button>
       </div>
     </form>
   );
 }
 
-type BriefFoodData = {
+export type BriefFoodData = {
   name: string;
   image: string;
   price: number;
@@ -147,7 +138,7 @@ export function QuickFoodPreview({
     >
       <CardHeader className="flex flex-col gap-2 p-0">
         <p className="text-xl">{food.name}</p>
-        <p>NutriScore: {food.nutriScore}</p>
+        <NutriScore score={food.nutriScore} isSmall={true} />
         <p>{food.price} RON</p>
       </CardHeader>
       <CardContent className="p-0">

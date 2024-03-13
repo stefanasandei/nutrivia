@@ -1,7 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import "@/styles/nutri-score.css";
 
-export default function NutriScore({ score }: { score: string }) {
+export default function NutriScore({
+  score,
+  isSmall,
+}: {
+  score: string;
+  isSmall?: boolean;
+}) {
   //   <div className="nutri-container">
   //     <div className="title">NUTRI-SCORE</div>
   //     <div className="scores-container">
@@ -18,7 +24,7 @@ export default function NutriScore({ score }: { score: string }) {
 
   return (
     <img
-      className="max-w-48"
+      className={isSmall ? "max-w-28" : "max-w-48"}
       alt={`Nutri-Score of ${score}`}
       src={`https://static.openfoodfacts.org/images/attributes/dist/nutriscore-${score.toLocaleLowerCase()}.svg`}
     />
