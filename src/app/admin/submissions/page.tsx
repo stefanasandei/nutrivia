@@ -9,10 +9,10 @@ export default async function SubmissionsPage() {
   });
 
   return (
-    <section className="container m-3 h-full w-full gap-6">
+    <section className="container mt-3 h-full w-full gap-6 md:m-3">
       <div className="flex flex-col gap-4">
         <Tabs defaultValue="pending" className="w-full">
-          <TabsList className="mx-auto flex w-full max-w-[40vw] flex-row justify-between gap-3">
+          <TabsList className="mx-auto flex w-full flex-row justify-between gap-3 md:max-w-[40vw]">
             <TabsTrigger value="pending" className="w-full">
               Pending
             </TabsTrigger>

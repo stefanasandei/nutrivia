@@ -29,7 +29,7 @@ export default function ProductCatalog({
       storeFields: ["id"],
       searchOptions: {
         prefix: true,
-        fuzzy: 0.5,
+        fuzzy: 0.2,
       },
     });
 

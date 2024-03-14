@@ -96,9 +96,9 @@ export default function FoodProductPage({
   });
 
   return (
-    <section className="container grid items-center gap-6 pt-3">
+    <section className="grid items-center gap-6 pt-3">
       <div className="sticky top-20 z-50 flex w-full flex-col items-center justify-between gap-2 rounded-lg bg-secondary/40 p-3 backdrop-blur-xl">
-        <div className="flex w-full flex-row justify-between px-2">
+        <div className="flex w-full flex-col justify-between gap-2 px-2 md:flex-row md:gap-0">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
             {food.name}
           </h1>
@@ -434,8 +434,8 @@ const HealthCard = ({
           <TableHeader>
             <TableRow>
               <TableHead>Nutrition facts </TableHead>
-              <TableHead>As sold for 100 g / 100 ml </TableHead>
-              <TableHead>Normal value</TableHead>
+              <TableHead>As sold for 100 g </TableHead>
+              {/* <TableHead>Normal value</TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>

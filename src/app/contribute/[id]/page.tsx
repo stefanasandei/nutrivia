@@ -22,7 +22,7 @@ export default async function SubmissionViewPage({
         comments={[]}
         user={null}
         additionalControls={
-          <div className="flex flex-row gap-3">
+          <div className="flex gap-3 md:flex-row">
             <Link
               href={`/contribute/edit/${submission.id}`}
               className={buttonVariants({ size: "icon", variant: "secondary" })}

@@ -26,13 +26,15 @@ export default async function ProductPage({
   });
 
   return (
-    <FoodProductPage
-      food={{
-        ...food,
-        nutriments: food.nutriments!,
-      }}
-      comments={comments?.comments ?? []}
-      user={session == null ? null : user}
-    />
+    <section className="container flex flex-col">
+      <FoodProductPage
+        food={{
+          ...food,
+          nutriments: food.nutriments!,
+        }}
+        comments={comments?.comments ?? []}
+        user={session == null ? null : user}
+      />
+    </section>
   );
 }
