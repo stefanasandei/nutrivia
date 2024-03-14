@@ -2,9 +2,11 @@
 "use client";
 
 import {
+  type RawFoodProduct,
   type Comment,
   type FoodNutriments,
   type FoodProduct,
+  type User,
 } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
@@ -20,14 +22,26 @@ import NutriScore from "../nutri-score";
 import { Icons } from "../icons";
 import { computeScore, recommendHealthyFood } from "@/lib/food";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import Link from "next/link";
+
+export type FoodItem = {
+  nutriments: FoodNutriments | null;
+  comments: Comment[];
+  ingredients: RawFoodProduct[];
+} & FoodProduct;
 
 export function CreateNewBasket({
+  user,
   food,
 }: {
-  food: ({
-    nutriments: FoodNutriments | null;
-    comments: Comment[];
-  } & FoodProduct)[];
+  user: { allergies: RawFoodProduct[] } & User;
+  food: FoodItem[];
 }) {
   const router = useRouter();
 
@@ -47,9 +61,7 @@ export function CreateNewBasket({
     return sortedFood.slice(0, Math.min(3, sortedFood.length));
   }, [food]);
 
-  const [foodItems, setFoodItems] = useState<
-    ({ nutriments: FoodNutriments } & FoodProduct)[]
-  >([]);
+  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [open, setOpen] = useState(false);
 
   const tips = useMemo(() => {
@@ -72,9 +84,7 @@ export function CreateNewBasket({
           <CreateBasketForm
             onSubmit={(items) => {
               const newItems = items.map((item) => {
-                return food.find((f) => f.id == parseInt(item.id))! as {
-                  nutriments: FoodNutriments;
-                } & FoodProduct;
+                return food.find((f) => f.id == parseInt(item.id))!;
               });
 
               setFoodItems([...foodItems, ...newItems]);
@@ -92,27 +102,85 @@ export function CreateNewBasket({
                 <p className="text-center text-xl">Add items to get started!</p>
               </div>
             )}
-            {foodItems.map((item, index) => (
-              <div
-                key={`${item.id}-${index}`}
-                className="flex w-full flex-row gap-3"
-              >
-                <FoodPreview food={item} />
-                <div className="flex flex-col items-center justify-start gap-3 md:mr-3">
-                  <Button
-                    size={"icon"}
-                    variant={"outline"}
-                    onClick={() => {
-                      const arr = [...foodItems];
-                      arr.splice(index, 1);
-                      setFoodItems(arr);
-                    }}
-                  >
-                    <Icons.delete />
-                  </Button>
+            {foodItems.map((item, index) => {
+              const notVeganIngredients = item.ingredients.filter(
+                (value) => value.vegan == false,
+              );
+              const isVegan = notVeganIngredients.length == 0;
+
+              const allergies = item.ingredients.filter(
+                (value) =>
+                  user.allergies.map((v) => v.name).includes(value.name) ==
+                  true,
+              );
+
+              return (
+                <div
+                  key={`${item.id}-${index}`}
+                  className="flex w-full flex-row gap-3"
+                >
+                  <FoodPreview food={item} />
+                  <div className="flex flex-col items-center justify-start gap-3 md:mr-3">
+                    <Button
+                      size={"icon"}
+                      variant={"outline"}
+                      onClick={() => {
+                        const arr = [...foodItems];
+                        arr.splice(index, 1);
+                        setFoodItems(arr);
+                      }}
+                    >
+                      <Icons.delete />
+                    </Button>
+
+                    {user.isVegan && !isVegan && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Button size={"icon"} variant={"destructive"}>
+                              <Icons.warning />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            This product is not vegan!{" "}
+                            <Link
+                              href={`/food/${item.id}`}
+                              className="font-semibold hover:underline"
+                              target="_blank"
+                            >
+                              Learn more.
+                            </Link>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+
+                    {allergies.length > 0 && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Button size={"icon"} variant={"destructive"}>
+                              <Icons.warning />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            This product contains {allergies.length}{" "}
+                            {allergies.length > 1 ? "allergies" : "allergy"}!{" "}
+                            <Link
+                              href={`/food/${item.id}`}
+                              className="font-semibold hover:underline"
+                              target="_blank"
+                            >
+                              Learn more.
+                            </Link>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="col-span-1 h-full md:border-l-2 md:pl-5">
             <p
@@ -149,11 +217,7 @@ export function CreateNewBasket({
                       }}
                       onClick={(item) => {
                         const newItems = [item].map((item) => {
-                          return food.find(
-                            (f) => f.id == parseInt(item.id),
-                          )! as {
-                            nutriments: FoodNutriments;
-                          } & FoodProduct;
+                          return food.find((f) => f.id == parseInt(item.id))!;
                         });
 
                         setFoodItems([...foodItems, ...newItems]);

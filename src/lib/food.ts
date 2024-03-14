@@ -1,4 +1,5 @@
-import { type FoodNutriments, type Comment, type FoodProduct } from "@prisma/client";
+import { type FoodItem } from "@/components/screens/new-basket";
+import { type Comment, type FoodProduct } from "@prisma/client";
 
 export const computeScore = (food: { comments: Comment[] } & FoodProduct) => {
     // likes / (likes + dislikes)
@@ -45,17 +46,17 @@ const TARGET_NUTRIMENTS = {
     "proteins": 50
 }
 
-export const recommendHealthyFood = (foodItems: ({ nutriments: FoodNutriments } & FoodProduct)[]): string[] => {
+export const recommendHealthyFood = (foodItems: FoodItem[]): string[] => {
     const totalNutrients = foodItems.reduce((acc, foodItem) => {
         const item = foodItem.nutriments;
-        acc.energy += Math.round(item.energy);
-        acc.proteins += Math.round(item.proteins);
-        acc.carbohydrates += Math.round(item.carbohydrates);
-        acc.fat += Math.round(item.fat);
-        acc.saturatedFat += Math.round(item.saturatedFat);
-        acc.sodium += Math.round(item.sodium);
-        acc.salt += Math.round(item.salt);
-        acc.sugars += Math.round(item.sugars);
+        acc.energy += Math.round(item!.energy);
+        acc.proteins += Math.round(item!.proteins);
+        acc.carbohydrates += Math.round(item!.carbohydrates);
+        acc.fat += Math.round(item!.fat);
+        acc.saturatedFat += Math.round(item!.saturatedFat);
+        acc.sodium += Math.round(item!.sodium);
+        acc.salt += Math.round(item!.salt);
+        acc.sugars += Math.round(item!.sugars);
         return acc;
     }, {
         energy: 0,
