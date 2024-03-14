@@ -10,7 +10,8 @@ import FoodCard from "@/components/food-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import MiniSearch from "minisearch";
 
 export default function ProductCatalog({
   user,
@@ -22,29 +23,30 @@ export default function ProductCatalog({
     ingredients: RawFoodProduct[];
   } & FoodProduct)[];
 }) {
+  const miniSearch = useMemo(() => {
+    const ms = new MiniSearch({
+      fields: ["name"],
+      storeFields: ["id"],
+      searchOptions: {
+        prefix: true,
+        fuzzy: 0.5,
+      },
+    });
+
+    ms.addAll(food);
+
+    return ms;
+  }, [food]);
+
   const [searchQuery, setSearchQuery] = useState("");
-
-  // TODO: use full text search instead
-  const [searchedFood, setSearchedFood] = useState(food.slice());
-
-  const update = (query: string) => {
-    if (query == "") setSearchedFood(food);
-
-    const similarityScore = (str: string, query: string) => {
-      const occurrences = str.split(query).length - 1;
-      return occurrences;
-    };
-
-    const foodCopy = food.slice();
-
-    setSearchedFood(
-      foodCopy.sort((a, b) => {
-        const scoreA = similarityScore(a.name, query);
-        const scoreB = similarityScore(b.name, query);
-        return scoreB - scoreA;
-      }),
+  const results = useMemo(() => {
+    const searchResults = miniSearch.search(searchQuery);
+    const results = searchResults.map(
+      (res) => food.find((elem) => elem.id == parseInt(res.id as string))!,
     );
-  };
+
+    return results;
+  }, [searchQuery, miniSearch, food]);
 
   return (
     <section className="container grid items-center gap-6 pb-8 pt-3">
@@ -59,7 +61,6 @@ export default function ProductCatalog({
             value={searchQuery}
             onChange={(value) => {
               setSearchQuery(value.target.value);
-              update(value.target.value);
             }}
           />
           <Button size={"icon"} variant={"outline"} className="w-16">
@@ -68,7 +69,7 @@ export default function ProductCatalog({
         </div>
       </div>
       <div className="grid grid-flow-row grid-cols-1 justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {searchedFood.map((item) => (
+        {(results.length == 0 ? food : results).map((item) => (
           <FoodCard key={item.id} food={item} userId={user ? user.id : null} />
         ))}
       </div>
