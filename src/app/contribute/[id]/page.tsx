@@ -17,21 +17,27 @@ export default async function SubmissionViewPage({
 
   return (
     <section className="container flex flex-col">
-      <FoodProductPage food={submission.food} comments={[]} user={null} />
-      <div className="ml-7 flex flex-row gap-4 pb-8">
-        <Link
-          href={`/contribute/edit/${submission.id}`}
-          className={buttonVariants({ size: "icon", variant: "secondary" })}
-        >
-          <Icons.update />
-        </Link>
-        <Link
-          href={`/contribute/delete/${submission.id}`}
-          className={buttonVariants({ size: "icon", variant: "secondary" })}
-        >
-          <Icons.delete />
-        </Link>
-      </div>
+      <FoodProductPage
+        food={{ ...submission.food, nutriments: submission.food.nutriments! }}
+        comments={[]}
+        user={null}
+        additionalControls={
+          <div className="flex flex-row gap-3">
+            <Link
+              href={`/contribute/edit/${submission.id}`}
+              className={buttonVariants({ size: "icon", variant: "secondary" })}
+            >
+              <Icons.update />
+            </Link>
+            <Link
+              href={`/contribute/delete/${submission.id}`}
+              className={buttonVariants({ size: "icon", variant: "secondary" })}
+            >
+              <Icons.delete />
+            </Link>
+          </div>
+        }
+      />
     </section>
   );
 }

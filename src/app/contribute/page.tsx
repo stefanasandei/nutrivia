@@ -18,8 +18,8 @@ export default async function ContributePage() {
           Contribute
         </h1>
         <p>
-          You can contribute to our collection of food products by adding a new
-          food record.
+          You can contribute to our collection of food products by adding new
+          food records.
         </p>
       </div>
       <div className="flex flex-col space-y-6">

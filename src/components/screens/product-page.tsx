@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 import { Icons } from "../icons";
 import { Input } from "../ui/input";
 import { api } from "@/trpc/react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import CommentPreview from "../comment";
@@ -34,6 +34,7 @@ export default function FoodProductPage({
   food,
   comments,
   user,
+  additionalControls,
 }: {
   food: {
     ingredients: RawFoodProduct[];
@@ -43,6 +44,7 @@ export default function FoodProductPage({
     createdBy: User;
   } & Comment)[];
   user: ({ allergies: RawFoodProduct[] } & User) | null;
+  additionalControls?: React.ReactNode;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -147,6 +149,7 @@ export default function FoodProductPage({
             >
               <Icons.share />
             </Button>
+            {additionalControls}
           </div>
         </div>
         <div className=" hidden w-full gap-4 px-2 sm:flex">

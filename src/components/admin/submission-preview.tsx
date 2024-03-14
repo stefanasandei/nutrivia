@@ -74,7 +74,7 @@ export default function SubmissionPreview({
           </div>
         )}
         {isAdmin && (
-          <div>
+          <div className="pr-3">
             {submission.food.isHidden && (
               <Button
                 variant={"secondary"}

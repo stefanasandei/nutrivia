@@ -131,7 +131,8 @@ export const adminRouter = createTRPCRouter({
           originCountry: input.originCountry,
           nutriScore: input.nutriScore,
           ean: input.ean,
-          priceRON: input.price, ingredients: { connect: input.ingredients },
+          priceRON: input.price,
+          ingredients: { connect: input.ingredients },
           nutriments: {
             create: {
               carbohydrates: input.nutriments.carbohydrates,
@@ -257,8 +258,39 @@ export const adminRouter = createTRPCRouter({
       originCountry: z.string(),
       nutriScore: z.string(),
       ean: z.string(),
-      ingredients: z.array(z.object({ id: z.number() }))
+      ingredients: z.array(z.object({ id: z.number() })),
+      nutriments: z.object({
+        carbohydrates: z.number(),
+        energy: z.number(),
+        fat: z.number(),
+        proteins: z.number(),
+        salt: z.number(),
+        sodium: z.number(),
+        sugars: z.number(),
+        fruitsVegetables: z.number(),
+        fiber: z.number()
+      })
     })).mutation(async ({ ctx, input }) => {
+      const oldSubmissions = await ctx.db.foodProduct.findMany({
+        where: { isHidden: true, ean: input.ean }
+      });
+
+      // autovalidate repeated submissions
+      // the datas are correct since they're fetched from 
+      // the open food facts api
+      if (oldSubmissions.length == 2) {
+        const data = await ctx.db.foodProduct.update({
+          where: { id: oldSubmissions[0]!.id },
+          data: { isHidden: false }
+        });
+
+        await ctx.db.foodProduct.delete({
+          where: { id: oldSubmissions[1]!.id }
+        });
+
+        return data;
+      }
+
       const product = await ctx.db.foodProduct.create({
         data: {
           name: input.name,
@@ -268,7 +300,20 @@ export const adminRouter = createTRPCRouter({
           originCountry: input.originCountry,
           nutriScore: input.nutriScore,
           ean: input.ean,
-          priceRON: input.price, ingredients: { connect: input.ingredients },
+          priceRON: input.price,
+          ingredients: { connect: input.ingredients },
+          nutriments: {
+            create: {
+              carbohydrates: input.nutriments.carbohydrates,
+              energy: input.nutriments.energy,
+              fat: input.nutriments.fat,
+              proteins: input.nutriments.proteins,
+              salt: input.nutriments.salt,
+              saturatedFat: 0.0,
+              sodium: input.nutriments.sodium,
+              sugars: input.nutriments.sugars,
+            }
+          },
           isHidden: true
         }
       });
@@ -298,7 +343,7 @@ export const adminRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.foodSubmission.findFirst({
         where: { createdById: ctx.session.user.id, id: input.id },
-        include: { food: { include: { ingredients: true } } }
+        include: { food: { include: { ingredients: true, nutriments: true } } }
       });
     }),
   editFoodSubmission: protectedProcedure
