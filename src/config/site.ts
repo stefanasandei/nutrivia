@@ -5,11 +5,12 @@ export const siteConfig = {
   description: "Description",
   mainNav: [
     {
-      title: "Home", // a feed of food products
+      // a feed of food products
+      title: "Home",
       href: "/",
     },
     {
-      title: "Your basket",
+      title: "Food baskets",
       href: "/basket",
     },
     {
@@ -19,6 +20,10 @@ export const siteConfig = {
     {
       title: "Forum",
       href: "/forum",
+    },
+    {
+      title: "Meal ideas",
+      href: "/meal-planner",
     },
   ],
   mainNavMarketing: [
