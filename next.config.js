@@ -9,8 +9,7 @@ import pwa from "next-pwa";
 const withPWA = pwa({
   dest: "public",
   register: true,
-  // disable: process.env.NODE_ENV === "development",
-  disable: true, // fix netlify build for the moment
+  disable: process.env.NODE_ENV === "development",
 });
 
 /** @type {import("next").NextConfig} */

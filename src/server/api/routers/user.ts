@@ -61,7 +61,7 @@ export const userRouter = createTRPCRouter({
         input.token
       ];
 
-      const topic = `topic_${ctx.session.user.id}`;
+      const topic = `topic-${ctx.session.user.id}`;
 
       return await getMessaging(ctx.firebaseApp).subscribeToTopic(registrationTokens, topic);
     }),
@@ -73,7 +73,7 @@ export const userRouter = createTRPCRouter({
           title: input.title,
           body: input.body
         },
-        topic: `topic_${!input.userId ? ctx.session.user.id : input.userId}`
+        topic: `topic-${!input.userId ? ctx.session.user.id : input.userId}`
       });
     })
 });
