@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MailSearch, PieChart, Scale, Utensils } from "lucide-react";
+import { MailSearch, Scale, Utensils } from "lucide-react";
 
 export const pages = [
-  {
-    icon: PieChart,
-    name: "Overview",
-    href: "/admin",
-  },
+  // {
+  //   icon: PieChart,
+  //   name: "Overview",
+  //   href: "/admin",
+  // },
   {
     icon: Utensils,
     name: "Food Products",
