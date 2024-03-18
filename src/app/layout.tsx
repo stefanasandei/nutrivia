@@ -14,6 +14,7 @@ import { env } from "@/env";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: {
@@ -66,6 +67,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               <TRPCReactProvider>
                 <div className="flex h-full flex-1 flex-col">{children}</div>
               </TRPCReactProvider>
+              <Footer />
               <Toaster
                 toastOptions={{
                   style: { willChange: "unset" },
