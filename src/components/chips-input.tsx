@@ -31,9 +31,12 @@ export default function ChipsInput({
       mode: theme.theme === "light" ? "light" : "dark",
       primary: {
         light: "#000",
-        dark: "#fff",
-        main: theme.theme === "light" ? "#000" : "#fff",
+        dark: "#00ffa6",
+        main: theme.theme === "light" ? "#000" : "#00ffa6",
       },
+    },
+    shape: {
+      borderRadius: 10,
     },
   });
 

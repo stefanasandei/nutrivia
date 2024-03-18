@@ -71,7 +71,9 @@ export const postRouter = createTRPCRouter({
   getComments: protectedProcedure.query(async ({ ctx }) => {
     if (ctx.session.user.id != env.ADMIN_ID) return;
 
-    return await ctx.db.comment.findMany({});
+    return await ctx.db.comment.findMany({
+      include: { createdBy: true }
+    });
   }),
 
   deleteComment: protectedProcedure

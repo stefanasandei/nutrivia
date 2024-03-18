@@ -27,7 +27,12 @@ export default async function FoodProductsPage() {
           rawFood={rawFood}
           isAdmin={true}
         />
-        <FoodList user={session.user} food={food} />
+        <FoodList
+          user={session.user}
+          food={food.map((item) => {
+            return { ...item, nutriments: item.nutriments! };
+          })}
+        />
         <AddRawFoodProductForm user={session.user} />
         <RawFoodList user={session.user} rawFood={rawFood} />
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { type Comment } from "@prisma/client";
+import { type User, type Comment } from "@prisma/client";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
@@ -22,15 +22,12 @@ import { toast } from "sonner";
 export default function CommentsModeration({
   comments,
 }: {
-  comments: Comment[];
+  comments: ({ createdBy: User } & Comment)[];
 }) {
   return (
     <div className="mt-3 border-t-2 border-border">
       <h1 className="text-3xl font-bold">Comments</h1>
-      <p>
-        Here you can delete the comments which do not respect the Community
-        Guidelines.
-      </p>
+      <p>Delete the comments which do not respect the Community Guidelines.</p>
       <div className="my-3 flex flex-col gap-3">
         {comments.map((com) => (
           <AdminCommentPreview comment={com} key={com.id} />
@@ -40,7 +37,11 @@ export default function CommentsModeration({
   );
 }
 
-const AdminCommentPreview = ({ comment }: { comment: Comment }) => {
+const AdminCommentPreview = ({
+  comment,
+}: {
+  comment: { createdBy: User } & Comment;
+}) => {
   const router = useRouter();
   const deleteComment = api.post.deleteComment.useMutation({
     onSuccess: () => {
@@ -50,11 +51,11 @@ const AdminCommentPreview = ({ comment }: { comment: Comment }) => {
   });
 
   return (
-    <Card className="max-w-md">
+    <Card className="">
       <CardHeader className="mx-3 flex flex-row items-center justify-between">
         <div>
           <p className="text-xl">{comment.body}</p>
-          <p>Posted by {comment.createdById}</p>
+          <p>Posted by {comment.createdBy.name}</p>
         </div>
 
         <AlertDialog>

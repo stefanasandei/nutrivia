@@ -23,7 +23,7 @@ export function SiteHeader({
         ...siteConfig.mainNav,
         {
           title: "Admin",
-          href: "/admin",
+          href: "/admin/foods",
         },
       ];
 
