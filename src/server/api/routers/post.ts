@@ -6,26 +6,30 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { removeItem } from "@/lib/array";
+import { env } from "@/env";
 
 export const postRouter = createTRPCRouter({
   getLatest: publicProcedure.query(({ ctx }) => {
     return ctx.db.post.findMany({
       orderBy: { createdAt: "desc" },
-      include: { createdBy: true }
+      include: { createdBy: true },
     });
   }),
   getBest: publicProcedure.query(({ ctx }) => {
     return ctx.db.post.findMany({
       orderBy: { likedBy: "desc" },
-      include: { createdBy: true }
+      include: { createdBy: true },
     });
   }),
 
   create: protectedProcedure
-    .input(z.object({
-      title: z.string(), body: z.string().optional(),
-      image: z.string().optional()
-    }))
+    .input(
+      z.object({
+        title: z.string(),
+        body: z.string().optional(),
+        image: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       return ctx.db.post.create({
         data: {
@@ -42,8 +46,11 @@ export const postRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.post.findFirst({
         where: { id: input.id },
-        include: { createdBy: true, comments: { include: { createdBy: true } } }
-      })
+        include: {
+          createdBy: true,
+          comments: { include: { createdBy: true } },
+        },
+      });
     }),
 
   addComment: protectedProcedure
@@ -53,36 +60,39 @@ export const postRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           comments: {
-            create:
-            {
+            create: {
               body: input.text,
-              createdById: ctx.session.user.id
-            }
-          }
-        }
-      })
+              createdById: ctx.session.user.id,
+            },
+          },
+        },
+      });
     }),
+  getComments: protectedProcedure.query(async ({ ctx }) => {
+    if (ctx.session.user.id != env.ADMIN_ID) return;
+
+    return await ctx.db.comment.findMany({});
+  }),
 
   deleteComment: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.comment.delete({
-        where: { id: input.id }
-      })
+        where: { id: input.id },
+      });
     }),
   deletePost: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.db.post.findFirst({
         where: { id: input.id },
-        select: { createdById: true }
+        select: { createdById: true },
       });
 
-      if (!post || post.createdById != ctx.session.user.id)
-        return null;
+      if (!post || post.createdById != ctx.session.user.id) return null;
 
       return await ctx.db.post.delete({
-        where: { id: input.id }
+        where: { id: input.id },
       });
     }),
 
@@ -91,20 +101,19 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.db.post.findFirst({
         where: { id: input.id },
-        select: { likedBy: true }
+        select: { likedBy: true },
       });
-      if (!post?.likedBy)
-        return null;
+      if (!post?.likedBy) return null;
 
       if (!post.likedBy.includes(ctx.session.user.id))
         return await ctx.db.post.update({
           where: { id: input.id },
-          data: { likedBy: { push: ctx.session.user.id } }
+          data: { likedBy: { push: ctx.session.user.id } },
         });
 
       return await ctx.db.post.update({
         where: { id: input.id },
-        data: { likedBy: removeItem(post.likedBy, ctx.session.user.id) }
-      })
-    })
+        data: { likedBy: removeItem(post.likedBy, ctx.session.user.id) },
+      });
+    }),
 });
