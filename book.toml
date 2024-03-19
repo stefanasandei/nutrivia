@@ -1,0 +1,6 @@
+[book]
+authors = ["Stefan Asandei"]
+language = "en"
+multilingual = false
+src = "docs"
+title = "Nutrivia Docs"
