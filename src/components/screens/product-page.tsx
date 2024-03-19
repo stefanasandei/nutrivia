@@ -97,7 +97,7 @@ export default function FoodProductPage({
 
   return (
     <section className="grid items-center gap-6 pt-3">
-      <div className="sticky top-20 z-50 flex w-full flex-col items-center justify-between gap-2 rounded-lg bg-secondary/40 p-3 backdrop-blur-xl">
+      <div className="sticky top-20 z-30 flex w-full flex-col items-center justify-between gap-2 rounded-lg bg-secondary/40 p-3 backdrop-blur-xl">
         <div className="flex w-full flex-col justify-between gap-2 px-2 md:flex-row md:gap-0">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
             {food.name}
