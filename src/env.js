@@ -36,6 +36,7 @@ export const env = createEnv({
     NEXT_PUBLIC_FIREBASE_PROJECT: z.string(),
     NEXT_PUBLIC_FIREBASE_ID: z.string(),
     NEXT_PUBLIC_URL: z.string(),
+    NEXT_PUBLIC_USDA_KEY: z.string(), //ikr
   },
 
   runtimeEnv: {
@@ -51,6 +52,7 @@ export const env = createEnv({
     ADMIN_ID: process.env.ADMIN_ID,
     FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
     FIREBASE_PRIVATE_EMAIL: process.env.FIREBASE_PRIVATE_EMAIL,
+    NEXT_PUBLIC_USDA_KEY: process.env.NEXT_PUBLIC_USDA_KEY,
 
     NEXT_PUBLIC_VAPID_KEY: process.env.NEXT_PUBLIC_VAPID_KEY,
     NEXT_PUBLIC_FIREBASE_KEY: process.env.NEXT_PUBLIC_FIREBASE_KEY,

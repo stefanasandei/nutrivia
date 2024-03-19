@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +21,32 @@ import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "../ui/checkbox";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Icons } from "../icons";
+import ResponsiveDialog from "../responsive-dialog";
+import { useEffect, useState } from "react";
+import { type USDAFood, fetchRawFoodStatsFromUSDA } from "@/lib/usda";
+
+type FormFieldType =
+  | "calories"
+  | "lipids"
+  | "cholesterol"
+  | "sodium"
+  | "potassium"
+  | "carbohydrate"
+  | "proteins"
+  | "vitaminC"
+  | "calcium"
+  | "iron"
+  | "vitaminD"
+  | "vitaminB6"
+  | "vitaminB12"
+  | "magnesium";
 
 export const rawFoodProduct = {
   name: z.string(),
@@ -44,6 +71,49 @@ const rawFoodProductSchema = z.object(rawFoodProduct);
 
 export default function AddRawFoodProductForm({ user }: { user: User }) {
   const router = useRouter();
+
+  const [open, setOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState<USDAFood[]>([]);
+  const [fillInValues, setFillInValues] = useState<USDAFood | null>(null);
+
+  useEffect(() => {
+    if (fillInValues == null) return;
+
+    const conversions = {
+      calories: "Energy",
+      lipids: "Total lipid (fat)",
+      cholesterol: "Cholesterol",
+      sodium: "Sodium, Na",
+      potassium: "potassium",
+      carbohydrate: "Carbohydrate, by difference",
+      proteins: "Protein",
+      vitaminC: "Vitamin C, total ascorbic acid",
+      calcium: "Calcium, Ca",
+      iron: "Iron, Fe",
+      // vitaminD: "vitaminD",
+      // vitaminB6: "vitaminB6",
+      // vitaminB12: "vitaminB12",
+      // magnesium: "magnesium",
+    };
+
+    const getValue = (val: string) => {
+      for (const elem of fillInValues.foodNutrients) {
+        if (elem.nutrientName == val) return elem;
+      }
+      return null;
+    };
+
+    for (const key of Object.keys(conversions)) {
+      const field = conversions[key as keyof typeof conversions];
+      if (field == null) continue;
+      const val = getValue(field);
+      if (val === null) continue;
+      form.setValue(key as FormFieldType, val.value);
+    }
+
+    setOpen(false);
+    toast("Values filled in! ✨");
+  }, [fillInValues]);
 
   const addRawFood = api.admin.addRawFood.useMutation({
     onSuccess: () => {
@@ -96,11 +166,14 @@ export default function AddRawFoodProductForm({ user }: { user: User }) {
     form.reset();
   }
 
+  async function fetchIngredientUSDA(ingredient: string) {
+    const data = await fetchRawFoodStatsFromUSDA(ingredient);
+    setSearchResults(data.foods);
+  }
+
   return (
     <Form {...form}>
-      <h1 className="border-t-2 py-2 text-3xl font-bold">
-        Add a raw food product
-      </h1>
+      <h1 className="border-t-2 py-2 text-3xl font-bold">Add an ingredient</h1>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
         <FormField
           control={form.control}
@@ -108,9 +181,51 @@ export default function AddRawFoodProductForm({ user }: { user: User }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+              <div className="flex flex-row items-center gap-3">
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+
+                <ResponsiveDialog
+                  title="Choose a product"
+                  description=""
+                  openState={[open, setOpen]}
+                  triggerButton={
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            onClick={async () => {
+                              setOpen(true);
+                              await fetchIngredientUSDA(field.value);
+                            }}
+                            disabled={!field.value}
+                          >
+                            <Icons.coolStars />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Fill in missing values</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  }
+                >
+                  {searchResults
+                    .sort((a, b) => a.description.length - b.description.length)
+                    .splice(0, 5)
+                    .map((res) => (
+                      <div
+                        key={res.fdcId}
+                        onClick={() => setFillInValues(res)}
+                        className="my-1 w-full rounded-lg p-3 text-xl transition-all hover:cursor-pointer hover:bg-secondary"
+                      >
+                        {res.description}
+                      </div>
+                    ))}
+                </ResponsiveDialog>
+              </div>
               <FormDescription>
                 The name of the raw food product.
               </FormDescription>
