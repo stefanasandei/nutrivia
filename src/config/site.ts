@@ -31,10 +31,10 @@ export const siteConfig = {
       title: "Home",
       href: "/",
     },
-    {
-      title: "About",
-      href: "/about",
-    },
+    // {
+    //   title: "About",
+    //   href: "/about",
+    // },
   ],
   links: {
     login: "/login",
