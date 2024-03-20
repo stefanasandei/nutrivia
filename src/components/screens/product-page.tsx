@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircle } from "lucide-react";
 import { env } from "@/env";
+import Link from "next/link";
 
 export default function FoodProductPage({
   food,
@@ -454,7 +455,16 @@ const HealthCard = ({
         <p className="mb-3 text-xl font-semibold">NutriScore:</p>
         <div className="flex flex-col items-start gap-6 md:flex-row">
           <NutriScore score={food.nutriScore} />
-          <p className="">What is the NutriScore? lorem ipsum</p>
+          <p className="">
+            What is the NutriScore?{" "}
+            <Link
+              href="https://www.eurofins.de/food-analysis/other-services/nutri-score/"
+              target="_blank"
+              className="hover:underline"
+            >
+              Read more here.
+            </Link>
+          </p>
         </div>
       </div>
     </div>

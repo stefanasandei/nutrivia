@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import UserAgreement from "@/components/screens/user-agreement";
 import { getServerAuthSession } from "@/server/auth";
 
@@ -13,42 +14,31 @@ export default async function ForumRules() {
       </div>
       <div className="space-y-4">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla a
-          ornare quam. Mauris lacus risus, posuere in dolor vel, aliquam
-          pulvinar tellus. Integer non magna tempor, posuere ante vitae,
-          convallis neque. Interdum et malesuada fames ac ante ipsum primis in
-          faucibus. Pellentesque habitant morbi tristique senectus et netus et
-          malesuada fames ac turpis egestas. Mauris in luctus diam. Nunc
-          ultrices leo velit, eget tincidunt dui varius quis. Sed augue mauris,
-          mattis vitae condimentum non, vehicula et tellus. Duis non enim
-          tortor. In consequat justo iaculis, fermentum orci eu, condimentum
-          nisl. Donec consectetur arcu lectus, a blandit dui sodales nec.
-          Vivamus laoreet in dui vitae sollicitudin. Mauris erat mauris, mattis
-          vitae sodales vitae, vehicula nec nisl. Phasellus eu lorem rutrum,
-          vehicula risus ac, tempus augue. Sed mi lorem, laoreet eget luctus sit
-          amet, molestie id turpis. Duis ultricies ligula eget nulla lobortis
-          pellentesque. Sed nec hendrerit turpis. Etiam lacinia sem at tempus
-          mollis. Sed facilisis ultricies diam eu mollis. Donec sed pulvinar
-          orci, vel convallis sapien. Phasellus eu velit eu quam dictum
-          convallis nec a dui. Fusce tellus justo, vestibulum tristique ornare
-          volutpat, aliquam aliquet lorem. Aliquam erat volutpat. Suspendisse ac
-          libero nec lorem faucibus sagittis sit amet a sapien. Duis luctus
-          tellus ex, eu dignissim enim vestibulum eget. Nunc ut semper quam. Sed
-          interdum ligula et erat vehicula pellentesque. Quisque congue odio et
-          ligula bibendum faucibus. Fusce eleifend at purus at tristique.
-          Vivamus dapibus purus vitae dui aliquam, id lacinia sapien finibus. In
-          at euismod velit. Quisque at dui ut turpis pulvinar mollis non
-          dignissim ligula. Nunc consectetur orci a dui scelerisque volutpat.
-          Nulla ut odio lacus. Vestibulum luctus urna libero, sit amet tristique
-          nibh rutrum ac. Suspendisse suscipit sit amet quam vel ullamcorper. In
-          id quam varius tellus dapibus faucibus a non ligula. In ultricies
-          fermentum tellus. Nulla molestie eget leo vel feugiat. Aenean vitae
-          magna bibendum, hendrerit dui in, tempor diam. Sed sed arcu et sapien
-          ullamcorper commodo at nec neque. Proin pellentesque at ex ac gravida.
-          Duis non fermentum lorem. Duis at lobortis ipsum. Nulla facilisi.
-          Quisque ultrices faucibus ex quis pellentesque. Cras tristique leo
-          eget libero interdum fringilla. Aenean bibendum nibh eget volutpat
-          vestibulum.
+          Be Honest and Constructive: When reviewing food products, honesty is
+          key. Share your genuine opinions and experiences, but remember to be
+          constructive in your criticism. If you didn't enjoy a product, explain
+          why and offer suggestions for improvement. Provide Detailed Reviews:
+          The more details you include in your reviews, the more helpful they'll
+          be to others. Mention aspects such as taste, texture, packaging, value
+          for money, and any special features. Don't forget to specify where you
+          purchased the product and its price, if possible. Respectful
+          Communication: Treat fellow community members with respect and
+          kindness, even if you disagree with their opinions. Healthy
+          discussions are encouraged, but personal attacks, offensive language,
+          and disrespectful behavior will not be tolerated. Disclosure of
+          Relationships: If you have any affiliations with a brand or product
+          you're reviewing, please disclose them transparently. This helps
+          maintain trust within the community and ensures that reviews are
+          unbiased. Avoid Self-Promotion: While we encourage you to share your
+          experiences, please refrain from using the forum solely for
+          self-promotion or advertising purposes. Any promotional content should
+          be relevant to the discussion and add value to the community. Stay
+          On-Topic: Keep discussions focused on food product reviews and related
+          topics. Off-topic conversations should be taken to appropriate
+          sections or forums. Respect Copyright and Intellectual Property: When
+          sharing images, recipes, or any other content, ensure you have the
+          necessary rights or permissions. Give credit to original sources
+          whenever possible.
         </p>
         {session != null && <UserAgreement user={session.user} />}
       </div>
