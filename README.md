@@ -4,11 +4,11 @@ Nutrivia is a web app designed to help its user make better decision regarding t
 
 ## FIICode
 
-This project was created for the FIICode Web&Mobile 2024 contest. Team members:
+This project was created for the FIICode Web&Mobile 2024 contest. Team name: Glitchd. Team members:
 
 - Asandei Stefan-Alexandru
 
-Video presentation: https://youtu.be/EySdVK0NK1Y
+Video presentation: https://youtu.be/3l_ZUBY1Qeo
 
 ## Documentation
 
