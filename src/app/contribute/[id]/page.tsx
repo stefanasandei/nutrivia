@@ -18,6 +18,7 @@ export default async function SubmissionViewPage({
   return (
     <section className="container flex flex-col">
       <FoodProductPage
+        points={0}
         food={{ ...submission.food, nutriments: submission.food.nutriments! }}
         comments={[]}
         user={null}

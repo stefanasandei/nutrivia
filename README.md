@@ -8,7 +8,9 @@ This project was created for the FIICode Web&Mobile 2024 contest. Team name: Gli
 
 - Asandei Stefan-Alexandru
 
-Video presentation: https://youtu.be/3l_ZUBY1Qeo
+Video for the Hackathon: https://youtu.be/Jk3sTCoEh8I
+
+Video presentation (whole project): https://youtu.be/3l_ZUBY1Qeo
 
 ## Documentation
 
