@@ -3,8 +3,10 @@
 import { type FoodProduct, type Basket, type Comment } from "@prisma/client";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { computeScore } from "@/lib/food";
+import { Calendar } from "../ui/calendar";
+import { useState } from "react";
 
 export default function MainBasketsPage({
   baskets,
@@ -12,25 +14,24 @@ export default function MainBasketsPage({
   baskets: ({ foods: ({ comments: Comment[] } & FoodProduct)[] } & Basket)[];
   food: FoodProduct[];
 }) {
+  const [date, setDate] = useState<Date | undefined>(undefined);
+
   return (
     <section className="container flex h-full flex-1 flex-col gap-6 pb-8 pt-3">
-      <div className="flex flex-row items-start justify-between gap-2">
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-          Your baskets
-        </h1>
-        <Link href="/basket/new" className={buttonVariants({ size: "icon" })}>
-          <Icons.add />
-        </Link>
-      </div>
-      <div className="h-full w-full items-center">
-        {baskets.length == 0 && (
-          <p>You didn&apos;t create any food baskets yet.</p>
-        )}
-        <div className="flex flex-col gap-4">
-          {baskets.map((basket) => (
-            <BasketPreview key={basket.id} basket={basket} />
-          ))}
+      <div className="flex h-full w-full flex-1 flex-col gap-4">
+        <div className="flex flex-col justify-between gap-2 md:flex-row">
+          <h1 className="text-3xl font-bold">Progress dashboard</h1>
+          <div className="flex flex-col justify-between gap-2 md:flex-row">
+            <Button>Create a basket</Button>
+            <Button variant={"outline"}>Daily challenge</Button>
+          </div>
         </div>
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          className="flex h-full w-full flex-1 rounded-md border"
+        />
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import MainBasketsPage from "@/components/screens/baskets";
+import MainBasketsPage from "@/components/screens/dashboard";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
 import { redirect } from "next/navigation";
