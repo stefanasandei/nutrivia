@@ -8,20 +8,31 @@ datasource db {
 }
 
 model User {
-    id             String           @id @default(cuid())
-    name           String?          @unique
-    email          String?          @unique
-    emailVerified  DateTime?
-    image          String?
-    hasAgreed      Boolean          @default(false)
-    isVegan        Boolean          @default(false)
-    allergies      RawFoodProduct[]
-    accounts       Account[]
-    sessions       Session[]
-    posts          Post[]
-    Comment        Comment[]
-    FoodSubmission FoodSubmission[]
-    baskets        Basket[]
+    id                  String           @id @default(cuid())
+    name                String?          @unique
+    email               String?          @unique
+    emailVerified       DateTime?
+    image               String?
+    hasAgreed           Boolean          @default(false)
+    isVegan             Boolean          @default(false)
+    allergies           RawFoodProduct[]
+    accounts            Account[]
+    sessions            Session[]
+    posts               Post[]
+    Comment             Comment[]
+    FoodSubmission      FoodSubmission[]
+    baskets             Basket[]
+    completedChallenges Challenges[]
+}
+
+// in the db challenges and milestone are the same
+model Challenges {
+    id          String  @id @default(uuid())
+    isMilestone Boolean
+    title       String
+    description String // markdown
+    value       Int // points
+    doneBy      User[]
 }
 
 model RawFoodProduct {

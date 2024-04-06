@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MailSearch, Scale, Utensils } from "lucide-react";
+import { MailSearch, Scale, Utensils, VeganIcon } from "lucide-react";
 
 export const pages = [
   // {
@@ -24,6 +24,11 @@ export const pages = [
     icon: MailSearch,
     name: "Submissions",
     href: "/admin/submissions",
+  },
+  {
+    icon: VeganIcon,
+    name: "Challenges",
+    href: "/admin/challenges",
   },
 ];
 
