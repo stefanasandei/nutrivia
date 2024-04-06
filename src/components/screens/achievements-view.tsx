@@ -13,7 +13,7 @@ export default function AchievementsView({
     <div className="flex flex-col gap-3">
       <p className="mb-3 text-2xl">
         <span className="font-bold">Achievements</span>: {challenges.length}{" "}
-        challenges solved
+        challenges & milestones earned
       </p>
       {/* <p className="text-xl">Milestones:</p> */}
       <div className="grid grid-flow-row grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-5">
