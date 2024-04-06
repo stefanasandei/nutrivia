@@ -83,6 +83,24 @@ export function CreateNewBasket({
     return recommendHealthyFood(foodItems);
   }, [foodItems]);
 
+  const isDisabled = useMemo(() => {
+    const d = foodItems.map((item, index) => {
+      const notVeganIngredients = item.ingredients.filter(
+        (value) => value.vegan == false,
+      );
+      const isVegan = notVeganIngredients.length == 0;
+
+      const allergies = item.ingredients.filter(
+        (value) =>
+          user.allergies.map((v) => v.name).includes(value.name) == true,
+      );
+
+      const disabled = (user.isVegan && !isVegan) || allergies.length > 0;
+      return disabled;
+    });
+    return d.includes(true);
+  }, [foodItems]);
+
   return (
     <section className="container flex h-full flex-1 flex-col gap-6 pb-8 pt-3">
       <div className="flex flex-row items-center justify-between gap-2">
@@ -128,6 +146,9 @@ export function CreateNewBasket({
                   user.allergies.map((v) => v.name).includes(value.name) ==
                   true,
               );
+
+              const disabled =
+                (user.isVegan && !isVegan) || allergies.length > 0;
 
               return (
                 <div
@@ -252,7 +273,7 @@ export function CreateNewBasket({
               food: foodItems.map((item) => item.id),
             })
           }
-          disabled={foodItems.length == 0}
+          disabled={foodItems.length == 0 || isDisabled}
         >
           Create basket
         </Button>
