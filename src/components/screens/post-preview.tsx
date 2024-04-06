@@ -28,7 +28,15 @@ export default function PostPreview({
     <Card className="flex w-full flex-col transition hover:cursor-pointer hover:bg-secondary/30">
       <CardHeader className="flex flex-row items-start justify-between p-3">
         <div>
-          <p>Posted by {post.createdBy.name}</p>
+          <p>
+            Posted by{" "}
+            <Link
+              className="hover:cursor-pointer hover:underline"
+              href={`/profile/@${post.createdBy.name}`}
+            >
+              {post.createdBy.name}
+            </Link>
+          </p>
           <CardTitle>{post.title}</CardTitle>
         </div>
         <Button size={"icon"} variant={"ghost"}>

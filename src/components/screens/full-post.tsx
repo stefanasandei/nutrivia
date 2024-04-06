@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -56,8 +57,14 @@ export default function FullPostPage({
         </h1>
         <p className="font-thin text-secondary-foreground">
           <span className="hidden sm:block">
-            Post created by {post.createdBy.name},{" "}
-            {dayjs(post.createdAt).fromNow()}
+            Post created by{" "}
+            <Link
+              className="hover:cursor-pointer hover:underline"
+              href={`/profile/@${post.createdBy.name}`}
+            >
+              {post.createdBy.name}
+            </Link>
+            , {dayjs(post.createdAt).fromNow()}
           </span>
           <span className="block sm:hidden">
             {post.createdBy.name}

@@ -26,7 +26,7 @@ export default async function Page({
             alt="profile picture"
           />
         </div>
-        <div className="col-span-2 flex flex-col gap-2">
+        <div className="col-span-2 flex flex-col justify-between gap-2">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
             {username}
           </h1>

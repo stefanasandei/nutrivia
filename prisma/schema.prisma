@@ -35,6 +35,7 @@ model Challenges {
     description        String // markdown
     completionMsg      String
     value              Int // points
+    badgeURL           String               @default("")
     doneBy             User[]
     CompletedChallenge CompletedChallenge[]
 }
