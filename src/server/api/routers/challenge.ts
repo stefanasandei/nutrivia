@@ -133,4 +133,21 @@ export const challengeRouter = createTRPCRouter({
         where: { id: input.id },
       });
     }),
+
+  getUserPoints: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findFirst({
+        where: { id: input.userId },
+        include: { completedChallenges: true },
+      });
+      if (user == null) return 0;
+
+      let sum = 0;
+      for (let i = 0; i < user?.completedChallenges.length; i++) {
+        sum += user.completedChallenges[i]?.value ?? 0;
+      }
+
+      return sum;
+    }),
 });

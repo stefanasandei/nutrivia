@@ -33,10 +33,12 @@ const formSchema = z.object({
 });
 
 export default function EditProfileForm({
+  points,
   user,
   food,
   allergies: userallergies,
 }: {
+  points: number;
   user: User;
   food: RawFoodProduct[];
   allergies: RawFoodProduct[];
@@ -84,12 +86,13 @@ export default function EditProfileForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
         <div className="gird-cols-1 grid md:grid-cols-3">
-          <div className="col-span-1 grid justify-evenly">
+          <div className="col-span-1 flex flex-col items-center justify-evenly gap-3">
             <img
               src={user.image!}
               className="m-1 size-40 rounded-md"
               alt="profile picture"
             />
+            <p>{points} points</p>
           </div>
           <div className="col-span-2 grid space-y-2">
             <FormField

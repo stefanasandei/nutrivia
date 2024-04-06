@@ -13,6 +13,10 @@ export default async function ProfilePage() {
 
   const user = await api.user.get.query();
 
+  const points = await api.challenge.getUserPoints.query({
+    userId: user!.id,
+  });
+
   const food = await api.admin.getRawFoodProducts.query();
   const allergies = await api.admin.getAllergiesOfUser.query({
     uid: session.user.id,
@@ -32,6 +36,7 @@ export default async function ProfilePage() {
       </div>
       <div className="flex flex-col gap-4">
         <EditProfileForm
+          points={points}
           user={user!}
           allergies={allergies?.allergies ?? []}
           food={food}
