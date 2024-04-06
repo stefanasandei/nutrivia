@@ -15,6 +15,8 @@ export default async function ForumPage() {
   const bestPosts = await api.post.getBest.query();
   const hasAgreed = await api.admin.getUserStatus.query();
 
+  const challenges = await api.challenge.get.query();
+
   return (
     <section className="container grid items-center gap-6 pb-8 pt-5 sm:pt-0">
       <div>
@@ -32,6 +34,7 @@ export default async function ForumPage() {
               </TabsTrigger>
             </TabsList>
             <ForumWritePrompt
+              challenges={challenges}
               user={session.user}
               agree={hasAgreed?.hasAgreed ?? false}
             />

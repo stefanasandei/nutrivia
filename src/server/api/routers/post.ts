@@ -27,6 +27,7 @@ export const postRouter = createTRPCRouter({
       z.object({
         title: z.string(),
         body: z.string().optional(),
+        challengeId: z.string(),
         image: z.string().optional(),
       }),
     )
@@ -35,6 +36,7 @@ export const postRouter = createTRPCRouter({
         data: {
           title: input.title,
           body: input.body,
+          challengeId: input.challengeId,
           image: input.image,
           createdBy: { connect: { id: ctx.session.user.id } },
         },
@@ -72,7 +74,7 @@ export const postRouter = createTRPCRouter({
     if (ctx.session.user.id != env.ADMIN_ID) return;
 
     return await ctx.db.comment.findMany({
-      include: { createdBy: true }
+      include: { createdBy: true },
     });
   }),
 

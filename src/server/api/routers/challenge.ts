@@ -125,4 +125,12 @@ export const challengeRouter = createTRPCRouter({
 
     return notCompleted[notCompleted.length - 1];
   }),
+
+  getById: protectedProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.challenges.findFirst({
+        where: { id: input.id },
+      });
+    }),
 });

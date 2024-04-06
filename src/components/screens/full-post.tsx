@@ -1,6 +1,6 @@
 "use client";
 
-import { type Comment, type Post } from "@prisma/client";
+import { type Challenges, type Comment, type Post } from "@prisma/client";
 import { type User } from "next-auth";
 import { Input } from "../ui/input";
 import { useState } from "react";
@@ -14,15 +14,19 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
 import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 dayjs.extend(relativeTime);
 
 export default function FullPostPage({
   user,
   post,
+  challenge,
 }: {
   post: { comments: ({ createdBy: User } & Comment)[]; createdBy: User } & Post;
   user: User | null;
+  challenge?: Challenges;
 }) {
   const router = useRouter();
 
@@ -82,6 +86,13 @@ export default function FullPostPage({
             height={250}
             className="mx-auto rounded-lg"
           />
+        )}
+        {challenge != undefined && (
+          <Alert className="my-3 ring-2 ring-secondary transition-all hover:cursor-pointer hover:bg-secondary">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Community Challenge: {challenge.title}</AlertTitle>
+            <AlertDescription>{challenge.description}</AlertDescription>
+          </Alert>
         )}
         <p>{post.body}</p>
         {post.createdById === user?.id && (

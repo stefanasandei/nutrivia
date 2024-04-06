@@ -12,7 +12,18 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
   if (post == null) notFound();
 
+  let challenge = undefined;
+  if (post.challengeId != "") {
+    challenge = await api.challenge.getById.query({
+      id: post.challengeId,
+    });
+  }
+
   return (
-    <FullPostPage post={post} user={session == null ? null : session.user} />
+    <FullPostPage
+      challenge={challenge ?? undefined}
+      post={post}
+      user={session == null ? null : session.user}
+    />
   );
 }

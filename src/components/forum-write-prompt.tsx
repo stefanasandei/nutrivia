@@ -32,10 +32,14 @@ import { useRouter } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { type User } from "next-auth";
+import ChipsInput from "./chips-input";
+import { type Challenges } from "@prisma/client";
 
 export default function ForumWritePrompt({
   agree,
+  challenges,
 }: {
+  challenges: Challenges[];
   user: User;
   agree: boolean;
 }) {
@@ -46,6 +50,7 @@ export default function ForumWritePrompt({
     title: "",
     body: "",
     image: "",
+    challengeId: "",
   });
 
   const createPost = api.post.create.useMutation({
@@ -100,6 +105,7 @@ export default function ForumWritePrompt({
             </DialogHeader>
             <div className="">
               <NewPostForm
+                allChallenges={challenges}
                 onChange={(obj) => setFormData(obj)}
                 initialValues={formData}
               />
@@ -126,7 +132,12 @@ export default function ForumWritePrompt({
                 setOpenDialog(false);
                 if (formData == undefined || formData?.title == "") return;
                 createPost.mutate(formData);
-                setFormData({ title: "", body: "", image: "" });
+                setFormData({
+                  title: "",
+                  body: "",
+                  image: "",
+                  challengeId: "",
+                });
               }}
             >
               Submit post
@@ -138,14 +149,21 @@ export default function ForumWritePrompt({
   );
 }
 
-type NewPostValues = { title: string; body: string; image: string };
+type NewPostValues = {
+  title: string;
+  body: string;
+  image: string;
+  challengeId: string;
+};
 
 function NewPostForm({
   initialValues,
+  allChallenges,
   onChange,
 }: {
   initialValues: NewPostValues;
   onChange: (obj: NewPostValues) => void;
+  allChallenges: Challenges[];
 }) {
   const formSchema = z.object({
     title: z.string().min(2).max(50),
@@ -155,6 +173,10 @@ function NewPostForm({
   const [title, setTitle] = useState(initialValues.title);
   const [body, setBody] = useState(initialValues.body);
   const [image, setImage] = useState(initialValues.image);
+
+  const [challenges, setChallenges] = useState<{ id: number; name: string }[]>(
+    [],
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -167,6 +189,12 @@ function NewPostForm({
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
+
+  const getCID = () => {
+    return (
+      allChallenges.filter((c) => c.title == challenges[0]?.name)[0]?.id ?? ""
+    );
+  };
 
   return (
     <Form {...form}>
@@ -183,7 +211,12 @@ function NewPostForm({
                   value={title}
                   onChange={(value) => {
                     setTitle(value.target.value);
-                    onChange({ title: value.target.value, body, image });
+                    onChange({
+                      title: value.target.value,
+                      body,
+                      image,
+                      challengeId: getCID(),
+                    });
                   }}
                 />
               </FormControl>
@@ -200,11 +233,16 @@ function NewPostForm({
               <FormLabel>Body</FormLabel>
               <FormControl>
                 <Textarea
-                  className="h-[25vh] max-h-[25vh]"
+                  className="h-[15vh] max-h-[25vh]"
                   value={body}
                   onChange={(value) => {
                     setBody(value.target.value);
-                    onChange({ title, body: value.target.value, image });
+                    onChange({
+                      title: title,
+                      body: value.target.value,
+                      image,
+                      challengeId: getCID(),
+                    });
                   }}
                 />
               </FormControl>
@@ -213,30 +251,67 @@ function NewPostForm({
             </FormItem>
           )}
         />
-        <FormItem>
-          <FormLabel>Image (optional)</FormLabel>
-          <FormControl>
-            <UploadButton
-              className="flex flex-row items-center justify-start gap-3 ut-button:bg-primary ut-button:text-primary-foreground ut-button:transition ut-button:hover:bg-primary/90"
-              endpoint="imageUploader"
-              onClientUploadComplete={(res) => {
-                setImage(res[0]?.url ?? "");
-                onChange({ title, body, image: res[0]?.url ?? "" });
-                alert("Upload complete!");
-              }}
-              onUploadError={(error: Error) => {
-                alert(
-                  `Please refresh the page and try again. Upload error: ${error.message}`,
-                );
-              }}
-            />
-          </FormControl>
-          <FormDescription>
-            Upload an image with the food product.
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
+        <div className="flex flex-row items-center justify-between">
+          <FormItem>
+            <FormLabel>Image (optional)</FormLabel>
+            <FormControl>
+              <UploadButton
+                className="flex flex-row items-center justify-start gap-3 ut-button:bg-primary ut-button:text-primary-foreground ut-button:transition ut-button:hover:bg-primary/90"
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  setImage(res[0]?.url ?? "");
+                  onChange({
+                    title,
+                    body,
+                    image: res[0]?.url ?? "",
+                    challengeId: getCID(),
+                  });
+                  alert("Upload complete!");
+                }}
+                onUploadError={(error: Error) => {
+                  alert(
+                    `Please refresh the page and try again. Upload error: ${error.message}`,
+                  );
+                }}
+              />
+            </FormControl>
+            <FormDescription>
+              Upload an image with the food product.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+          <FormItem>
+            <FormLabel>Challenge (optional)</FormLabel>
+            <FormControl>
+              <ChipsInput
+                placeholder="challenge"
+                options={allChallenges.map((c) => {
+                  return { id: getHash(c.id), name: c.title };
+                })}
+                value={challenges}
+                setValue={(newValue) => {
+                  setChallenges(newValue);
+                }}
+              />
+            </FormControl>
+            <FormDescription>
+              Want to start a community challenge? Add a challenge to kick start
+              the group effort!
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        </div>
       </form>
     </Form>
   );
+}
+
+function getHash(input: string) {
+  let hash = 0;
+  const len = input.length;
+  for (let i = 0; i < len; i++) {
+    hash = (hash << 5) - hash + input.charCodeAt(i);
+    hash |= 0; // to 32bit integer
+  }
+  return hash;
 }

@@ -149,6 +149,7 @@ model Post {
     createdById String
     likedBy     String[]  @default([])
     comments    Comment[]
+    challengeId String    @default("")
 }
 
 model Comment {

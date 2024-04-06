@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 
 export type ChipOption = {
   id: number;
@@ -49,6 +50,7 @@ export default function ChipsInput({
       <Autocomplete
         multiple
         value={value}
+        className="z-50"
         onChange={(event, newValue) => {
           const update = [
             ...fixedOptions,
@@ -72,7 +74,7 @@ export default function ChipsInput({
           return tagValue.map((option, index) => {
             const tags = getTagProps({ index });
             const goodTags = {
-              className: tags.className,
+              className: cn(tags.className, "z-50"),
               onDelete: tags.onDelete,
               "data-tag-index": tags["data-tag-index"],
               disabled: tags.disabled,
