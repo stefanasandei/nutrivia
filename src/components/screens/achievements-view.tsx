@@ -7,6 +7,7 @@ export default function AchievementsView({
   challenges: Challenges[];
 }) {
   const badgedChallenges = challenges.filter((c) => c.badgeURL.length > 1);
+  const boringChallenges = challenges.filter((c) => c.isMilestone == false);
 
   return (
     <div className="flex flex-col gap-3">
@@ -14,12 +15,22 @@ export default function AchievementsView({
         <span className="font-bold">Achievements</span>: {challenges.length}{" "}
         challenges solved
       </p>
+      {/* <p className="text-xl">Milestones:</p> */}
       <div className="grid grid-flow-row grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-5">
         {[...badgedChallenges].map((challenge) => (
           <AchievementPreview key={challenge.id} challenge={challenge} />
         ))}
       </div>
-      <p></p>
+      {boringChallenges.length > 0 && (
+        <>
+          <p className="text-xl">Challanges completed:</p>
+          <ul className="list ml-5 list-disc">
+            {boringChallenges.map((c) => {
+              return <li key={c.id}>{c.title}</li>;
+            })}
+          </ul>
+        </>
+      )}
     </div>
   );
 }

@@ -25,9 +25,11 @@ import { Clipboard } from "lucide-react";
 export default function ChallengeList({
   challenges,
   isMilestone,
+  totalUsers,
 }: {
   challenges: (Challenges & { doneBy: User[] })[];
   isMilestone: boolean;
+  totalUsers: number;
 }) {
   const router = useRouter();
 
@@ -53,7 +55,7 @@ export default function ChallengeList({
             <TableHead>Title</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Completition Message</TableHead>
-            <TableHead>Solved by</TableHead>
+            <TableHead>Earned by</TableHead>
             <TableHead>Points awarded</TableHead>
           </TableRow>
         </TableHeader>
@@ -89,7 +91,10 @@ export default function ChallengeList({
               <TableCell>
                 {challenge.completionMsg.substring(0, 25)}...
               </TableCell>
-              <TableCell>{challenge.doneBy.length} users</TableCell>
+              <TableCell>
+                {challenge.doneBy.length} users (
+                {(challenge.doneBy.length / totalUsers) * 100}%)
+              </TableCell>
               <TableCell>{challenge.value} points</TableCell>
             </TableRow>
           ))}

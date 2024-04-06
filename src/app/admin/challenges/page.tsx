@@ -9,6 +9,7 @@ export default async function FoodProductsPage() {
   if (!session) redirect("/");
 
   const challenges = await api.challenge.get.query();
+  const totalUsers = await api.admin.countUsers.query();
 
   return (
     <section className="container m-3 h-full w-full">
@@ -20,9 +21,17 @@ export default async function FoodProductsPage() {
       </div>
       <div className="mt-5 flex w-full flex-col space-y-4">
         <AddChallengeForm isMilestone={true} />
-        <ChallengeList challenges={challenges} isMilestone={true} />
+        <ChallengeList
+          challenges={challenges}
+          totalUsers={totalUsers}
+          isMilestone={true}
+        />
         <AddChallengeForm isMilestone={false} />
-        <ChallengeList challenges={challenges} isMilestone={false} />
+        <ChallengeList
+          challenges={challenges}
+          totalUsers={totalUsers}
+          isMilestone={false}
+        />
       </div>
     </section>
   );
