@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import AchievementsView from "@/components/screens/achievements-view";
 import { api } from "@/trpc/server";
 import { notFound } from "next/navigation";
 
@@ -33,8 +34,7 @@ export default async function Page({
         </div>
       </div>
       <div>
-        <p className="text-2xl font-bold">Achievements</p>
-        {/*todo*/}
+        <AchievementsView challenges={user.completedChallenges} />
       </div>
     </section>
   );

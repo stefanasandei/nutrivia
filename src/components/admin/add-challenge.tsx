@@ -43,13 +43,6 @@ export default function AddChallengeForm({
     },
   });
 
-  const finishChallenge = api.challenge.complete.useMutation({
-    onSuccess() {
-      toast("yass");
-      router.refresh();
-    },
-  });
-
   // form handling
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -78,15 +71,6 @@ export default function AddChallengeForm({
       <h1 className="border-t-2 py-2 text-3xl font-bold">
         Create a {isMilestone ? "milestone" : "challenge"}
       </h1>
-      <Button
-        onClick={() =>
-          finishChallenge.mutate({
-            challengeId: "44681366-7821-4ded-920a-44af1438879a",
-          })
-        }
-      >
-        test
-      </Button>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className=" w-full space-y-4"

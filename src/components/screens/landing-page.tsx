@@ -19,7 +19,7 @@ export default function LandingPage() {
         </p>
       </div>
       <div className="flex gap-4">
-        <Button onClick={() => signIn()}>Join now</Button>
+        <Button onClick={async () => await signIn()}>Join now</Button>
         <Link
           href={siteConfig.links.about}
           className={buttonVariants({ variant: "outline" })}

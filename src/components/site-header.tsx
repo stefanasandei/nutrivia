@@ -4,9 +4,9 @@ import { siteConfig } from "@/config/site";
 import { MainNav } from "@/components/main-nav";
 import { buttonVariants } from "@/components/ui/button";
 import { type Session } from "next-auth";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 export function SiteHeader({
   session,
@@ -40,7 +40,7 @@ export function SiteHeader({
               className={buttonVariants()}
               onClick={async () => {
                 if (session) router.push("/profile");
-                else await signIn("discord");
+                else await signIn();
               }}
             >
               {session ? "Profile" : "Sign in"}

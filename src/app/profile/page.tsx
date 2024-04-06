@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import AchievementsView from "@/components/screens/achievements-view";
 import EditProfileForm from "@/components/screens/edit-profile";
 import { buttonVariants } from "@/components/ui/button";
 import { getServerAuthSession } from "@/server/auth";
@@ -29,12 +30,13 @@ export default async function ProfilePage() {
           </Link>
         </div>
       </div>
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4">
         <EditProfileForm
           user={user!}
           allergies={allergies?.allergies ?? []}
           food={food}
         />
+        <AchievementsView challenges={user?.completedChallenges!} />
       </div>
     </section>
   );

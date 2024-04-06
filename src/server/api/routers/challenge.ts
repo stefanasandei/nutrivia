@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 
 export const challengeRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
@@ -43,29 +47,45 @@ export const challengeRouter = createTRPCRouter({
       });
     }),
 
-  complete: protectedProcedure
+  complete: publicProcedure
     .input(
       z.object({
         challengeId: z.string().uuid(),
+        userId: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const challenge = await ctx.db.challenges.findFirst({
+        where: { id: input.challengeId },
+        select: { doneBy: true },
+      });
+
+      const userId = ctx.session == null ? input.userId : ctx.session.user.id;
+
+      const isDone =
+        challenge?.doneBy.filter((usr) => {
+          return usr.id == userId;
+        }).length == 1;
+      if (isDone) return true;
+
       // mark the challenge as completed
       await ctx.db.challenges.update({
         where: { id: input.challengeId },
-        data: { doneBy: { connect: { id: ctx.session.user.id } } },
+        data: { doneBy: { connect: { id: userId } } },
       });
 
       // add it to the completed challenges "queue"
       return await ctx.db.completedChallenge.create({
         data: {
           challengesId: input.challengeId,
-          userId: ctx.session.user.id,
+          userId: userId!,
         },
       });
     }),
 
-  getQueued: protectedProcedure.query(async ({ ctx }) => {
+  getQueued: publicProcedure.query(async ({ ctx }) => {
+    if (ctx.session == null) return null;
+
     return await ctx.db.completedChallenge.findFirst({
       where: { userId: ctx.session.user.id },
       include: { challenge: true },
