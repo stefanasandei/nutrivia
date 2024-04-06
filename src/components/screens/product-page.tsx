@@ -359,7 +359,7 @@ const CoreInfoCard = ({
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>This product is vegan!</AlertTitle>
             <AlertDescription>
-              Your session has expired. Please log in again.
+              No meat based products were found.
             </AlertDescription>
           </Alert>
         )}
