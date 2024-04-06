@@ -25,6 +25,7 @@ model User {
     baskets             Basket[]
     completedChallenges Challenges[]
     CompletedChallenge  CompletedChallenge[]
+    TrackedChallange    TrackedChallange[]
 }
 
 // in the db challenges and milestone are the same
@@ -38,6 +39,7 @@ model Challenges {
     badgeURL           String               @default("")
     doneBy             User[]
     CompletedChallenge CompletedChallenge[]
+    TrackedChallange   TrackedChallange[]
 }
 
 model CompletedChallenge {
@@ -46,6 +48,15 @@ model CompletedChallenge {
     challengesId String
     user         User       @relation(fields: [userId], references: [id])
     userId       String
+}
+
+model TrackedChallange {
+    id           String     @id @default(uuid())
+    challenge    Challenges @relation(fields: [challengesId], references: [id])
+    challengesId String
+    user         User       @relation(fields: [userId], references: [id])
+    userId       String
+    completedOn  DateTime   @default(now())
 }
 
 model RawFoodProduct {

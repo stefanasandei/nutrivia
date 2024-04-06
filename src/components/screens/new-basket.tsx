@@ -29,6 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
+import { CHALLENGES, ITALIAN_FOOD } from "@/lib/milestones";
 
 export type FoodItem = {
   nutriments: FoodNutriments | null;
@@ -45,10 +46,24 @@ export function CreateNewBasket({
 }) {
   const router = useRouter();
 
-  const createBasket = api.user.createBasket.useMutation({
+  const completeChallenge = api.challenge.complete.useMutation({
     onSuccess: () => {
+      router.refresh();
+    },
+  });
+
+  const createBasket = api.user.createBasket.useMutation({
+    onSuccess: async () => {
+      const italian =
+        foodItems.filter((item) => ITALIAN_FOOD.includes(item.id)).length > 0;
+      if (italian) {
+        await completeChallenge.mutateAsync({
+          challengeId: CHALLENGES.ItalianForADay,
+        });
+      }
+
       toast("Basket created!");
-      router.push("/basket");
+      router.push("/dashboard");
     },
   });
 

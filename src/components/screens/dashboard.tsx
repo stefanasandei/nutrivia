@@ -1,20 +1,74 @@
 "use client";
 
-import { type FoodProduct, type Basket, type Comment } from "@prisma/client";
-import { Icons } from "@/components/icons";
+import {
+  type FoodProduct,
+  type Basket,
+  type Comment,
+  type Challenges,
+  type TrackedChallange,
+} from "@prisma/client";
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import { computeScore } from "@/lib/food";
 import { Calendar } from "../ui/calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import ResponsiveDialog from "../responsive-dialog";
 
 export default function MainBasketsPage({
+  completedChallenges,
+  dailyChallenge,
   baskets,
 }: {
+  completedChallenges: (TrackedChallange & { challenge: Challenges })[];
+  dailyChallenge: Challenges;
   baskets: ({ foods: ({ comments: Comment[] } & FoodProduct)[] } & Basket)[];
   food: FoodProduct[];
 }) {
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [openDayDialog, setOpenDayDialog] = useState(false);
+
+  const [selectedBaskets, setSelectedBaskets] = useState<
+    ({ foods: ({ comments: Comment[] } & FoodProduct)[] } & Basket)[]
+  >([]);
+  const [selectedChallenges, setSelectedChallenges] = useState<Challenges[]>(
+    [],
+  );
+
+  useEffect(() => {
+    if (date == undefined) return;
+
+    setOpenDayDialog(true);
+
+    setSelectedBaskets(
+      baskets.filter((b) => {
+        return (
+          b.createdAt.getDate() == date.getDate() &&
+          b.createdAt.getMonth() == date.getMonth()
+        );
+      }),
+    );
+
+    setSelectedChallenges(
+      completedChallenges
+        .filter((b) => {
+          return (
+            b.completedOn.getDate() == date.getDate() &&
+            b.completedOn.getMonth() == date.getMonth()
+          );
+        })
+        .map((c) => c.challenge),
+    );
+  }, [date]);
 
   return (
     <section className="container flex h-full flex-1 flex-col gap-6 pb-8 pt-3">
@@ -22,12 +76,60 @@ export default function MainBasketsPage({
         <div className="flex flex-col justify-between gap-2 md:flex-row">
           <h1 className="text-3xl font-bold">Progress dashboard</h1>
           <div className="flex flex-col justify-between gap-2 md:flex-row">
-            <Button>Create a basket</Button>
-            <Button variant={"outline"}>Daily challenge</Button>
+            <Link href="/dashboard/new" className={buttonVariants()}>
+              Create a basket
+            </Link>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant={"outline"}>Daily challenge</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex flex-row justify-between">
+                    <p>{dailyChallenge.title}</p>
+                    <p>
+                      {dailyChallenge.value} point
+                      {dailyChallenge.value == 1 ? "" : "s"}
+                    </p>
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {dailyChallenge.description}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogAction>Ok</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
+        <ResponsiveDialog
+          description=""
+          title={`Statistics for ${date?.toLocaleDateString("ro-RO") ?? ""}`}
+          openState={[openDayDialog, setOpenDayDialog]}
+          triggerButton={<></>}
+        >
+          {selectedBaskets.map((basket) => (
+            <BasketPreview key={basket.id} basket={basket} />
+          ))}
+          {selectedBaskets.length == 0 && <p>No baskets for this day!</p>}
+
+          {selectedChallenges.length > 0 && (
+            <div>
+              <p>Challenges completed:</p>
+              <ul className="list ml-5 list-disc">
+                {selectedChallenges.map((challenge) => (
+                  <li key={challenge.id}>{challenge.title}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {selectedChallenges.length == 0 && <p>No challenges for this day!</p>}
+        </ResponsiveDialog>
         <Calendar
           mode="single"
+          baskets={baskets}
           selected={date}
           onSelect={setDate}
           className="flex h-full w-full flex-1 rounded-md border"

@@ -74,6 +74,15 @@ export const challengeRouter = createTRPCRouter({
         data: { doneBy: { connect: { id: userId } } },
       });
 
+      // this table is for keeping track of
+      // dates when users completed challenges
+      await ctx.db.trackedChallange.create({
+        data: {
+          challengesId: input.challengeId,
+          userId: userId!,
+        },
+      });
+
       // add it to the completed challenges "queue"
       return await ctx.db.completedChallenge.create({
         data: {
@@ -82,6 +91,13 @@ export const challengeRouter = createTRPCRouter({
         },
       });
     }),
+
+  getCompleted: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.trackedChallange.findMany({
+      where: { userId: ctx.session.user.id },
+      include: { challenge: true },
+    });
+  }),
 
   getQueued: publicProcedure.query(async ({ ctx }) => {
     if (ctx.session == null) return null;
@@ -101,4 +117,12 @@ export const challengeRouter = createTRPCRouter({
         },
       });
     }),
+
+  getDaily: protectedProcedure.query(async ({ ctx }) => {
+    const notCompleted = await ctx.db.challenges.findMany({
+      where: { doneBy: { none: { id: ctx.session.user.id } } },
+    });
+
+    return notCompleted[notCompleted.length - 1];
+  }),
 });

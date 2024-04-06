@@ -6,6 +6,7 @@ import { DateFormatter, DayPicker } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { type Basket } from "@prisma/client";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -13,13 +14,35 @@ function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  baskets,
   ...props
-}: CalendarProps) {
-  const formatDay: DateFormatter = (day) => (
-    <div>
-      <p className="text-3xl font-bold">{day.getUTCDate()}</p>
-    </div>
-  );
+}: CalendarProps & {
+  baskets: Basket[];
+}) {
+  const formatDay: DateFormatter = (day) => {
+    const basketCount = baskets.filter((b) => {
+      return (
+        b.createdAt.getDate() == day.getDate() &&
+        b.createdAt.getMonth() == day.getMonth()
+      );
+    }).length;
+
+    return (
+      <div
+        className={cn(
+          "flex h-full w-full flex-col gap-3",
+          basketCount > 0 ? "rounded-lg ring-2 ring-primary" : "",
+        )}
+      >
+        <p className="text-3xl font-bold">{day.getUTCDate()}</p>
+        {basketCount != 0 && (
+          <p className="hidden sm:block">
+            {basketCount} basket{basketCount == 1 ? "" : "s"}
+          </p>
+        )}
+      </div>
+    );
+  };
 
   return (
     <DayPicker
