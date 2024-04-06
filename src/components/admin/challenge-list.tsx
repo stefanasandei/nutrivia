@@ -1,6 +1,6 @@
 "use client";
 
-import { type FoodProduct, type Challenges } from "@prisma/client";
+import { type Challenges } from "@prisma/client";
 import { type User } from "next-auth";
 import {
   Table,
@@ -13,6 +13,14 @@ import {
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { Button } from "../ui/button";
+import { Clipboard } from "lucide-react";
 
 export default function ChallengeList({
   challenges,
@@ -23,9 +31,10 @@ export default function ChallengeList({
 }) {
   const router = useRouter();
 
-  const deleteFood = api.admin.deleteFood.useMutation({
-    onSuccess: (data: FoodProduct) => {
-      toast(`Deleted food item "${data.name}"!`);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const deleteChallenge = api.challenge.deleteChallenge.useMutation({
+    onSuccess: (data: Challenges) => {
+      toast(`Deleted challenge "${data.title}"!`);
       router.refresh();
     },
   });
@@ -40,6 +49,7 @@ export default function ChallengeList({
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>ID</TableHead>
             <TableHead>Title</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Completition Message</TableHead>
@@ -50,6 +60,30 @@ export default function ChallengeList({
         <TableBody>
           {goodChallenges.map((challenge) => (
             <TableRow key={challenge.id}>
+              <TableCell>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size={"icon"}
+                        onClick={() => {
+                          void navigator.clipboard
+                            .writeText(challenge.id)
+                            .then(() => {
+                              toast("ID copied to clipboard!");
+                            });
+                        }}
+                      >
+                        <Clipboard />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Click to copy ID</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
               <TableCell>{challenge.title}</TableCell>
               <TableCell>{challenge.description.substring(0, 25)}...</TableCell>
               <TableCell>

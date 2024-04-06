@@ -30,4 +30,16 @@ export const challengeRouter = createTRPCRouter({
         },
       });
     }),
+
+  deleteChallenge: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.challenges.delete({
+        where: { id: input.id },
+      });
+    }),
 });
