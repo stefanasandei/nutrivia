@@ -26,11 +26,15 @@ const formSchema = z.object({
   points: z.coerce.number(),
 });
 
-export default function AddMilestoneForm() {
+export default function AddChallengeForm({
+  isMilestone,
+}: {
+  isMilestone: boolean;
+}) {
   const router = useRouter();
 
   // api mutations
-  const addMilestone = api.challenge.addMilestone.useMutation({
+  const addChallenge = api.challenge.addChallenge.useMutation({
     onSuccess: () => {
       toast("Milestone created!");
       router.refresh();
@@ -48,10 +52,11 @@ export default function AddMilestoneForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    addMilestone.mutate({
+    addChallenge.mutate({
       title: values.title,
       description: values.description,
       points: values.points,
+      isMilestone: isMilestone,
     });
 
     form.reset();
@@ -59,7 +64,9 @@ export default function AddMilestoneForm() {
 
   return (
     <Form {...form}>
-      <h1 className="border-t-2 py-2 text-3xl font-bold">Create a milestone</h1>
+      <h1 className="border-t-2 py-2 text-3xl font-bold">
+        Create a {isMilestone ? "milestone" : "challenge"}
+      </h1>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className=" w-full space-y-4"

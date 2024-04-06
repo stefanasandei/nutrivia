@@ -1,7 +1,8 @@
 import { getServerAuthSession } from "@/server/auth";
 import { redirect } from "next/navigation";
 import { api } from "@/trpc/server";
-import AddMilestoneForm from "@/components/admin/add-milestone";
+import ChallengeList from "@/components/admin/challenge-list";
+import AddChallengeForm from "@/components/admin/add-challenge";
 
 export default async function FoodProductsPage() {
   const session = await getServerAuthSession();
@@ -18,8 +19,10 @@ export default async function FoodProductsPage() {
         <p>Create and manage challenges and milestones.</p>
       </div>
       <div className="mt-5 flex w-full flex-col space-y-4">
-        <AddMilestoneForm />
-        {JSON.stringify(challenges)}
+        <AddChallengeForm isMilestone={true} />
+        <ChallengeList challenges={challenges} isMilestone={true} />
+        <AddChallengeForm isMilestone={false} />
+        <ChallengeList challenges={challenges} isMilestone={false} />
       </div>
     </section>
   );

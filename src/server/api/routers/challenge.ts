@@ -4,15 +4,18 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 export const challengeRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.challenges.findMany({});
+    return await ctx.db.challenges.findMany({
+      include: { doneBy: true },
+    });
   }),
 
-  addMilestone: protectedProcedure
+  addChallenge: protectedProcedure
     .input(
       z.object({
         title: z.string(),
         description: z.string(),
         points: z.number(),
+        isMilestone: z.boolean().default(false),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -21,7 +24,7 @@ export const challengeRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           value: input.points,
-          isMilestone: true,
+          isMilestone: input.isMilestone,
         },
       });
     }),
