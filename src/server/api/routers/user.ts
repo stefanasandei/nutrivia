@@ -7,16 +7,25 @@ export const userRouter = createTRPCRouter({
   get: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.user.findUnique({
       where: { id: ctx.session.user.id },
-      include: { allergies: true }
-    })
+      include: { allergies: true },
+    });
   }),
+  findByUsername: protectedProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.user.findUnique({
+        where: { name: input.username },
+        include: { allergies: true },
+      });
+    }),
   update: protectedProcedure
     .input(
       z.object({
         username: z.string().min(1),
+        bio: z.string(),
         id: z.string().cuid(),
         allergies: z.array(z.object({ name: z.string(), id: z.number() })),
-        vegan: z.boolean()
+        vegan: z.boolean(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -24,6 +33,7 @@ export const userRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           name: input.username,
+          bio: input.bio,
           isVegan: input.vegan,
           allergies: {
             set: input.allergies.map((val) => {
@@ -36,44 +46,54 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  getBaskets: protectedProcedure
-    .query(async ({ ctx }) => {
-      return await ctx.db.basket.findMany({
-        where: { createdById: ctx.session.user.id },
-        include: { foods: { include: { comments: true } } }
-      });
-    }),
+  getBaskets: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.basket.findMany({
+      where: { createdById: ctx.session.user.id },
+      include: { foods: { include: { comments: true } } },
+    });
+  }),
   createBasket: protectedProcedure
     .input(z.object({ food: z.array(z.number()) }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.basket.create({
         data: {
           createdById: ctx.session.user.id,
-          foods: { connect: input.food.map((id) => { return { id: id } }) }
-        }
+          foods: {
+            connect: input.food.map((id) => {
+              return { id: id };
+            }),
+          },
+        },
       });
     }),
 
   subscribeToTopic: protectedProcedure
     .input(z.object({ token: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const registrationTokens = [
-        input.token
-      ];
+      const registrationTokens = [input.token];
 
       const topic = `topic-${ctx.session.user.id}`;
 
-      return await getMessaging(ctx.firebaseApp).subscribeToTopic(registrationTokens, topic);
+      return await getMessaging(ctx.firebaseApp).subscribeToTopic(
+        registrationTokens,
+        topic,
+      );
     }),
   sendNotification: protectedProcedure
-    .input(z.object({ userId: z.string().optional(), title: z.string(), body: z.string() }))
+    .input(
+      z.object({
+        userId: z.string().optional(),
+        title: z.string(),
+        body: z.string(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       return await getMessaging(ctx.firebaseApp).send({
         notification: {
           title: input.title,
-          body: input.body
+          body: input.body,
         },
-        topic: `topic-${!input.userId ? ctx.session.user.id : input.userId}`
+        topic: `topic-${!input.userId ? ctx.session.user.id : input.userId}`,
       });
-    })
+    }),
 });

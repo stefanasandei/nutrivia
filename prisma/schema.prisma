@@ -13,6 +13,7 @@ model User {
     email               String?          @unique
     emailVerified       DateTime?
     image               String?
+    bio                 String           @default("")
     hasAgreed           Boolean          @default(false)
     isVegan             Boolean          @default(false)
     allergies           RawFoodProduct[]

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +28,7 @@ const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
+  bio: z.string(),
   vegan: z.boolean(),
 });
 
@@ -63,6 +65,7 @@ export default function EditProfileForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: user.name!,
+      bio: user.bio,
       vegan: user.isVegan,
     },
   });
@@ -71,6 +74,7 @@ export default function EditProfileForm({
     updateProfile.mutate({
       id: user.id,
       username: values.username,
+      bio: values.bio,
       allergies: allergies,
       vegan: values.vegan,
     });
@@ -79,22 +83,49 @@ export default function EditProfileForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="gird-cols-1 grid md:grid-cols-3">
+          <div className="col-span-1 grid justify-evenly">
+            <img
+              src={user.image!}
+              className="m-1 size-40 rounded-md"
+              alt="profile picture"
+            />
+          </div>
+          <div className="col-span-2 grid space-y-2">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bio</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Write someting about yourself and your nutrition goals!
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
         <FormItem>
           <FormLabel>allergies</FormLabel>
           <FormControl>

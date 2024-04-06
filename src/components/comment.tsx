@@ -3,6 +3,7 @@ import { type Comment } from "@prisma/client";
 import { type User } from "next-auth";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -22,7 +23,12 @@ export default function CommentPreview({
       />
       <div className="flex flex-col gap-1">
         <p className="font-thin text-secondary-foreground">
-          <span>{comment.createdBy.name}</span>
+          <Link
+            className="hover:cursor-pointer hover:underline"
+            href={`/profile/@${comment.createdBy.name}`}
+          >
+            {comment.createdBy.name}
+          </Link>
           {" • "}
           {dayjs(comment.createdAt).fromNow()}
         </p>
