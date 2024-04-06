@@ -21,6 +21,10 @@ export default async function ProductPage({
 
   const user = await api.user.get.query();
 
+  const points = await api.challenge.getUserPoints.query({
+    userId: user!.id,
+  });
+
   const comments = await api.admin.getFoodComments.query({
     id: food.id,
   });
@@ -32,6 +36,7 @@ export default async function ProductPage({
           ...food,
           nutriments: food.nutriments!,
         }}
+        points={points}
         comments={comments?.comments ?? []}
         user={session == null ? null : user}
       />

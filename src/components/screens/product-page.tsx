@@ -30,17 +30,20 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircle } from "lucide-react";
 import { env } from "@/env";
 import Link from "next/link";
+import { calcDiscount } from "@/lib/points";
 
 export default function FoodProductPage({
   food,
   comments,
   user,
   additionalControls,
+  points,
 }: {
   food: {
     ingredients: RawFoodProduct[];
     nutriments: FoodNutriments;
   } & FoodProduct;
+  points: number;
   comments: ({
     createdBy: User;
   } & Comment)[];
@@ -196,7 +199,7 @@ export default function FoodProductPage({
       </div>
 
       <div className="section" id="brief">
-        <BriefProductCard food={food} />
+        <BriefProductCard food={food} points={points} />
       </div>
       {user != null && (
         <div className="section" id="core">
@@ -259,9 +262,14 @@ export default function FoodProductPage({
 
 const BriefProductCard = ({
   food,
+  points,
 }: {
   food: { ingredients: RawFoodProduct[] } & FoodProduct;
+  points: number;
 }) => {
+  const discount = calcDiscount(points);
+  const newPrice = ((100 - discount) * food.priceRON) / 100;
+
   return (
     <div className="flex flex-col items-start gap-5 border-b-2 border-b-secondary py-5 md:grid md:grid-cols-3 md:gap-2">
       <h1 className="mb-3 text-3xl md:hidden">
@@ -286,7 +294,12 @@ const BriefProductCard = ({
             <span className="font-semibold">Quantity</span>: {food.weightG} g
           </h1>
           <h1 className="text-2xl">
-            <span className="font-semibold">Price</span>: {food.priceRON} RON
+            <span className="font-semibold">Original price</span>:{" "}
+            {food.priceRON} RON
+          </h1>
+          <h1 className="text-2xl">
+            <span className="font-semibold">Price</span>: {newPrice} RON (
+            {discount}% discount for your {points} points)
           </h1>
           <h1 className="text-2xl">
             <span className="font-semibold">Country of origin</span>:{" "}
