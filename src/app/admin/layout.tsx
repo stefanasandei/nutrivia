@@ -24,3 +24,11 @@ export default async function AdminLayout({
     </div>
   );
 }
+
+/*
+when complete challenge add it to the user array 
+and add it to a quque
+queue with recently completed challenges
+provider at top level
+on each page fetch queue and check for current user
+*/

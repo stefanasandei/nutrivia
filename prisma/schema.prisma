@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-    id                  String           @id @default(cuid())
-    name                String?          @unique
-    email               String?          @unique
+    id                  String               @id @default(cuid())
+    name                String?              @unique
+    email               String?              @unique
     emailVerified       DateTime?
     image               String?
-    bio                 String           @default("")
-    hasAgreed           Boolean          @default(false)
-    isVegan             Boolean          @default(false)
+    bio                 String               @default("")
+    hasAgreed           Boolean              @default(false)
+    isVegan             Boolean              @default(false)
     allergies           RawFoodProduct[]
     accounts            Account[]
     sessions            Session[]
@@ -24,17 +24,27 @@ model User {
     FoodSubmission      FoodSubmission[]
     baskets             Basket[]
     completedChallenges Challenges[]
+    CompletedChallenge  CompletedChallenge[]
 }
 
 // in the db challenges and milestone are the same
 model Challenges {
-    id            String  @id @default(uuid())
-    isMilestone   Boolean
-    title         String
-    description   String // markdown
-    completionMsg String
-    value         Int // points
-    doneBy        User[]
+    id                 String               @id @default(uuid())
+    isMilestone        Boolean
+    title              String
+    description        String // markdown
+    completionMsg      String
+    value              Int // points
+    doneBy             User[]
+    CompletedChallenge CompletedChallenge[]
+}
+
+model CompletedChallenge {
+    id           String     @id @default(uuid())
+    challenge    Challenges @relation(fields: [challengesId], references: [id])
+    challengesId String
+    user         User       @relation(fields: [userId], references: [id])
+    userId       String
 }
 
 model RawFoodProduct {

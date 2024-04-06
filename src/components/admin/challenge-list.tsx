@@ -32,7 +32,7 @@ export default function ChallengeList({
   const router = useRouter();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const deleteChallenge = api.challenge.deleteChallenge.useMutation({
+  const deleteChallenge = api.challenge.delete.useMutation({
     onSuccess: (data: Challenges) => {
       toast(`Deleted challenge "${data.title}"!`);
       router.refresh();
