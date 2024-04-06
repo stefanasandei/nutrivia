@@ -23,6 +23,7 @@ import { Button } from "../ui/button";
 const formSchema = z.object({
   title: z.string(),
   description: z.string(),
+  completionMsg: z.string(),
   points: z.coerce.number(),
 });
 
@@ -36,7 +37,8 @@ export default function AddChallengeForm({
   // api mutations
   const addChallenge = api.challenge.addChallenge.useMutation({
     onSuccess: () => {
-      toast("Milestone created!");
+      if (isMilestone) toast("Milestone created!");
+      else toast("Challenge created!");
       router.refresh();
     },
   });
@@ -47,6 +49,7 @@ export default function AddChallengeForm({
     defaultValues: {
       title: "",
       description: "",
+      completionMsg: "",
       points: 0,
     },
   });
@@ -55,6 +58,7 @@ export default function AddChallengeForm({
     addChallenge.mutate({
       title: values.title,
       description: values.description,
+      completionMsg: values.completionMsg,
       points: values.points,
       isMilestone: isMilestone,
     });
@@ -100,6 +104,24 @@ export default function AddChallengeForm({
               </div>
               <FormDescription>
                 Write a description for the milestone. You can use markdown.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="completionMsg"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Completion Message</FormLabel>
+              <div className="flex flex-row items-center gap-3">
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+              </div>
+              <FormDescription>
+                Write the completion message. You can use markdown.
               </FormDescription>
               <FormMessage />
             </FormItem>

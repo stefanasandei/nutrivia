@@ -27,12 +27,13 @@ model User {
 
 // in the db challenges and milestone are the same
 model Challenges {
-    id          String  @id @default(uuid())
-    isMilestone Boolean
-    title       String
-    description String // markdown
-    value       Int // points
-    doneBy      User[]
+    id            String  @id @default(uuid())
+    isMilestone   Boolean
+    title         String
+    description   String // markdown
+    completionMsg String
+    value         Int // points
+    doneBy        User[]
 }
 
 model RawFoodProduct {

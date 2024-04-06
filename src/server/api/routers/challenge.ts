@@ -14,6 +14,7 @@ export const challengeRouter = createTRPCRouter({
       z.object({
         title: z.string(),
         description: z.string(),
+        completionMsg: z.string(),
         points: z.number(),
         isMilestone: z.boolean().default(false),
       }),
@@ -23,6 +24,7 @@ export const challengeRouter = createTRPCRouter({
         data: {
           title: input.title,
           description: input.description,
+          completionMsg: input.completionMsg,
           value: input.points,
           isMilestone: input.isMilestone,
         },

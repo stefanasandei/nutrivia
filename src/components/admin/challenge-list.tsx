@@ -42,6 +42,7 @@ export default function ChallengeList({
           <TableRow>
             <TableHead>Title</TableHead>
             <TableHead>Description</TableHead>
+            <TableHead>Completition Message</TableHead>
             <TableHead>Solved by</TableHead>
             <TableHead>Points awarded</TableHead>
           </TableRow>
@@ -51,6 +52,9 @@ export default function ChallengeList({
             <TableRow key={challenge.id}>
               <TableCell>{challenge.title}</TableCell>
               <TableCell>{challenge.description.substring(0, 25)}...</TableCell>
+              <TableCell>
+                {challenge.completionMsg.substring(0, 25)}...
+              </TableCell>
               <TableCell>{challenge.doneBy.length} users</TableCell>
               <TableCell>{challenge.value} points</TableCell>
             </TableRow>
