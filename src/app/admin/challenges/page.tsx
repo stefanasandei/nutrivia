@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { api } from "@/trpc/server";
 import ChallengeList from "@/components/admin/challenge-list";
 import AddChallengeForm from "@/components/admin/add-challenge";
+import { DebugChallenge } from "@/components/admin/debug-challenge";
 
 export default async function FoodProductsPage() {
   const session = await getServerAuthSession();
@@ -11,13 +12,20 @@ export default async function FoodProductsPage() {
   const challenges = await api.challenge.get.query();
   const totalUsers = await api.admin.countUsers.query();
 
+  const completed = await api.challenge.getCompleted.query();
+
   return (
     <section className="container m-3 h-full w-full">
-      <div className="flex flex-col content-center items-start justify-between gap-2">
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-          Challenges & Milestones
-        </h1>
-        <p>Create and manage challenges and milestones.</p>
+      <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-col content-center items-start justify-between gap-2">
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
+            Challenges & Milestones
+          </h1>
+          <p>Create and manage challenges and milestones.</p>
+        </div>
+        <div className="gap-3">
+          <DebugChallenge completedChallenges={completed} />
+        </div>
       </div>
       <div className="mt-5 flex w-full flex-col space-y-4">
         <AddChallengeForm isMilestone={true} />

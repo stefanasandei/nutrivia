@@ -92,6 +92,39 @@ export const challengeRouter = createTRPCRouter({
       });
     }),
 
+  restart: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const doneBy = await ctx.db.challenges.findFirst({
+        where: { id: input.id },
+        select: { doneBy: true }
+      });
+
+      if (doneBy == null)
+        throw new Error("challenge does not exist");
+
+      await ctx.db.challenges.update({
+        where: { id: input.id },
+        data: { doneBy: { set: doneBy.doneBy.filter((u) => u.id != ctx.session.user.id).map((u) => { return { id: u.id } }) } }
+      });
+
+      await ctx.db.trackedChallange.deleteMany({
+        where: { challengesId: input.id, userId: ctx.session.user.id }
+      });
+
+      return await ctx.db.completedChallenge.deleteMany({
+        where: {
+          challengesId: input.id,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
+
+
   getCompleted: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.trackedChallange.findMany({
       where: { userId: ctx.session.user.id },
@@ -123,7 +156,11 @@ export const challengeRouter = createTRPCRouter({
       where: { doneBy: { none: { id: ctx.session.user.id } } },
     });
 
-    return notCompleted[notCompleted.length - 1];
+    let i = 1;
+    while (i < notCompleted.length && notCompleted[notCompleted.length - i]?.value == 0)
+      i++;
+
+    return notCompleted[notCompleted.length - i];
   }),
 
   getById: protectedProcedure
