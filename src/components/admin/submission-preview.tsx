@@ -36,14 +36,14 @@ export default function SubmissionPreview({
   });
 
   return (
-    <Card className="transition hover:cursor-pointer hover:bg-secondary/30">
+    <Card className="text-foreground transition hover:cursor-pointer hover:bg-secondary/30">
       <div className="flex flex-row items-center justify-between">
         <Link href={`/contribute/${submission.id}`} className="w-full">
           <CardHeader>
             <CardTitle>
               {submission.food.name}
               {" • "}
-              <span className="text-xl font-thin text-secondary-foreground">
+              <span className="text-xl font-thin text-foreground">
                 {dayjs(submission.createdAt).fromNow()}
               </span>
             </CardTitle>

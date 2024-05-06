@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTheme } from "next-themes";
 
 export const ProfileButton = ({
   user,
@@ -21,6 +22,7 @@ export const ProfileButton = ({
   points: number;
 }) => {
   const router = useRouter();
+  const { setTheme, theme } = useTheme();
 
   if (user == null)
     return (
@@ -38,7 +40,7 @@ export const ProfileButton = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-0" asChild>
-        <button className="flex flex-row items-center gap-4 overflow-hidden rounded-md border bg-card pl-2 transition-all hover:bg-secondary/50 active:border-0">
+        <button className="flex flex-row items-center gap-4 overflow-hidden rounded-md border bg-card pl-2 text-foreground transition-all hover:bg-secondary/50 active:border-0">
           <div className="flex flex-col">
             <p>{user.name}</p>
             <p className="font-semibold">{points} points</p>
@@ -71,6 +73,12 @@ export const ProfileButton = ({
           </p>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="hover:cursor-pointer"
+          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+        >
+          Toggle theme
+        </DropdownMenuItem>
         <DropdownMenuItem>
           <Link href="/api/auth/signout">Logout</Link>
         </DropdownMenuItem>

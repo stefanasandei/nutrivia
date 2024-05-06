@@ -131,23 +131,6 @@ export default function EditProfileForm({
               </FormDescription>
               <FormMessage />
             </FormItem>
-            <FormField
-              control={form.control}
-              name="vegan"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      onCheckedChange={field.onChange}
-                      defaultChecked={field.value}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Are you vegan?</FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
           </div>
         </div>
         <FormField
@@ -163,6 +146,23 @@ export default function EditProfileForm({
                 Write someting about yourself and your nutrition goals!
               </FormDescription>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="vegan"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+              <FormControl>
+                <Checkbox
+                  onCheckedChange={field.onChange}
+                  defaultChecked={field.value}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Are you vegan?</FormLabel>
+              </div>
             </FormItem>
           )}
         />

@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="m-4 border-t-2 border-border">
+    <footer className="m-4 border-t-2 border-border text-foreground">
       <div className="mx-auto w-full max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-        <span className="text-sm sm:text-center">
+        <span className="text-sm sm:text-center ">
           © 2024{" "}
           <a
             target="_blank"
