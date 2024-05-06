@@ -44,6 +44,12 @@ export default function FullPostPage({
     },
   });
 
+  const likePost = api.post.likePost.useMutation({
+    onSuccess: () => {
+      router.refresh();
+    },
+  });
+
   const deletePost = api.post.deletePost.useMutation({
     onSuccess: () => {
       toast("Post deleted");
@@ -95,16 +101,28 @@ export default function FullPostPage({
           </Alert>
         )}
         <p>{post.body}</p>
-        {post.createdById === user?.id && (
-          <div className="mt-4 flex flex-row gap-3">
+        <div className="mt-4 flex flex-row gap-3">
+          {user != null && (
             <Button
+              variant={"secondary"}
+              size={"icon"}
+              onClick={() => likePost.mutate({ id: post.id })}
+            >
+              <Icons.like
+                fill={post.likedBy.includes(user.id) ? "white" : "none"}
+              />
+            </Button>
+          )}
+          {post.createdById === user?.id && (
+            <Button
+              variant={"secondary"}
               size={"icon"}
               onClick={() => deletePost.mutate({ id: post.id })}
             >
               <Icons.delete />
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <div className="flex w-full flex-col gap-3">
         {user != null && (
