@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { siteConfig } from "@/config/site";
@@ -7,11 +8,16 @@ import { type Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import { type User } from "@prisma/client";
 
 export function SiteHeader({
+  userMetadata,
+  userPoints,
   session,
   isAdmin,
 }: {
+  userMetadata: User | null;
+  userPoints: number;
   session: Session | null;
   isAdmin: boolean;
 }) {
@@ -35,16 +41,39 @@ export function SiteHeader({
         />
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
-            <Link
-              href={session ? "/profile" : ""}
-              className={buttonVariants()}
-              onClick={async () => {
-                if (session) router.push("/profile");
-                else await signIn();
-              }}
-            >
-              {session ? "Profile" : "Sign in"}
-            </Link>
+            {session ? (
+              <Link
+                href={"/profile"}
+                // className={buttonVariants()}
+                onClick={async () => {
+                  router.push("/profile");
+                }}
+              >
+                <div className="flex flex-row items-center gap-4 overflow-hidden rounded-md border bg-card pl-2 shadow-md transition-all hover:bg-secondary/50">
+                  <div className="flex flex-col">
+                    <p>{userMetadata?.name}</p>
+                    <p className="font-semibold">{userPoints} points</p>
+                  </div>
+                  {userMetadata?.image && (
+                    <img
+                      src={userMetadata?.image}
+                      alt="profile picture"
+                      className="size-12"
+                    />
+                  )}
+                </div>
+              </Link>
+            ) : (
+              <Link
+                href={""}
+                className={buttonVariants()}
+                onClick={async () => {
+                  await signIn();
+                }}
+              >
+                {"Sign in"}
+              </Link>
+            )}
           </nav>
         </div>
       </div>

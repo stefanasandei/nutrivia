@@ -16,6 +16,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
 import Footer from "@/components/footer";
 import RewardProvider from "@/components/reward-provider";
+import { api } from "@/trpc/server";
 
 export const metadata: Metadata = {
   title: {
@@ -42,6 +43,11 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const session = await getServerAuthSession();
+  const user = await api.user.get.query();
+
+  const points = await api.challenge.getUserPoints.query({
+    userId: user!.id,
+  });
 
   return (
     <>
@@ -63,6 +69,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             <div className="relative flex min-h-screen flex-col">
               <SiteHeader
                 session={session}
+                userMetadata={user}
+                userPoints={points}
                 isAdmin={session?.user.id === env.ADMIN_ID}
               />
               <TRPCReactProvider>
