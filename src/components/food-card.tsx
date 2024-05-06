@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -34,10 +35,10 @@ export default function FoodCard({
   return (
     <Card
       key={food.id}
-      className="flex h-full w-[300px] flex-col justify-between transition hover:cursor-pointer hover:bg-secondary/30"
+      className="flex h-[30rem] w-72 flex-col justify-between transition hover:cursor-pointer hover:bg-secondary/30"
     >
-      <Link href={`/food/${food.id}`} className="">
-        <CardHeader className="flex flex-row items-start justify-between">
+      <Link href={`/food/${food.id}`} className="p-0">
+        <CardHeader className="flex flex-row items-start justify-between p-4">
           <div>
             <CardTitle>{food.name}</CardTitle>
             <CardDescription>
@@ -51,31 +52,31 @@ export default function FoodCard({
               })()}
             </CardDescription>
           </div>
-          <div>
+          <div className="text-center">
             <p>{food.priceRON} RON</p>
           </div>
         </CardHeader>
-        <CardContent>
-          <Image
-            className="rounded-lg"
+        <CardContent className="p-0">
+          <img
+            className="mx-auto h-72 rounded-lg"
             src={food.image!}
-            width={250}
-            height={100}
             alt={food.name}
           />
         </CardContent>
       </Link>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between p-3">
         <Link
           href={`/food/${food.id}`}
-          className={buttonVariants({ variant: "secondary" })}
+          className={buttonVariants({ variant: "secondary", size: "sm" })}
         >
-          Discuss
+          Read more
         </Link>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant={"secondary"}>{computeScore(food)}% score</Button>
+              <Button variant={"secondary"} size={"sm"}>
+                {computeScore(food)}% score
+              </Button>
             </TooltipTrigger>
             <TooltipContent>
               <p>
