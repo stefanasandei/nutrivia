@@ -37,8 +37,8 @@ export const ProfileButton = ({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="border-0 ring-0">
-        <div className="flex flex-row items-center gap-4 overflow-hidden rounded-md border bg-card pl-2 transition-all hover:bg-secondary/50">
+      <DropdownMenuTrigger className="outline-0" asChild>
+        <button className="flex flex-row items-center gap-4 overflow-hidden rounded-md border bg-card pl-2 transition-all hover:bg-secondary/50 active:border-0">
           <div className="flex flex-col">
             <p>{user.name}</p>
             <p className="font-semibold">{points} points</p>
@@ -46,14 +46,14 @@ export const ProfileButton = ({
           {user.image && (
             <img src={user.image} alt="profile picture" className="size-12" />
           )}
-        </div>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <p
-            className="hover:cursor-pointer"
+            className="w-full hover:cursor-pointer"
             onClick={() => {
               // do this instead of a link so the dropdown menu closes on page nav
               router.push("/profile");
@@ -64,7 +64,7 @@ export const ProfileButton = ({
         </DropdownMenuItem>
         <DropdownMenuItem>
           <p
-            className="hover:cursor-pointer"
+            className="w-full hover:cursor-pointer"
             onClick={() => router.push("/profile/settings")}
           >
             Settings

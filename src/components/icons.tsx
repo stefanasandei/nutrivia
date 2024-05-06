@@ -35,6 +35,7 @@ import {
   ShieldAlert,
   Sparkles,
   Share2,
+  Copy,
 } from "lucide-react";
 
 export type Icon = unknown;
@@ -44,6 +45,7 @@ export const Icons = {
   coolStars: Sparkles,
   approve: Check,
   deny: X,
+  copy: Copy,
   warning: ShieldAlert,
   options: MoreHorizontal,
   write: PenLine,
