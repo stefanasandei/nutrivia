@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import AchievementsView from "@/components/screens/achievements-view";
 import EditProfileForm from "@/components/screens/edit-profile";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/trpc/server";
@@ -32,6 +33,7 @@ export default async function ProfilePage() {
           <Link href="/api/auth/signout" className={buttonVariants()}>
             Sign out
           </Link>
+          <ThemeToggle />
         </div>
       </div>
       <div className="flex flex-col gap-4">

@@ -49,7 +49,7 @@ export function SiteHeader({
                   router.push("/profile");
                 }}
               >
-                <div className="flex flex-row items-center gap-4 overflow-hidden rounded-md border bg-card pl-2 shadow-md transition-all hover:bg-secondary/50">
+                <div className="flex flex-row items-center gap-4 overflow-hidden rounded-md border bg-card pl-2 transition-all hover:bg-secondary/50">
                   <div className="flex flex-col">
                     <p>{userMetadata?.name}</p>
                     <p className="font-semibold">{userPoints} points</p>
