@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
 import { env } from "@/env";
+import { marked } from "marked";
 
 export const InspectUserProfile = ({
   user,
@@ -20,6 +21,11 @@ export const InspectUserProfile = ({
   const achievements = user.completedChallenges.filter(
     (c) => c.badgeURL.length > 1,
   );
+
+  const bio = (() => {
+    const rendered = marked(user.bio);
+    return rendered;
+  })();
 
   return (
     <section className="container grid items-center pb-8 pt-3">
@@ -60,7 +66,10 @@ export const InspectUserProfile = ({
           </div>
           <div className="mt-3 space-y-1">
             <p className="text-muted-foreground">Bio</p>
-            <div>{user.bio}</div>
+            <div
+              className="prose dark:prose-invert"
+              dangerouslySetInnerHTML={{ __html: bio }}
+            />
           </div>
           <div className="mt-3 space-y-1">
             <p className="text-muted-foreground">Stats</p>

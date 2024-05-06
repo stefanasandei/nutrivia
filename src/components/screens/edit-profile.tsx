@@ -23,6 +23,7 @@ import ChipsInput, { type ChipOption } from "../chips-input";
 import { useState } from "react";
 import { type RawFoodProduct, type User } from "@prisma/client";
 import { Checkbox } from "../ui/checkbox";
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -33,12 +34,10 @@ const formSchema = z.object({
 });
 
 export default function EditProfileForm({
-  points,
   user,
   food,
   allergies: userallergies,
 }: {
-  points: number;
   user: User;
   food: RawFoodProduct[];
   allergies: RawFoodProduct[];
@@ -86,15 +85,14 @@ export default function EditProfileForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
         <div className="gird-cols-1 grid md:grid-cols-3">
-          <div className="col-span-1 flex flex-col items-center justify-evenly gap-3">
+          <div className="col-span-1 flex flex-col items-start justify-evenly gap-3">
             <img
               src={user.image!}
-              className="m-1 size-40 rounded-md"
+              className="m-1 size-52 rounded-xl"
               alt="profile picture"
             />
-            <p>{points} points</p>
           </div>
-          <div className="col-span-2 grid space-y-2">
+          <div className="col-span-2 grid space-y-3">
             <FormField
               control={form.control}
               name="username"
@@ -111,63 +109,64 @@ export default function EditProfileForm({
                 </FormItem>
               )}
             />
+            <FormItem>
+              <FormLabel>Food allergies</FormLabel>
+              <FormControl>
+                <ChipsInput
+                  placeholder="allergies"
+                  options={food.map((value) => {
+                    return {
+                      name: value.name,
+                      id: value.id,
+                    };
+                  })}
+                  value={allergies}
+                  setValue={(newValue) => {
+                    setAllergies(newValue);
+                  }}
+                />
+              </FormControl>
+              <FormDescription>
+                Add here any ingredients you have alergic reactions to.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
             <FormField
               control={form.control}
-              name="bio"
+              name="vegan"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bio</FormLabel>
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
                   <FormControl>
-                    <Input {...field} />
+                    <Checkbox
+                      onCheckedChange={field.onChange}
+                      defaultChecked={field.value}
+                    />
                   </FormControl>
-                  <FormDescription>
-                    Write someting about yourself and your nutrition goals!
-                  </FormDescription>
-                  <FormMessage />
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Are you vegan?</FormLabel>
+                  </div>
                 </FormItem>
               )}
             />
           </div>
         </div>
-        <FormItem>
-          <FormLabel>allergies</FormLabel>
-          <FormControl>
-            <ChipsInput
-              placeholder="allergies"
-              options={food.map((value) => {
-                return {
-                  name: value.name,
-                  id: value.id,
-                };
-              })}
-              value={allergies}
-              setValue={(newValue) => {
-                setAllergies(newValue);
-              }}
-            />
-          </FormControl>
-          <FormDescription>
-            Add here any ingredients you have alergic reactions to.
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
         <FormField
           control={form.control}
-          name="vegan"
+          name="bio"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+            <FormItem>
+              <FormLabel>Bio</FormLabel>
               <FormControl>
-                <Checkbox
-                  onCheckedChange={field.onChange}
-                  defaultChecked={field.value}
-                />
+                <Textarea {...field} />
               </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Are you vegan?</FormLabel>
-              </div>
+              <FormDescription>
+                Write someting about yourself and your nutrition goals!
+              </FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
+
         <Button type="submit">Submit</Button>
       </form>
     </Form>
