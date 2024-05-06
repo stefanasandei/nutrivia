@@ -1,6 +1,7 @@
 {
-  "name": "fiicode",
-  "version": "0.1.0",
+  "name": "nutrivia",
+  "version": "0.5.0",
+  "author": "Asandei Stefan-Alexandru",
   "private": true,
   "type": "module",
   "scripts": {
