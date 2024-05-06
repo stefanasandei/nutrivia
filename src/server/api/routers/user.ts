@@ -1,10 +1,13 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { getMessaging } from "firebase-admin/messaging";
 
 export const userRouter = createTRPCRouter({
-  get: protectedProcedure.query(async ({ ctx }) => {
+  get: publicProcedure.query(async ({ ctx }) => {
+    if (ctx.session == null)
+      return null;
+
     return await ctx.db.user.findUnique({
       where: { id: ctx.session.user.id },
       include: { allergies: true, completedChallenges: true },

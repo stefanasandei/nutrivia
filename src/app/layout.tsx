@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#6652ff",
+  themeColor: "#00ffa6",
 };
 
 interface RootLayoutProps {
@@ -45,9 +45,11 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const session = await getServerAuthSession();
   const user = await api.user.get.query();
 
-  const points = await api.challenge.getUserPoints.query({
-    userId: user!.id,
-  });
+  let points = 0;
+  if (user != null)
+    points = await api.challenge.getUserPoints.query({
+      userId: user.id,
+    });
 
   return (
     <>
