@@ -97,11 +97,13 @@ export default function FoodList({
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Brand</TableHead>
-            <TableHead>Weight (grams)</TableHead>
-            <TableHead>Price (RON)</TableHead>
-            <TableHead>Ingredients</TableHead>
-            <TableHead>Nutriments</TableHead>
+            <TableHead className="hidden md:table-cell">Brand</TableHead>
+            <TableHead className="hidden md:table-cell">
+              Weight (grams)
+            </TableHead>
+            <TableHead className="hidden md:table-cell">Price (RON)</TableHead>
+            <TableHead className="hidden md:table-cell">Ingredients</TableHead>
+            <TableHead className="hidden md:table-cell">Nutriments</TableHead>
             <TableHead>Image</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -110,10 +112,16 @@ export default function FoodList({
           {food.map((food, index) => (
             <TableRow key={food.id}>
               <TableCell>{food.name}</TableCell>
-              <TableCell>{food.brand}</TableCell>
-              <TableCell>{food.weightG} g</TableCell>
-              <TableCell>{food.priceRON} RON</TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
+                {food.brand}
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
+                {food.weightG} g
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
+                {food.priceRON} RON
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
                 {(() => {
                   const f = food.ingredients.map((value) => value.name);
                   let i = "";
@@ -123,7 +131,7 @@ export default function FoodList({
                   return <p>{i}</p>;
                 })()}
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 <Dialog>
                   <DialogTrigger
                     className={buttonVariants({

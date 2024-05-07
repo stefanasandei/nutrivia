@@ -68,19 +68,21 @@ export default function RawFoodList({
         <TableCaption>A list of recent raw food products.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Internal ID</TableHead>
+            <TableHead className="hidden md:table-cell">Internal ID</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Nutrition Values</TableHead>
-            <TableHead>Vegan</TableHead>
+            <TableHead className="hidden md:table-cell">
+              Nutrition Values
+            </TableHead>
+            <TableHead className="hidden md:table-cell">Vegan</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rawFood.map((food) => (
             <TableRow key={food.id}>
-              <TableCell>{food.id}</TableCell>
+              <TableCell className="hidden md:table-cell">{food.id}</TableCell>
               <TableCell>{food.name}</TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline">View</Button>
@@ -120,7 +122,7 @@ export default function RawFoodList({
               <TableCell>
                 {food.vegan ? <Icons.check /> : <Icons.close />}
               </TableCell>
-              <TableCell className="flex flex-row gap-3">
+              <TableCell className="flex hidden flex-row gap-3 md:table-cell">
                 <Dialog>
                   <DialogTrigger
                     className={buttonVariants({

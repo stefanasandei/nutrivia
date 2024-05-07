@@ -51,18 +51,20 @@ export default function ChallengeList({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>ID</TableHead>
+            <TableHead className="hidden md:table-cell">ID</TableHead>
             <TableHead>Title</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Completition Message</TableHead>
-            <TableHead>Earned by</TableHead>
+            <TableHead className="hidden md:table-cell">Description</TableHead>
+            <TableHead className="hidden md:table-cell">
+              Completition Message
+            </TableHead>
+            <TableHead className="hidden md:table-cell">Earned by</TableHead>
             <TableHead>Points awarded</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {goodChallenges.map((challenge) => (
             <TableRow key={challenge.id}>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -87,11 +89,13 @@ export default function ChallengeList({
                 </TooltipProvider>
               </TableCell>
               <TableCell>{challenge.title}</TableCell>
-              <TableCell>{challenge.description.substring(0, 25)}...</TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
+                {challenge.description.substring(0, 25)}...
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
                 {challenge.completionMsg.substring(0, 25)}...
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 {challenge.doneBy.length} users (
                 {(challenge.doneBy.length / totalUsers) * 100}%)
               </TableCell>

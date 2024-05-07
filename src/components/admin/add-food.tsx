@@ -228,7 +228,7 @@ export default function AddFoodProductForm({
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
             name="brand"
@@ -314,7 +314,7 @@ export default function AddFoodProductForm({
               control={form.control}
               name="createPlaceholder"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center space-x-3 space-y-0 p-4">
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0 md:p-4">
                   <FormControl>
                     <Checkbox onCheckedChange={field.onChange} />
                   </FormControl>

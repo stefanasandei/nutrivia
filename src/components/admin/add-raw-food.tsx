@@ -260,7 +260,7 @@ export default function AddRawFoodProductForm({ user }: { user: User }) {
             control={form.control}
             name="vegan"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center space-x-3 space-y-0 p-4">
+              <FormItem className="flex flex-row items-center space-x-3 space-y-0 md:p-4">
                 <FormControl>
                   <Checkbox
                     onCheckedChange={field.onChange}

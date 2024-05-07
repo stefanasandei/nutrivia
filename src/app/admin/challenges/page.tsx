@@ -16,7 +16,7 @@ export default async function FoodProductsPage() {
 
   return (
     <section className="container m-3 h-full w-full">
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
         <div className="flex flex-col content-center items-start justify-between gap-2">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
             Challenges & Milestones
