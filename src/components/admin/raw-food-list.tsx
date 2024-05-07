@@ -119,10 +119,10 @@ export default function RawFoodList({
                   </DialogContent>
                 </Dialog>
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden md:table-cell">
                 {food.vegan ? <Icons.check /> : <Icons.close />}
               </TableCell>
-              <TableCell className="flex hidden flex-row gap-3 md:table-cell">
+              <TableCell className="flex flex-row gap-3">
                 <Dialog>
                   <DialogTrigger
                     className={buttonVariants({

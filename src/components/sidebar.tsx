@@ -21,26 +21,41 @@ export function Sidebar({ className, items }: SidebarProps) {
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+          <h2 className="mb-2 hidden px-4 text-lg font-semibold tracking-tight md:block">
             Admin Panel
           </h2>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2 md:w-full">
             {items.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  buttonVariants({
-                    variant: pathname.endsWith(item.href)
-                      ? "secondary"
-                      : "ghost",
-                  }),
-                  "w-full justify-start",
-                )}
-              >
-                <item.icon className="mr-2 h-4 w-4" />
-                {item.name}
-              </Link>
+              <div key={item.name}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    buttonVariants({
+                      variant: pathname.endsWith(item.href)
+                        ? "secondary"
+                        : "ghost",
+                    }),
+                    "hidden justify-start md:flex md:w-full",
+                  )}
+                >
+                  <item.icon className="mr-2 h-4 w-4" />
+                  {item.name}
+                </Link>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    buttonVariants({
+                      variant: pathname.endsWith(item.href)
+                        ? "secondary"
+                        : "ghost",
+                      // size: "icon",
+                    }),
+                    "justify-start px-4 md:hidden md:w-full",
+                  )}
+                >
+                  <item.icon />
+                </Link>
+              </div>
             ))}
           </div>
         </div>

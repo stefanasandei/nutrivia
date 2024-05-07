@@ -13,14 +13,14 @@ export default async function AdminLayout({
   if (!session || session.user.id != env.ADMIN_ID) redirect("/");
 
   return (
-    <div className="grid h-full w-full flex-1 md:grid-cols-6">
-      <div className="hidden w-full md:col-span-1 md:flex">
+    <div className="flex h-full w-full flex-1 flex-row md:grid md:grid-cols-6">
+      <div className="w-10 md:col-span-1 md:w-full">
         <Sidebar
           items={adminPages}
-          className="fixed max-w-[20vw] md:max-w-[18vw]"
+          className="fixed z-50 h-full w-fit bg-background md:w-[18vw]"
         />
       </div>
-      <div className="w-full md:col-span-5">{children}</div>
+      <div className="w-full flex-1 md:col-span-5">{children}</div>
     </div>
   );
 }
