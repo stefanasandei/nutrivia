@@ -7,6 +7,7 @@ import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+  title: string;
   items: {
     icon: typeof Icons.add;
     name: string;
@@ -14,15 +15,15 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   }[];
 }
 
-export function Sidebar({ className, items }: SidebarProps) {
+export function Sidebar({ className, title, items }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
-          <h2 className="mb-2 hidden px-4 text-lg font-semibold tracking-tight md:block">
-            Admin Panel
+        <div className="px-3">
+          <h2 className="mb-3 hidden px-4 text-2xl font-bold tracking-tight md:block">
+            {title}
           </h2>
           <div className="flex flex-col gap-2 md:w-full">
             {items.map((item) => (

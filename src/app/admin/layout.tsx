@@ -16,6 +16,7 @@ export default async function AdminLayout({
     <div className="flex h-full w-full flex-1 flex-row md:grid md:grid-cols-6">
       <div className="w-10 md:col-span-1 md:w-full">
         <Sidebar
+          title={"Admin panel"}
           items={adminPages}
           className="fixed z-50 h-full w-fit bg-background md:w-[18vw]"
         />

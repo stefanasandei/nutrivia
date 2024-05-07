@@ -72,7 +72,7 @@ export default function MainBasketsPage({
   }, [date]);
 
   return (
-    <section className="container flex h-full flex-1 flex-col gap-6 pb-8 pt-3">
+    <section className="mx-2 flex h-full flex-1 flex-col gap-6 pb-8 pt-3">
       <div className="flex h-full w-full flex-1 flex-col gap-4">
         <div className="flex flex-col justify-between gap-2 md:flex-row">
           <h1 className="text-3xl font-bold">Progress dashboard</h1>

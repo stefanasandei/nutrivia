@@ -32,6 +32,26 @@ export const pages = [
   },
 ];
 
+// shouldn't be here, but it has to be
+// exported from a "use client" component.
+export const forYouPages = [
+  {
+    icon: Utensils,
+    name: "Food baskets",
+    href: "/dashboard",
+  },
+  {
+    icon: Utensils,
+    name: "Progress",
+    href: "#",
+  },
+  {
+    icon: Utensils,
+    name: "Recipes",
+    href: "#",
+  },
+];
+
 export default function AdminNavPanel() {
   const path = usePathname();
 
