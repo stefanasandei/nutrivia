@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
 import {
   type RawFoodProduct,
   type FoodProduct,
@@ -30,12 +29,11 @@ export default function FoodCard({
     comments: Comment[];
     ingredients: RawFoodProduct[];
   } & FoodProduct;
-  userId: string | null;
 }) {
   return (
     <Card
       key={food.id}
-      className="flex h-[30rem] w-72 flex-col justify-between transition hover:cursor-pointer hover:bg-secondary/30"
+      className="flex h-[30rem] w-72 flex-col justify-between transition hover:cursor-pointer hover:bg-background"
     >
       <Link href={`/food/${food.id}`} className="p-0">
         <CardHeader className="flex flex-row items-start justify-between p-4">

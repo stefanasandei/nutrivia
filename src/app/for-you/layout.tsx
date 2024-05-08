@@ -5,7 +5,6 @@ import { Sidebar } from "@/components/sidebar";
 import { getServerAuthSession } from "@/server/auth";
 import { redirect } from "next/navigation";
 
-// needs work
 export default async function ForYouLayout({
   children,
 }: {
