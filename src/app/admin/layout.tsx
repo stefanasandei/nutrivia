@@ -18,18 +18,10 @@ export default async function AdminLayout({
         <Sidebar
           title={"Admin panel"}
           items={adminPages}
-          className="fixed z-50 h-full w-fit bg-background md:w-[18vw]"
+          className="fixed z-50 w-fit bg-background md:w-[18vw]"
         />
       </div>
       <div className="w-full flex-1 md:col-span-5">{children}</div>
     </div>
   );
 }
-
-/*
-when complete challenge add it to the user array 
-and add it to a quque
-queue with recently completed challenges
-provider at top level
-on each page fetch queue and check for current user
-*/

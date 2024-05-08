@@ -72,70 +72,70 @@ export default function MainBasketsPage({
   }, [date]);
 
   return (
-    <section className="mx-2 flex h-full flex-1 flex-col gap-6 pb-8 pt-3">
-      <div className="flex h-full w-full flex-1 flex-col gap-4">
+    <section className="container m-3 flex h-full w-full flex-col gap-6 pb-4">
+      <div className="flex flex-row content-center items-start justify-between gap-2">
+        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
+          Progress dashboard
+        </h1>
         <div className="flex flex-col justify-between gap-2 md:flex-row">
-          <h1 className="text-3xl font-bold">Progress dashboard</h1>
-          <div className="flex flex-col justify-between gap-2 md:flex-row">
-            <Link href="/dashboard/new" className={buttonVariants()}>
-              Create a basket
-            </Link>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant={"outline"}>Daily challenge</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="flex flex-row justify-between">
-                    <p>{dailyChallenge.title}</p>
-                    <p>
-                      {dailyChallenge.value} point
-                      {dailyChallenge.value == 1 ? "" : "s"}
-                    </p>
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {dailyChallenge.description}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogAction>Ok</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
+          <Link href="/dashboard/new" className={buttonVariants()}>
+            Create a basket
+          </Link>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant={"outline"}>Daily challenge</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex flex-row justify-between">
+                  <p>{dailyChallenge.title}</p>
+                  <p>
+                    {dailyChallenge.value} point
+                    {dailyChallenge.value == 1 ? "" : "s"}
+                  </p>
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {dailyChallenge.description}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogAction>Ok</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
-        <ResponsiveDialog
-          description=""
-          title={`Statistics for ${date?.toLocaleDateString("ro-RO") ?? ""}`}
-          openState={[openDayDialog, setOpenDayDialog]}
-          triggerButton={<></>}
-        >
-          {selectedBaskets.map((basket) => (
-            <BasketPreview key={basket.id} basket={basket} />
-          ))}
-          {selectedBaskets.length == 0 && <p>No baskets for this day!</p>}
-
-          {selectedChallenges.length > 0 && (
-            <div>
-              <p>Challenges completed:</p>
-              <ul className="list ml-5 list-disc">
-                {selectedChallenges.map((challenge) => (
-                  <li key={challenge.id}>{challenge.title}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {selectedChallenges.length == 0 && <p>No challenges for this day!</p>}
-        </ResponsiveDialog>
-        <Calendar
-          mode="single"
-          baskets={baskets}
-          selected={date}
-          onSelect={setDate}
-          className="flex h-full w-full flex-1 rounded-md border"
-        />
       </div>
+      <ResponsiveDialog
+        description=""
+        title={`Statistics for ${date?.toLocaleDateString("ro-RO") ?? ""}`}
+        openState={[openDayDialog, setOpenDayDialog]}
+        triggerButton={<></>}
+      >
+        {selectedBaskets.map((basket) => (
+          <BasketPreview key={basket.id} basket={basket} />
+        ))}
+        {selectedBaskets.length == 0 && <p>No baskets for this day!</p>}
+
+        {selectedChallenges.length > 0 && (
+          <div>
+            <p>Challenges completed:</p>
+            <ul className="list ml-5 list-disc">
+              {selectedChallenges.map((challenge) => (
+                <li key={challenge.id}>{challenge.title}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {selectedChallenges.length == 0 && <p>No challenges for this day!</p>}
+      </ResponsiveDialog>
+      <Calendar
+        mode="single"
+        baskets={baskets}
+        selected={date}
+        onSelect={setDate}
+        className="flex h-full w-full flex-1 rounded-md border"
+      />
     </section>
   );
 }

@@ -11,7 +11,7 @@ export const siteConfig = {
     },
     {
       title: "For you",
-      href: "/dashboard",
+      href: "/for-you",
     },
     {
       title: "Contribute",
@@ -20,10 +20,6 @@ export const siteConfig = {
     {
       title: "Forum",
       href: "/forum",
-    },
-    {
-      title: "Meal ideas",
-      href: "/meal-planner",
     },
   ],
   mainNavMarketing: [
