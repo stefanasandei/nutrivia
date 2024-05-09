@@ -1,12 +1,15 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { getMessaging } from "firebase-admin/messaging";
 
 export const userRouter = createTRPCRouter({
   get: publicProcedure.query(async ({ ctx }) => {
-    if (ctx.session == null)
-      return null;
+    if (ctx.session == null) return null;
 
     return await ctx.db.user.findUnique({
       where: { id: ctx.session.user.id },
@@ -56,11 +59,19 @@ export const userRouter = createTRPCRouter({
     });
   }),
   createBasket: protectedProcedure
-    .input(z.object({ food: z.array(z.number()) }))
+    .input(
+      z.object({
+        food: z.array(z.number()),
+        name: z.string().optional(),
+        scheduledFor: z.date().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.basket.create({
         data: {
           createdById: ctx.session.user.id,
+          name: input.name,
+          scheduledFor: input.scheduledFor,
           foods: {
             connect: input.food.map((id) => {
               return { id: id };

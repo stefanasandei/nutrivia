@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { CHALLENGES, ITALIAN_FOOD } from "@/lib/milestones";
+import { Input } from "../ui/input";
+import { DatePicker } from "../ui/date-picker";
 
 export type FoodItem = {
   nutriments: FoodNutriments | null;
@@ -37,6 +39,9 @@ export type FoodItem = {
   ingredients: RawFoodProduct[];
 } & FoodProduct;
 
+// yes, this component is too big
+// however all the basket creation data is right here
+// without complicated state flow
 export function CreateNewBasket({
   user,
   food,
@@ -46,6 +51,7 @@ export function CreateNewBasket({
 }) {
   const router = useRouter();
 
+  // api mutations
   const completeChallenge = api.challenge.complete.useMutation({
     onSuccess: () => {
       router.refresh();
@@ -54,6 +60,7 @@ export function CreateNewBasket({
 
   const createBasket = api.user.createBasket.useMutation({
     onSuccess: async () => {
+      // basket created, now check for challenges
       const italian =
         foodItems.filter((item) => ITALIAN_FOOD.includes(item.id)).length > 0;
       if (italian) {
@@ -63,11 +70,19 @@ export function CreateNewBasket({
       }
 
       toast("Basket created!");
-      router.push("/dashboard");
+      router.push("/for-you");
     },
   });
 
+  // state
+  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState<string | undefined>(undefined);
+  const [scheduledFor, setScheduledFor] = useState<Date | undefined>(undefined);
+
+  // memoization stuff
   const bestFood = useMemo(() => {
+    // choose what to recommend
     const sortedFood = food.sort((a, b) => {
       const p = computeScore(a) > computeScore(b);
       return p ? -1 : 1;
@@ -76,15 +91,12 @@ export function CreateNewBasket({
     return sortedFood.slice(0, Math.min(3, sortedFood.length));
   }, [food]);
 
-  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
-  const [open, setOpen] = useState(false);
-
   const tips = useMemo(() => {
     return recommendHealthyFood(foodItems);
   }, [foodItems]);
 
   const isDisabled = useMemo(() => {
-    const d = foodItems.map((item, index) => {
+    const disabled = foodItems.map((item) => {
       const notVeganIngredients = item.ingredients.filter(
         (value) => value.vegan == false,
       );
@@ -98,11 +110,12 @@ export function CreateNewBasket({
       const disabled = (user.isVegan && !isVegan) || allergies.length > 0;
       return disabled;
     });
-    return d.includes(true);
+    return disabled.includes(true);
   }, [foodItems]);
 
+  // the actual component
   return (
-    <section className="container flex h-full flex-1 flex-col gap-6 pb-8 pt-3">
+    <section className="container ml-4 flex h-full flex-1 flex-col gap-6 pb-8 pt-3 sm:ml-0">
       <div className="flex flex-row items-center justify-between gap-2">
         <h1 className="text-xl font-extrabold leading-tight tracking-tighter md:text-3xl">
           Create a new basket
@@ -267,12 +280,36 @@ export function CreateNewBasket({
             )}
           </div>
         </div>
+
+        <div className="flex flex-col gap-4 pb-4">
+          <div className="space-y-2">
+            <p>Basket name (optional)</p>
+            <Input
+              placeholder="Name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+            <p className="text-muted-foreground">
+              Choose a descriptive name for your buket
+            </p>
+          </div>
+          <div className="space-y-2">
+            <p>Schedule (optional)</p>
+            <DatePicker onSelect={(newDate) => setScheduledFor(newDate)} />
+            <p className="text-muted-foreground">
+              Do you need this basket for a specific day?
+            </p>
+          </div>
+        </div>
+
         <Button
-          onClick={() =>
+          onClick={() => {
             createBasket.mutate({
+              name: name,
+              scheduledFor: scheduledFor,
               food: foodItems.map((item) => item.id),
-            })
-          }
+            });
+          }}
           disabled={foodItems.length == 0 || isDisabled}
         >
           Create basket

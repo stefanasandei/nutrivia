@@ -130,12 +130,14 @@ model FoodSubmission {
 }
 
 model Basket {
-    id          Int           @id @default(autoincrement())
-    createdAt   DateTime      @default(now())
-    updatedAt   DateTime      @updatedAt
-    createdBy   User          @relation(fields: [createdById], references: [id])
-    createdById String
-    foods       FoodProduct[]
+    id           Int           @id @default(autoincrement())
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    createdBy    User          @relation(fields: [createdById], references: [id])
+    createdById  String
+    name         String        @default("Untitled basket")
+    scheduledFor DateTime      @default(now())
+    foods        FoodProduct[]
 }
 
 model Post {
