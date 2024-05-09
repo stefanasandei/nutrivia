@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import ResponsiveDialog from "../responsive-dialog";
 
-export default function MainBasketsPage({
+export default function ProgressDashboard({
   completedChallenges,
   dailyChallenge,
   baskets,
@@ -78,12 +78,9 @@ export default function MainBasketsPage({
           Progress dashboard
         </h1>
         <div className="flex flex-col justify-between gap-2 md:flex-row">
-          <Link href="/dashboard/new" className={buttonVariants()}>
-            Create a basket
-          </Link>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant={"outline"}>Daily challenge</Button>
+              <Button variant={"default"}>Daily challenge</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

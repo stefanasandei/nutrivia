@@ -1,4 +1,4 @@
-import MainBasketsPage from "@/components/screens/dashboard";
+import ProgressDashboard from "@/components/screens/dashboard";
 import { api } from "@/trpc/server";
 
 export default async function ForYouProgressPage() {
@@ -9,7 +9,7 @@ export default async function ForYouProgressPage() {
   const completed = await api.challenge.getCompleted.query();
 
   return (
-    <MainBasketsPage
+    <ProgressDashboard
       completedChallenges={completed}
       baskets={baskets}
       dailyChallenge={daily!}
