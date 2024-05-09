@@ -3,6 +3,7 @@ import { OpenAIStream, StreamingTextResponse } from 'ai';
 import { env } from '@/env';
 import { api } from '@/trpc/server';
 
+// TODO
 const openai = new OpenAI({
     apiKey: 'ollama',
     baseURL: env.OLLAMA_API_ENDPOINT,
@@ -26,12 +27,16 @@ export async function POST(req: Request) {
         model: 'mistral',
         max_tokens: 800,
         temperature: 0.8,
+        response_format: {
+            type: "json_object"
+        },
         stream: true,
         messages: [
             { role: "system", content: system(allergies) },
             { role: "user", content: prompt }],
     });
 
+    // actually uses a foss mistral 7b model running locally
     const stream = OpenAIStream(response);
 
     return new StreamingTextResponse(stream);

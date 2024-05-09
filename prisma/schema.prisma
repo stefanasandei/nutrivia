@@ -23,9 +23,25 @@ model User {
     Comment             Comment[]
     FoodSubmission      FoodSubmission[]
     baskets             Basket[]
+    recipes             Recipe[]
     completedChallenges Challenges[]
     CompletedChallenge  CompletedChallenge[]
     TrackedChallange    TrackedChallange[]
+}
+
+model Recipe {
+    id        String  @id @default(uuid())
+    title     String
+    generated Boolean @default(false)
+
+    // contains the generated markdown
+    // two sections: ingredients and instructions
+    content String
+
+    pictureURL  String?
+    ingredients FoodProduct[]
+    User        User?         @relation(fields: [userId], references: [id])
+    userId      String?
 }
 
 // in the db challenges and milestone are the same
@@ -117,6 +133,7 @@ model FoodProduct {
     submission    FoodSubmission?
     baskets       Basket[]
     nutriments    FoodNutriments?
+    recipes       Recipe[]
 }
 
 model FoodSubmission {
