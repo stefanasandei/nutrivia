@@ -1,7 +1,8 @@
 import { Icons } from "@/components/icons";
 import { ForYouFood } from "@/components/screens/for-you-food";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/trpc/server";
+import Link from "next/link";
 
 export default async function ForYouCorePage() {
   const baskets = await api.user.getBaskets.query();
@@ -12,9 +13,9 @@ export default async function ForYouCorePage() {
         <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
           Food baskets
         </h1>
-        <Button size={"icon"}>
+        <Link href="/for-you/new" className={buttonVariants({ size: "icon" })}>
           <Icons.add />
-        </Button>
+        </Link>
       </div>
       <div className="">
         <ForYouFood baskets={baskets} />
