@@ -80,6 +80,20 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+  deleteBasket: protectedProcedure
+    .input(
+      z.object({
+        baskedId: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.basket.delete({
+        where: {
+          id: input.baskedId,
+          createdById: ctx.session.user.id,
+        },
+      });
+    }),
 
   subscribeToTopic: protectedProcedure
     .input(z.object({ token: z.string() }))

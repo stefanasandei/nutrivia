@@ -32,7 +32,7 @@ export function Sidebar({ className, title, items }: SidebarProps) {
                   href={item.href}
                   className={cn(
                     buttonVariants({
-                      variant: pathname.endsWith(item.href)
+                      variant: pathname.startsWith(item.href)
                         ? "secondary"
                         : "ghost",
                     }),
@@ -46,7 +46,7 @@ export function Sidebar({ className, title, items }: SidebarProps) {
                   href={item.href}
                   className={cn(
                     buttonVariants({
-                      variant: pathname.endsWith(item.href)
+                      variant: pathname.startsWith(item.href)
                         ? "secondary"
                         : "ghost",
                       // size: "icon",

@@ -7,6 +7,11 @@ import FoodCard from "./food-card";
 import { Button } from "./ui/button";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import ResponsiveDialog from "./responsive-dialog";
+import Link from "next/link";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 dayjs.extend(relativeTime);
 
@@ -49,9 +54,7 @@ export const FancyBasketPreview = ({ basket }: { basket: CompleteBasket }) => {
         </div>
         <div className="flex flex-row items-center justify-between">
           <p>{dayjs(basket.scheduledFor).fromNow()}</p>
-          <Button size={"sm"} variant={"default"}>
-            Read more
-          </Button>
+          <FullBasketViewTrigger basket={basket} />
         </div>
       </div>
       {cards.map((food) => (
@@ -63,5 +66,69 @@ export const FancyBasketPreview = ({ basket }: { basket: CompleteBasket }) => {
         </div>
       ))}
     </div>
+  );
+};
+
+const FullBasketViewTrigger = ({ basket }: { basket: CompleteBasket }) => {
+  const router = useRouter();
+
+  const [open, setOpen] = useState(false);
+
+  const deleteBasket = api.user.deleteBasket.useMutation({
+    onSuccess: () => {
+      toast("Basket deleted!");
+      router.refresh();
+    },
+  });
+
+  const price = useMemo(() => {
+    let price = 0;
+
+    basket.foods.forEach((food) => {
+      price += food.priceRON;
+    });
+
+    return price;
+  }, [basket]);
+
+  return (
+    <ResponsiveDialog
+      triggerButton={
+        <Button size={"sm"} variant={"default"}>
+          Read more
+        </Button>
+      }
+      title={basket.name}
+      description={`Scheduled for: ${dayjs(basket.scheduledFor).fromNow()}`}
+      openState={[open, setOpen]}
+    >
+      <div className="flex h-full flex-col justify-between">
+        <ul className="list-inside list-disc text-lg">
+          {basket.foods.map((food) => (
+            <li key={`${basket.id}-${food.id}-full`}>
+              <Link href={`/food/${food.id}`} className="hover:underline">
+                {food.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="mb-6 flex flex-col gap-4 md:mb-0">
+          <p className="text-lg">Total: {price} RON</p>
+          <div className="flex flex-row justify-between">
+            <Button disabled={true}>Order now</Button>
+            <Button
+              onClick={() => {
+                setOpen(false);
+                deleteBasket.mutate({
+                  baskedId: basket.id,
+                });
+              }}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      </div>
+    </ResponsiveDialog>
   );
 };
