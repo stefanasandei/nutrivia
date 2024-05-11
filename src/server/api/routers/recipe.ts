@@ -26,11 +26,12 @@ export const recipeRouter = createTRPCRouter({
         content: z.string(),
         pictureURL: z.string().optional(),
         ingredients: z.array(z.number()),
+        generated: z.boolean().default(false)
     })).mutation(async ({ input, ctx }) => {
         return await ctx.db.recipe.create({
             data: {
                 title: input.title,
-                generated: false,
+                generated: input.generated,
                 content: input.content,
                 pictureURL: input.pictureURL,
                 ingredients: { connect: input.ingredients.map((ing) => ({ id: ing })) },
