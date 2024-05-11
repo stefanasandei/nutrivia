@@ -11,7 +11,7 @@ export const siteConfig = {
     },
     {
       title: "For you",
-      href: "/for-you",
+      href: "/for-you/food",
     },
     {
       title: "Contribute",

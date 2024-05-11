@@ -13,7 +13,10 @@ export default async function ForYouCorePage() {
         <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
           Food baskets
         </h1>
-        <Link href="/for-you/new" className={buttonVariants({ size: "icon" })}>
+        <Link
+          href="/for-you/food/new"
+          className={buttonVariants({ size: "icon" })}
+        >
           <Icons.add />
         </Link>
       </div>

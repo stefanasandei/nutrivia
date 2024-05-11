@@ -70,7 +70,7 @@ export function CreateNewBasket({
       }
 
       toast("Basket created!");
-      router.push("/for-you");
+      router.push("/for-you/food");
     },
   });
 

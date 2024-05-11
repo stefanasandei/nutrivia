@@ -6,7 +6,7 @@ export const forYouPages = [
   {
     icon: Croissant,
     name: "Food baskets",
-    href: "/for-you",
+    href: "/for-you/food",
   },
   {
     icon: Star,
