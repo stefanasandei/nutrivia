@@ -12,5 +12,23 @@ export const recipeRouter = createTRPCRouter({
             where: { id: ctx.session.user.id },
             select: { recipes: { include: { ingredients: true } } }
         })
+    }),
+
+    create: protectedProcedure.input(z.object({
+        title: z.string(),
+        content: z.string(),
+        pictureURL: z.string().optional(),
+        ingredients: z.array(z.number()),
+    })).mutation(async ({ input, ctx }) => {
+        return await ctx.db.recipe.create({
+            data: {
+                title: input.title,
+                generated: false,
+                content: input.content,
+                pictureURL: input.pictureURL,
+                ingredients: { connect: input.ingredients.map((ing) => ({ id: ing })) },
+                userId: ctx.session.user.id
+            }
+        })
     })
 });
