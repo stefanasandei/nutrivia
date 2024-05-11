@@ -5,13 +5,20 @@ import {
     protectedProcedure,
 } from "@/server/api/trpc";
 
-// TODO
 export const recipeRouter = createTRPCRouter({
     getAll: protectedProcedure.query(async ({ ctx }) => {
         return await ctx.db.user.findUnique({
             where: { id: ctx.session.user.id },
             select: { recipes: { include: { ingredients: true } } }
         })
+    }),
+
+    get: protectedProcedure.input(z.object({
+        id: z.string()
+    })).query(async ({ input, ctx }) => {
+        return await ctx.db.recipe.findUnique({
+            where: { id: input.id, userId: ctx.session.user.id }
+        });
     }),
 
     create: protectedProcedure.input(z.object({

@@ -3,7 +3,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/trpc/server";
 import Link from "next/link";
 
-// TODO
 export default async function ForYouRecipesPage() {
   const recipes = (await api.recipe.getAll.query())?.recipes ?? [];
 
@@ -30,12 +29,13 @@ export default async function ForYouRecipesPage() {
       </div>
       <div className="flex flex-col gap-4">
         {recipes.map((recipe) => (
-          <div
+          <Link
             key={recipe.id}
+            href={`/for-you/recipes/${recipe.id}`}
             className="rounded-md bg-secondary/50 p-3 transition-all hover:cursor-pointer hover:bg-secondary/70"
           >
             <p className="text-xl">{recipe.title}</p>
-          </div>
+          </Link>
         ))}
       </div>
     </section>
