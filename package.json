@@ -100,6 +100,5 @@
   },
   "prisma": {
     "seed": "ts-node ./src/scripts/seed.ts"
-  },
-  "packageManager": "pnpm@8.7.5"
+  }
 }
