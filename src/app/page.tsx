@@ -7,9 +7,7 @@ export default async function IndexPage() {
   const session = await getServerAuthSession();
   if (!session)
     return (
-      <>
         <LandingPage />
-      </>
     );
 
   const food = await api.admin.getFoodProducts.query();

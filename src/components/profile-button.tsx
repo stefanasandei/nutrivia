@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { type User } from "next-auth";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { buttonVariants } from "./ui/button";
 import Link from "next/link";
@@ -13,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
+import { signOut } from "next-auth/react";
 
 export const ProfileButton = ({
   user,
@@ -26,13 +26,7 @@ export const ProfileButton = ({
 
   if (user == null)
     return (
-      <Link
-        href={""}
-        className={buttonVariants()}
-        onClick={async () => {
-          await signIn();
-        }}
-      >
+      <Link href={"/login"} className={buttonVariants()}>
         Sign in
       </Link>
     );
@@ -80,7 +74,14 @@ export const ProfileButton = ({
           Toggle theme
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link href="/api/auth/signout">Logout</Link>
+          <p
+            className="w-full hover:cursor-pointer"
+            onClick={async () => {
+              await signOut();
+            }}
+          >
+            Logout
+          </p>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
