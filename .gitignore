@@ -49,3 +49,4 @@ book
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/playwright/.auth
