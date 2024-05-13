@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { type Challenges } from "@prisma/client";
 import {
   AlertDialog,
@@ -10,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Image from "next/image";
 
 export default function AchievementsView({
   challenges,
@@ -54,7 +54,7 @@ export const AchievementPreview = ({
     <AlertDialog>
       <AlertDialogTrigger>
         <div className="col-span-1 flex flex-col items-center rounded-lg p-2 transition-all hover:cursor-pointer hover:bg-secondary/40">
-          <img
+          <Image
             src={challenge.badgeURL}
             alt={"Profile badge"}
             width={500}
