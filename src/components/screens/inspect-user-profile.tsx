@@ -9,23 +9,19 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
 import { env } from "@/env";
-import { marked } from "marked";
 
 export const InspectUserProfile = ({
   user,
   points,
+  bio,
 }: {
   user: { completedChallenges: Challenges[] } & User;
   points: number;
+  bio: string;
 }) => {
   const achievements = user.completedChallenges.filter(
     (c) => c.badgeURL.length > 1,
   );
-
-  const bio = (() => {
-    const rendered = marked(user.bio);
-    return rendered;
-  })();
 
   return (
     <section className="container grid items-center pb-8 pt-3">

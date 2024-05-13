@@ -14,7 +14,6 @@ import { useMemo, useState } from "react";
 import MiniSearch from "minisearch";
 
 export default function ProductCatalog({
-  user,
   food,
 }: {
   user?: User;
@@ -70,7 +69,7 @@ export default function ProductCatalog({
       </div>
       <div className="grid grid-flow-row grid-cols-1 justify-items-center gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {(results.length == 0 ? food : results).map((item) => (
-          <FoodCard key={item.id} food={item} userId={user ? user.id : null} />
+          <FoodCard key={item.id} food={item} />
         ))}
       </div>
     </section>

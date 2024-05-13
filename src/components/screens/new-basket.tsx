@@ -160,8 +160,8 @@ export function CreateNewBasket({
                   true,
               );
 
-              const disabled =
-                (user.isVegan && !isVegan) || allergies.length > 0;
+              // const disabled =
+              //   (user.isVegan && !isVegan) || allergies.length > 0;
 
               return (
                 <div

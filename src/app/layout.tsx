@@ -37,6 +37,8 @@ export const viewport: Viewport = {
   themeColor: "#00ffa6",
 };
 
+export const dynamic = "force-dynamic";
+
 interface RootLayoutProps {
   children: React.ReactNode;
 }

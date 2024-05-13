@@ -9,7 +9,7 @@ import {
   type TrackedChallange,
 } from "@prisma/client";
 import Link from "next/link";
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "../ui/button";
 import { computeScore } from "@/lib/food";
 import { Calendar } from "../ui/calendar";
 import { useEffect, useState } from "react";

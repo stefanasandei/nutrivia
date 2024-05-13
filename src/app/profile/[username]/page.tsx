@@ -2,6 +2,8 @@
 import { InspectUserProfile } from "@/components/screens/inspect-user-profile";
 import { api } from "@/trpc/server";
 import { notFound } from "next/navigation";
+import { marked } from "marked";
+import DOMPurify from "isomorphic-dompurify";
 
 export default async function Page({
   params,
@@ -20,5 +22,11 @@ export default async function Page({
     userId: user.id,
   });
 
-  return <InspectUserProfile user={user} points={points} />;
+  const bio = await (async () => {
+    const rendered = await marked(user.bio);
+    const safe = DOMPurify.sanitize(rendered);
+    return safe;
+  })();
+
+  return <InspectUserProfile user={user} points={points} bio={bio} />;
 }
