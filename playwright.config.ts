@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://localhost:3000',
 
     // npx playwright codegen 127.0.0.1:3000 --save-storage=./playwright/.auth/user.json
     storageState: './playwright/.auth/user.json',
@@ -23,15 +23,15 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
   ],
 
   webServer: {
     command: 'pnpm run start',
     url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
   },
 });
