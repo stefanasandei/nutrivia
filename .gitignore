@@ -45,3 +45,7 @@ yarn-error.log*
 
 # mdbook
 book
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
