@@ -62,7 +62,7 @@ export default function CreateBasketForm({
               value={searchQuery}
               onChange={(value) => setSearchQuery(value.target.value)}
             />
-            <Button size={"icon"} className="w-12">
+            <Button size={"icon"} className="w-12" title="Search product">
               <Icons.search />
             </Button>
           </div>

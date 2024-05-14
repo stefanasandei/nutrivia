@@ -79,6 +79,7 @@ export default function SubmissionPreview({
               <Button
                 variant={"secondary"}
                 size={"icon"}
+                title="Approve submission"
                 onClick={() =>
                   approveSubmissions.mutate({ id: submission.food.id })
                 }
@@ -90,6 +91,7 @@ export default function SubmissionPreview({
               <Button
                 variant={"secondary"}
                 size={"icon"}
+                title="Deny submission"
                 onClick={() =>
                   denySubmissions.mutate({ id: submission.food.id })
                 }

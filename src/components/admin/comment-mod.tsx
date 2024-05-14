@@ -60,7 +60,7 @@ const AdminCommentPreview = ({
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button size={"icon"}>
+            <Button size={"icon"} title="Delete comment">
               <Icons.delete />
             </Button>
           </AlertDialogTrigger>

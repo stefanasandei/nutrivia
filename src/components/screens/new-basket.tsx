@@ -172,6 +172,7 @@ export function CreateNewBasket({
                   <div className="flex flex-col items-center justify-start gap-3 md:mr-3">
                     <Button
                       size={"icon"}
+                      title="Delete basket"
                       variant={"outline"}
                       onClick={() => {
                         const arr = [...foodItems];
@@ -186,7 +187,11 @@ export function CreateNewBasket({
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger>
-                            <Button size={"icon"} variant={"destructive"}>
+                            <Button
+                              size={"icon"}
+                              title={"Not vegan"}
+                              variant={"destructive"}
+                            >
                               <Icons.warning />
                             </Button>
                           </TooltipTrigger>
@@ -208,7 +213,11 @@ export function CreateNewBasket({
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger>
-                            <Button size={"icon"} variant={"destructive"}>
+                            <Button
+                              size={"icon"}
+                              title={"Allergies present"}
+                              variant={"destructive"}
+                            >
                               <Icons.warning />
                             </Button>
                           </TooltipTrigger>

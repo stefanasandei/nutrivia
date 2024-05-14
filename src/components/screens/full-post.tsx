@@ -106,6 +106,7 @@ export default function FullPostPage({
             <Button
               variant={"secondary"}
               size={"icon"}
+              title={"Like post"}
               onClick={() => likePost.mutate({ id: post.id })}
             >
               <Icons.like
@@ -117,6 +118,7 @@ export default function FullPostPage({
             <Button
               variant={"secondary"}
               size={"icon"}
+              title={"Delete post"}
               onClick={() => deletePost.mutate({ id: post.id })}
             >
               <Icons.delete />
@@ -134,6 +136,7 @@ export default function FullPostPage({
             />
             <Button
               size={"icon"}
+              title={"Submit comment"}
               onClick={() => {
                 addComment.mutate({
                   id: post.id,
@@ -157,6 +160,7 @@ export default function FullPostPage({
                 {user?.id == comment.createdById && (
                   <Button
                     size={"icon"}
+                    title="Delete comment"
                     onClick={() => {
                       deleteComment.mutate({ id: comment.id });
                     }}

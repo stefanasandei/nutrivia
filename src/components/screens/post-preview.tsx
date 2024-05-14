@@ -59,6 +59,7 @@ export default function PostPreview({
             <Button
               variant={"secondary"}
               size={"icon"}
+              title={"Like post"}
               onClick={(event) => {
                 event.preventDefault();
                 event.stopPropagation();

@@ -62,7 +62,12 @@ export default function ProductCatalog({
               setSearchQuery(value.target.value);
             }}
           />
-          <Button size={"icon"} variant={"outline"} className="w-16">
+          <Button
+            size={"icon"}
+            title={"Search product"}
+            variant={"outline"}
+            className="w-16"
+          >
             <Icons.search />
           </Button>
         </div>

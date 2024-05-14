@@ -69,6 +69,7 @@ export default function ForumWritePrompt({
       />
       <Button
         size={"icon"}
+        title={"Create a post"}
         variant={"default"}
         onClick={() => setOpenDialog(true)}
         className="sm:w-14"

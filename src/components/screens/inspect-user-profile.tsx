@@ -43,6 +43,7 @@ export const InspectUserProfile = ({
             </h1>
             <Button
               size={"icon"}
+              title={"Copy to clipboard"}
               variant={"ghost"}
               onClick={() => {
                 navigator.clipboard

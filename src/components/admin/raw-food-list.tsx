@@ -155,6 +155,7 @@ export default function RawFoodList({
                 </Dialog>
                 <Button
                   size={"icon"}
+                  title={"Update product"}
                   variant={"outline"}
                   onClick={() => {
                     toast(`Updating raw food ${food.id}`);

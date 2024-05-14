@@ -213,6 +213,7 @@ export default function FoodList({
                 </Dialog>
                 <Button
                   size={"icon"}
+                  title={"Update product"}
                   variant={"outline"}
                   onClick={() => {
                     toast(`Updating food ${food.id}`);

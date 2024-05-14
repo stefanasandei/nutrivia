@@ -111,6 +111,7 @@ export default function FoodProductPage({
               <Button
                 variant="secondary"
                 size={"icon"}
+                title={"Like product"}
                 onClick={() => {
                   likePost.mutate({
                     id: food.id,
@@ -128,6 +129,7 @@ export default function FoodProductPage({
               <Button
                 variant="secondary"
                 size={"icon"}
+                title={"Dislike product"}
                 onClick={() => {
                   likePost.mutate({
                     id: food.id,
@@ -143,6 +145,7 @@ export default function FoodProductPage({
             )}
             <Button
               size={"icon"}
+              title={"Copy to clipboard"}
               variant={"secondary"}
               onClick={async () => {
                 const text = `${env.NEXT_PUBLIC_URL}${pathname}`;
@@ -220,6 +223,7 @@ export default function FoodProductPage({
             />
             <Button
               size={"icon"}
+              title={"Add comment"}
               onClick={() => {
                 addComment.mutate({
                   id: food.id,
@@ -244,6 +248,7 @@ export default function FoodProductPage({
                 {user?.id == comment.createdById && (
                   <Button
                     size={"icon"}
+                    title={"Delete comment"}
                     onClick={() => {
                       deleteComment.mutate({ id: comment.id, uid: user.id });
                     }}

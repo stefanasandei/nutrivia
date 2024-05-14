@@ -71,6 +71,7 @@ export default function ChallengeList({
                       <Button
                         variant="outline"
                         size={"icon"}
+                        title={"Copy to clipboard"}
                         onClick={() => {
                           void navigator.clipboard
                             .writeText(challenge.id)
