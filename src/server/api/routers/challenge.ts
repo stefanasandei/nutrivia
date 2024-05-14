@@ -140,6 +140,7 @@ export const challengeRouter = createTRPCRouter({
       include: { challenge: true },
     });
   }),
+
   markSeen: protectedProcedure
     .input(z.object({ challengeId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
