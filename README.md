@@ -4,7 +4,7 @@ Nutrivia is a web app designed to help its user make better decision regarding t
 
 ![pic](./docs/pic_v2.png)
 
-## Documentation (work in progress)
+## Documentation
 
 Markdown docs are available in the `./docs` directory. Start with the [introduction](./docs/introduction.md).
 
